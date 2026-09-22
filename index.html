@@ -19,7 +19,8 @@
   button{font-family:inherit;cursor:pointer}
   header{max-width:1280px;margin:0 auto;padding:18px 20px 6px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
   .brand{display:flex;align-items:center;gap:12px}
-  .brand .logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#ffe4b3,#ffc46b);display:grid;place-items:center;font-size:26px;box-shadow:var(--shadow)}
+  .brand .logo{width:46px;height:46px;border-radius:14px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);flex:0 0 auto}
+  .brand .logo svg{display:block;width:100%;height:100%}
   h1{font-size:22px;margin:0;font-weight:900;letter-spacing:-.3px}
   .brand p{margin:2px 0 0;font-size:13px;color:var(--muted)}
   .tabs{display:flex;gap:6px;background:#efe9df;padding:5px;border-radius:14px}
@@ -159,7 +160,32 @@
 <body>
 <header>
   <div class="brand">
-    <div class="logo">🌍</div>
+    <div class="logo" aria-hidden="true">
+      <svg viewBox="0 0 48 48">
+        <defs>
+          <linearGradient id="lgSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3eefb"/><stop offset="1" stop-color="#eef7fd"/></linearGradient>
+          <linearGradient id="lgGround" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2d8c6"/><stop offset="1" stop-color="#cfc1a6"/></linearGradient>
+          <clipPath id="lgClip"><rect width="48" height="48" rx="14"/></clipPath>
+        </defs>
+        <g clip-path="url(#lgClip)">
+          <rect width="48" height="48" fill="url(#lgSky)"/>
+          <rect y="35" width="48" height="13" fill="url(#lgGround)"/>
+          <line x1="0" y1="35" x2="48" y2="35" stroke="#b8a98c" stroke-width="1"/>
+          <line x1="0" y1="14" x2="48" y2="14" stroke="#c9d3e6" stroke-width="1" stroke-dasharray="2 2"/>
+          <g transform="translate(11.5,11)">
+            <circle r="4.3" fill="#ffd54a" stroke="#f5a623" stroke-width="1.4"/>
+            <g stroke="#f5a623" stroke-width="1.4" stroke-linecap="round">
+              <line x1="0" y1="-7.5" x2="0" y2="-6"/><line x1="0" y1="6" x2="0" y2="7.5"/>
+              <line x1="-7.5" y1="0" x2="-6" y2="0"/><line x1="6" y1="0" x2="7.5" y2="0"/>
+              <line x1="-5.3" y1="-5.3" x2="-4.3" y2="-4.3"/><line x1="4.3" y1="4.3" x2="5.3" y2="5.3"/>
+              <line x1="-5.3" y1="5.3" x2="-4.3" y2="4.3"/><line x1="4.3" y1="-4.3" x2="5.3" y2="-5.3"/>
+            </g>
+          </g>
+          <g fill="#f6a63a"><path d="M23 6.5 V26" stroke="#f6a63a" stroke-width="5" stroke-linecap="round"/><polygon points="23,34 16.5,26 29.5,26"/></g>
+          <g fill="#ea6a62"><path d="M36 35 V15" stroke="#ea6a62" stroke-width="5" stroke-linecap="round"/><polygon points="36,7 29.5,15 42.5,15"/></g>
+        </g>
+      </svg>
+    </div>
     <div>
       <h1>지구 열수지 평형 따라가기</h1>
       <p>태양 복사 100은 어디로 갈까? — 지표·대기·우주, 들어온 만큼 나가는지 계산해 보기</p>
@@ -327,16 +353,18 @@
 (() => {
   /* ---------- arrow definitions (textbook numbers: 대기과학 2016) ---------- */
   const ARROWS = {
+    // 태양 복사 100의 가지(25·20)는 100 화살표 머리 안쪽(y=118)에서 출발 → 끊긴 곳 없이 이어짐.
+    // 객체 순서 = 그리기 순서: sun100·abs50 을 가지들보다 뒤에 두어 굵은 줄기가 가지의 시작을 덮음.
+    ref25:  {pts:[[470,118],[415,300],[335,52]], w:12, c:'sol', cont:true, layers:['space','atm'],
+             label:{x:350,y:185,num:'25',anchor:'end'}},
+    ref5:   {pts:[[430,406],[205,52]], w:6, c:'sol', cont:true, layers:['space','sfc'],
+             label:{x:358,y:336,num:'5',anchor:'end'}},
+    abs20:  {pts:[[470,118],[470,236],[600,236]], w:9, c:'sol', cont:true, layers:['atm'],
+             label:{x:535,y:222,num:'20',anchor:'middle'}},
     sun100: {pts:[[470,36],[470,124]], w:40, c:'sol', layers:['space'],
              label:{x:506,y:74,num:'100',name:'태양 복사',anchor:'start'}},
-    ref25:  {pts:[[470,196],[415,300],[335,52]], w:12, c:'sol', layers:['space','atm'],
-             label:{x:362,y:185,num:'25',anchor:'end'}},
-    ref5:   {pts:[[430,406],[205,52]], w:6, c:'sol', cont:true, layers:['space','sfc'],
-             label:{x:372,y:336,num:'5',anchor:'end'}},
-    abs20:  {pts:[[470,236],[600,236]], w:9, c:'sol', cont:true, layers:['atm'],
-             label:{x:535,y:224,num:'20',anchor:'middle'}},
     abs50:  {pts:[[470,124],[470,414]], w:20, c:'sol', cont:true, layers:['sfc'],
-             label:{x:496,y:388,num:'50',anchor:'start'}},
+             label:{x:496,y:372,num:'50',anchor:'start'}},
     emit132:{pts:[[700,414],[700,272]], w:30, c:'ter', cont:true, layers:['sfc','atm'],
              label:{x:722,y:352,num:'132',name:'대기 흡수',anchor:'start',follow:{cx:700,side:1}}},
     emit12: {pts:[[830,414],[830,46]], w:8, c:'ter', cont:true, layers:['sfc','space'],
