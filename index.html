@@ -119,17 +119,24 @@
   /* ---- warming panel ---- */
   .warm{padding:18px 20px}
   .warm h2{margin:0 0 6px;font-size:20px;font-weight:900}
-  .warm p{margin:0 0 10px;font-size:14.5px}
-  .slider{margin:12px 0 4px}
+  .warm p{margin:0 0 8px;font-size:14px}
+  .slider{margin:8px 0 2px}
   .slider label{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:6px}
   .slider input{width:100%;accent-color:var(--ter)}
   .slider .ends{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
-  .chain{display:grid;grid-template-columns:1fr;gap:8px;margin-top:14px}
-  .node{border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:#fbfaf7;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .nums{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
+  .nums .full{grid-column:1/-1;background:var(--ok-bg);border-color:#cfe9d8}
+  .nums div{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 9px;border-radius:10px;background:#fbfaf7;border:1px solid var(--line);font-size:12.5px;color:#555}
+  .nums b{font-size:14px;font-weight:900;color:var(--ink);white-space:nowrap}
+  .nums b s{color:#aaa;font-weight:600;font-size:12px;margin-right:3px}
+  .nums b.up{color:var(--ter-dk)} .nums b.dn{color:var(--accent)}
+  .numnote{font-size:11.5px;color:var(--muted);margin:6px 0 0}
+  .chain{display:grid;grid-template-columns:1fr;gap:6px;margin-top:10px}
+  .node{border:1px solid var(--line);border-radius:14px;padding:7px 12px;background:#fbfaf7;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .node .n{width:24px;height:24px;border-radius:50%;background:#e9e2d5;display:grid;place-items:center;font-weight:900;font-size:13px;flex:0 0 auto}
   .node .q{flex:1;font-size:14px;font-weight:500;min-width:150px}
   .node .opts{display:flex;gap:6px}
-  .node .opts button{border:1.5px solid #d9d0c2;background:#fff;border-radius:999px;padding:6px 14px;font-size:14px;font-weight:700;min-height:38px}
+  .node .opts button{border:1.5px solid #d9d0c2;background:#fff;border-radius:999px;padding:5px 13px;font-size:13.5px;font-weight:700;min-height:34px}
   .node .opts button.sel{border-color:var(--ink);background:var(--ink);color:#fff}
   .node.right{border-color:var(--ok);background:var(--ok-bg)}
   .node.wrong{border-color:var(--bad);background:var(--bad-bg)}
@@ -324,7 +331,7 @@
         <circle cx="0" cy="76" r="11" fill="#e4544f" stroke="#8a8175" stroke-width="1.5"/>
         <text x="0" y="104" text-anchor="middle" font-size="12" font-weight="700" fill="#6b5f4c">지표 온도</text>
       </g>
-      <text id="hint-warm" x="26" y="522" font-size="12" font-weight="700" fill="#7a4a3a">※ 굵어진 화살표 = 증가 (교과서 흐름도 기준, 정량적 비율은 아님)</text>
+      <text id="hint-warm" x="26" y="522" font-size="12" font-weight="700" fill="#7a4a3a">※ 화살표 굵기와 숫자 = 새 평형 상태의 에너지양 (단순 모형)</text>
     </svg>
     <div class="dialog" id="dialog"></div>
     <div class="legend">
@@ -395,12 +402,14 @@
     <!-- ===== TAB 3 ===== -->
     <div id="warmPanel" class="card warm" hidden>
       <h2>이산화 탄소가 늘어나면?</h2>
-      <p>대기 중 이산화 탄소 농도를 올려 보고, 그림에서 어떤 화살표가 굵어지는지 관찰한 뒤 아래 흐름도를 완성해 보자.</p>
+      <p>이산화 탄소 농도를 올려 보고, 그림의 화살표 굵기와 숫자가 어떻게 변하는지 본 뒤 아래 흐름도를 완성해 보자.</p>
       <div class="slider">
         <label><span>대기 중 이산화 탄소 농도</span><span id="co2val">현재</span></label>
         <input type="range" id="co2" min="0" max="100" value="0">
         <div class="ends"><span>현재</span><span>증가 →</span></div>
       </div>
+      <div class="nums" id="nums"></div>
+      <p class="numnote">* 새 평형 상태의 값 (단순 모형). 어느 쪽이 늘고 주는지 경향을 보기 위한 숫자임.</p>
 
       <div class="chain" id="chain">
         <div class="node given"><span class="n">→</span><span class="q">대기 중 이산화 탄소 농도 <b>증가</b></span></div>
@@ -408,7 +417,7 @@
           <span class="opts"><button data-v="증가">증가</button><button data-v="감소">감소</button></span><span class="ans"></span></div>
         <div class="node" data-key="b"><span class="n">2</span><span class="q">대기가 지표로 방출하는 에너지양이 94보다</span>
           <span class="opts"><button data-v="증가">증가</button><button data-v="감소">감소</button></span><span class="ans"></span></div>
-        <div class="node" data-key="c"><span class="n">3</span><span class="q">지표가 다시 흡수하는 에너지양이 94보다</span>
+        <div class="node" data-key="c"><span class="n">3</span><span class="q">지표가 대기로부터 다시 받는 에너지양이 94보다</span>
           <span class="opts"><button data-v="증가">증가</button><button data-v="감소">감소</button></span><span class="ans"></span></div>
         <div class="node" data-key="d"><span class="n">4</span><span class="q">지표 온도</span>
           <span class="opts"><button data-v="상승">상승</button><button data-v="하강">하강</button></span><span class="ans"></span></div>
@@ -518,9 +527,14 @@
      ['atm','그런데 내가 이산화 탄소를 더 먹으면 어떻게 될까?']],
   ];
   const WARM_TALK = [
-    [['atm','지금은 들어온 만큼 내보내고 있어. 평형 상태!'],['sfc','슬라이더를 올려서 이산화 탄소를 늘려 봐.']],
-    [['atm','이산화 탄소가 늘었더니 지구 복사가 자꾸 걸려… 132보다 많이 흡수 중!'],['sfc','어? 대기가 돌려주는 게 94보다 많아졌어. 조금 더워지는데?']],
-    [['atm','너무 많이 먹었더니 나도 뜨거워. 아래로 더 많이 돌려보낼 수밖에 없어!'],['sfc','받는 게 내보내는 것보다 많아… 온도 올라간다! 더 뜨거워져야 다시 균형이 맞겠어.']],
+    [['atm','지금은 지표도, 나도, 우주도 들어온 만큼 내보내고 있어. 평형 상태!'],
+     ['sfc','슬라이더를 오른쪽으로 밀어서 이산화 탄소를 늘려 봐. 어떤 화살표가 굵어지고 숫자가 커지는지 잘 봐.']],
+    [['atm','이산화 탄소가 늘었더니 지표가 보낸 적외선이 나한테 더 많이 걸려. 132보다 많이 흡수하고 있어!'],
+     ['atm','더 많이 흡수하니 나도 더 따뜻해져서, 아래로 돌려보내는 재복사도 94보다 늘었어.'],
+     ['sfc','어? 대기한테 받는 게 많아졌네. 나 조금 더워지는데?']],
+    [['sfc','너무 더워! 받는 게 늘어난 만큼 나도 더 많이 내보낼 수밖에 없어. 방출이 144보다 커졌어.'],
+     ['atm','그래도 결국 들어온 만큼 나가게 돼. 다만 예전보다 더 높은 온도에서 새로 평형을 이룬 거야.'],
+     ['sun','내가 보내는 100은 그대로인데 지구가 더워졌네. 이게 온실 효과가 강해진 거야.']],
   ];
   const dialog = document.getElementById('dialog');
   function say(lines){
@@ -704,7 +718,7 @@
     if (t==='check'){
       svg.classList.remove('warm'); svg.classList.add('instant');
       for (const id in ARROWS) setWidth(id, ARROWS[id].w);
-      nodes.emit132.tnum.textContent='132'; nodes.back94.tnum.textContent='94';
+      nodes.emit132.tnum.textContent='132'; nodes.back94.tnum.textContent='94'; nodes.atm58.tnum.textContent='58'; nodes.emit12.tnum.textContent='12';
       $('ground-warm').setAttribute('opacity', 0);
       for (const id in nodes) nodes[id].g.classList.add('on');
       $('br-ref').classList.add('on'); $('br-earth').classList.add('on');
@@ -720,7 +734,7 @@
       focusArrow(null);
       svg.classList.remove('warm');
       for (const id in ARROWS) { setWidth(id, ARROWS[id].w); }
-      nodes.emit132.tnum.textContent='132'; nodes.back94.tnum.textContent='94';
+      nodes.emit132.tnum.textContent='132'; nodes.back94.tnum.textContent='94'; nodes.atm58.tnum.textContent='58'; nodes.emit12.tnum.textContent='12';
       $('ground-warm').setAttribute('opacity', 0);
       // keep 'instant' for one frame so arrows don't re-animate, then restore
       requestAnimationFrame(()=>{ render(); requestAnimationFrame(()=>svg.classList.remove('instant')); });
@@ -853,14 +867,31 @@
   /* ---------- warming slider ---------- */
   const co2 = $('co2');
   let warmLevel = -1;
+  // 단순 2층 모형: 태양 복사 배분(50/20/30)은 그대로, 대기가 지구 복사를 흡수하는 비율만 올려
+  // 지표·대기·우주가 모두 평형이 되는 새 값을 구함. s=0 이면 교과서 값(144/132/12/94/58)과 일치.
+  function warmModel(s){
+    const a = 132/144 + 0.06*s;          // 대기의 지구 복사 흡수율
+    const f = 94/152;                     // 대기 방출 중 아래(지표)로 가는 비율
+    const E = (50 + 20*f) / (1 - f*a);    // 지표 방출
+    const Er = Math.round(E), abs = Math.round(a*E);
+    const pass = Er - abs, A = 20 + abs, down = Er - 50, up = A - down;
+    return {E:Er, abs, pass, A, down, up};   // 항상 지표 50+down=E, 대기 20+abs=down+up, 우주 30+pass+up=100
+  }
+  const NUM_ROWS = [['대기가 흡수하는 지구 복사',132,'abs'],['대기 재복사 (→ 지표)',94,'down'],['지표 방출',144,'E'],['대기·구름 → 우주',58,'up'],['대기 통과 (→ 우주)',12,'pass']];
   function applyCO2(){
     const s = co2.value/100;
     const lv = s<0.04 ? 0 : (s<0.5 ? 1 : 2);
     if (lv!==warmLevel){ warmLevel = lv; say(WARM_TALK[lv]); }
-    setWidth('emit132', 30*(1+0.7*s));
-    setWidth('back94',  24*(1+0.7*s));
-    nodes.emit132.tnum.textContent = s>0.04 ? '132 ↑' : '132';
-    nodes.back94.tnum.textContent  = s>0.04 ? '94 ↑'  : '94';
+    const m = warmModel(s);
+    const mark = (v, base) => v>base ? ' ↑' : (v<base ? ' ↓' : '');
+    setWidth('emit132', 30*m.abs/132);   nodes.emit132.tnum.textContent = m.abs + mark(m.abs,132);
+    setWidth('back94',  24*m.down/94);   nodes.back94.tnum.textContent  = m.down + mark(m.down,94);
+    setWidth('atm58',   18*m.up/58);     nodes.atm58.tnum.textContent   = m.up + mark(m.up,58);
+    setWidth('emit12',  Math.max(3, 8*m.pass/12)); nodes.emit12.tnum.textContent = m.pass + mark(m.pass,12);
+    $('nums').innerHTML = NUM_ROWS.map(([nm, base, k]) => {
+      const v = m[k], cls = v>base ? 'up' : (v<base ? 'dn' : '');
+      return `<div><span>${nm}</span><b class="${cls}">${v!==base ? `<s>${base}</s>` : ''}${v}${mark(v,base)}</b></div>`;
+    }).join('') + `<div class="full"><span>지표 유입 = 유출 ✓${m.E>144 ? ' · 더 높은 온도에서 새 평형' : ''}</span><b>50 + ${m.down} = ${m.E}</b></div>`;
     $('ground-warm').setAttribute('opacity', (0.45*s).toFixed(2));
     const h = 7 + 53*s; $('thermo-fill').setAttribute('y', 67-h); $('thermo-fill').setAttribute('height', h);
     $('co2val').textContent = s<0.04 ? '현재' : (s<0.5 ? '조금 증가' : (s<0.9 ? '많이 증가' : '크게 증가'));
@@ -888,8 +919,8 @@
       ans.textContent = ok ? '정답' : `정답: ${ANSWER[k]}`;
     });
     if (picked<4) say([['sun','아직 고르지 않은 칸이 있어. 다 고르고 확인해 줘.']]);
-    else if (okCount===4) say([['sun','4문제 모두 정답! 대기가 더 많이 흡수 → 더 많이 돌려줌 → 지표가 더 받음 → 온도 상승. 완벽해.'],['sfc','그래서 온도가 올라가면 나도 더 많이 내보내고, 결국 더 높은 온도에서 다시 평형이 돼.']]);
-    else say([['sun',`${okCount}/4 정답. 틀린 칸의 정답을 보고, 그림에서 굵어진 화살표를 다시 따라가 봐.`]]);
+    else if (okCount===4) say([['sun','4문제 모두 정답! 대기 흡수 증가 → 재복사 증가 → 지표가 받는 양 증가 → 지표 온도 상승. 완벽해.'],['sfc','온도가 올라가면 나도 더 많이 내보내서, 결국 더 높은 온도에서 다시 평형이 돼. 이게 지구 온난화야.']]);
+    else say([['sun',`${okCount}/4 정답. 틀린 칸의 정답을 확인하고, 슬라이더를 움직이며 굵어진 화살표와 숫자를 다시 따라가 봐.`]]);
   };
   $('quizReset').onclick = () => {
     for (const k in picks) delete picks[k];
