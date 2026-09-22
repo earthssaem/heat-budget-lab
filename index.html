@@ -16,8 +16,12 @@
   }
   *{box-sizing:border-box}
   html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;line-height:1.55}
+  /* 1440px 폭으로 설계하고, 화면 크기에 맞춰 #app 전체를 zoom 으로 축소·확대 → 어떤 화면에서도 한 화면에 들어옴 */
+  html,body{height:100%}
+  body{display:grid;place-items:center;overflow:hidden}
+  #app{width:1440px}
   button{font-family:inherit;cursor:pointer}
-  header{max-width:1280px;margin:0 auto;padding:18px 20px 6px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+  header{padding:14px 20px 6px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
   .brand{display:flex;align-items:center;gap:12px}
   .brand .logo{width:46px;height:46px;border-radius:14px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);flex:0 0 auto}
   .brand .logo svg{display:block;width:100%;height:100%}
@@ -26,9 +30,9 @@
   .tabs{display:flex;gap:6px;background:#efe9df;padding:5px;border-radius:14px}
   .tab{border:0;background:transparent;padding:9px 16px;border-radius:10px;font-weight:700;font-size:14px;color:var(--muted);min-height:42px}
   .tab.active{background:#fff;color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.08)}
-  main{max-width:1280px;margin:0 auto;padding:10px 20px 20px;display:grid;grid-template-columns:minmax(0,62fr) minmax(320px,38fr);gap:16px;align-items:start}
+  main{padding:10px 20px 8px;display:grid;grid-template-columns:minmax(0,60fr) minmax(320px,40fr);gap:16px;align-items:start}
   .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--line)}
-  .figure{padding:12px;position:sticky;top:10px}
+  .figure{padding:12px}
   .figure svg{width:100%;height:auto;display:block}
   .legend{display:flex;gap:16px;flex-wrap:wrap;padding:8px 8px 0;font-size:12.5px;color:var(--muted)}
   .legend i{display:inline-block;width:22px;height:9px;border-radius:5px;vertical-align:middle;margin-right:6px}
@@ -117,22 +121,22 @@
   .verdict.ok{display:block;background:var(--ok-bg);color:var(--ok)} .verdict.no{display:block;background:var(--bad-bg);color:var(--bad)}
 
   /* ---- warming panel ---- */
-  .warm{padding:18px 20px}
-  .warm h2{margin:0 0 6px;font-size:20px;font-weight:900}
+  .warm{padding:16px 20px}
+  .warm h2{margin:0 0 4px;font-size:20px;font-weight:900}
   .warm p{margin:0 0 8px;font-size:14px}
   .slider{margin:8px 0 2px}
   .slider label{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:6px}
   .slider input{width:100%;accent-color:var(--ter)}
   .slider .ends{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
-  .nums{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:10px}
-  .nums .full{grid-column:1/-1;background:var(--ok-bg);border-color:#cfe9d8}
-  .nums div{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:5px 9px;border-radius:10px;background:#fbfaf7;border:1px solid var(--line);font-size:12.5px;color:#555}
-  .nums b{font-size:14px;font-weight:900;color:var(--ink);white-space:nowrap}
-  .nums b s{color:#aaa;font-weight:600;font-size:12px;margin-right:3px}
+  .nums{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+  .nums div{display:inline-flex;align-items:center;gap:6px;padding:4px 9px;border-radius:999px;background:#fbfaf7;border:1px solid var(--line);font-size:12px;color:#555;white-space:nowrap}
+  .nums .full{background:var(--ok-bg);border-color:#cfe9d8;color:var(--ok);font-weight:700}
+  .nums b{font-size:13px;font-weight:900;color:var(--ink)}
+  .nums b s{color:#aaa;font-weight:600;font-size:11.5px;margin-right:2px}
   .nums b.up{color:var(--ter-dk)} .nums b.dn{color:var(--accent)}
-  .numnote{font-size:11.5px;color:var(--muted);margin:6px 0 0}
-  .chain{display:grid;grid-template-columns:1fr;gap:6px;margin-top:10px}
-  .node{border:1px solid var(--line);border-radius:14px;padding:7px 12px;background:#fbfaf7;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .nums .note{border:0;background:transparent;color:var(--muted);font-size:11.5px;padding:0}
+  .chain{display:grid;grid-template-columns:1fr;gap:4px;margin-top:8px}
+  .node{border:1px solid var(--line);border-radius:12px;padding:4px 12px;background:#fbfaf7;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
   .node .n{width:24px;height:24px;border-radius:50%;background:#e9e2d5;display:grid;place-items:center;font-weight:900;font-size:13px;flex:0 0 auto}
   .node .q{flex:1;font-size:14px;font-weight:500;min-width:150px}
   .node .opts{display:flex;gap:6px}
@@ -140,18 +144,18 @@
   .node .opts button.sel{border-color:var(--ink);background:var(--ink);color:#fff}
   .node.right{border-color:var(--ok);background:var(--ok-bg)}
   .node.wrong{border-color:var(--bad);background:var(--bad-bg)}
-  .node.given .n{background:#ffd08a}
+  .chain .given{font-size:13px;font-weight:700;color:#7a5a2a;background:#fff7e8;border-radius:10px;padding:3px 12px}
   .node .ans{font-size:12px;color:var(--ok);font-weight:700;width:100%}
   .node.wrong .ans{color:var(--bad)}
-  .warm .actions{display:flex;gap:8px;margin-top:12px}
+  .warm .actions{display:flex;gap:8px;margin-top:8px}
   .warm .actions button{flex:1;border:0;border-radius:12px;min-height:44px;font-weight:700;font-size:15px}
   .warm .actions .go{background:var(--ink);color:#fff}
   .warm .actions .re{background:#efe9df}
-  details{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}
+  details{margin-top:6px;border-top:1px dashed var(--line);padding-top:4px}
   summary{cursor:pointer;font-weight:700;font-size:14px}
   details p{margin-top:8px;font-size:14px}
 
-  footer{max-width:1280px;margin:0 auto;padding:6px 20px 24px;font-size:12px;color:var(--muted);text-align:center}
+  footer{padding:2px 20px 10px;font-size:12px;color:var(--muted);text-align:center}
 
   /* ---- SVG ---- */
   .arrow{filter:drop-shadow(0 2px 2px rgba(80,50,10,.10))}
@@ -181,7 +185,7 @@
   .char{transform-box:fill-box;transform-origin:center bottom}
   .char.talk{animation:hop .55s ease 2}
   @keyframes hop{0%{transform:translateY(0)}35%{transform:translateY(-7px) scale(1.07)}70%{transform:translateY(0) scale(.98)}100%{transform:translateY(0)}}
-  .dialog{display:flex;flex-direction:column;gap:8px;padding:12px 6px 2px;min-height:64px}
+  .dialog{display:flex;flex-direction:column;gap:8px;padding:12px 6px 2px;min-height:158px}
   .bubble{display:flex;gap:10px;align-items:flex-start;animation:bubbleIn .4s ease both}
   .bubble:nth-child(2){animation-delay:.55s} .bubble:nth-child(3){animation-delay:1.1s}
   @keyframes bubbleIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
@@ -200,8 +204,10 @@
   svg.warm #hint-warm{opacity:1} #hint-warm{opacity:0;transition:opacity .3s}
 
   @media (max-width:900px){
+    body{display:block;overflow:auto}
+    #app{width:auto;zoom:1 !important}
     main{grid-template-columns:1fr}
-    .figure{position:static}
+    .dialog{min-height:64px}
     header{padding:14px 14px 4px} main{padding:8px 14px 16px}
     h1{font-size:19px}
     .tab{padding:8px 12px;font-size:13px}
@@ -209,6 +215,7 @@
 </style>
 </head>
 <body>
+<div id="app">
 <header>
   <div class="brand">
     <div class="logo" aria-hidden="true">
@@ -402,17 +409,16 @@
     <!-- ===== TAB 3 ===== -->
     <div id="warmPanel" class="card warm" hidden>
       <h2>이산화 탄소가 늘어나면?</h2>
-      <p>이산화 탄소 농도를 올려 보고, 그림의 화살표 굵기와 숫자가 어떻게 변하는지 본 뒤 아래 흐름도를 완성해 보자.</p>
+      <p>농도를 올리며 화살표 굵기와 숫자의 변화를 보고, 아래 흐름도를 완성해 보자.</p>
       <div class="slider">
         <label><span>대기 중 이산화 탄소 농도</span><span id="co2val">현재</span></label>
         <input type="range" id="co2" min="0" max="100" value="0">
         <div class="ends"><span>현재</span><span>증가 →</span></div>
       </div>
       <div class="nums" id="nums"></div>
-      <p class="numnote">* 새 평형 상태의 값 (단순 모형). 어느 쪽이 늘고 주는지 경향을 보기 위한 숫자임.</p>
 
       <div class="chain" id="chain">
-        <div class="node given"><span class="n">→</span><span class="q">대기 중 이산화 탄소 농도 <b>증가</b></span></div>
+        <div class="given">대기 중 이산화 탄소 농도 <b>증가</b> ▼</div>
         <div class="node" data-key="a"><span class="n">1</span><span class="q">대기가 흡수하는 에너지양이 132보다</span>
           <span class="opts"><button data-v="증가">증가</button><button data-v="감소">감소</button></span><span class="ans"></span></div>
         <div class="node" data-key="b"><span class="n">2</span><span class="q">대기가 지표로 방출하는 에너지양이 94보다</span>
@@ -434,6 +440,7 @@
   </aside>
 </main>
 <footer>© 2026 제작: 김연경(earthssaem@gmail.com)</footer>
+</div>
 
 <script>
 (() => {
@@ -877,7 +884,7 @@
     const pass = Er - abs, A = 20 + abs, down = Er - 50, up = A - down;
     return {E:Er, abs, pass, A, down, up};   // 항상 지표 50+down=E, 대기 20+abs=down+up, 우주 30+pass+up=100
   }
-  const NUM_ROWS = [['대기가 흡수하는 지구 복사',132,'abs'],['대기 재복사 (→ 지표)',94,'down'],['지표 방출',144,'E'],['대기·구름 → 우주',58,'up'],['대기 통과 (→ 우주)',12,'pass']];
+  const NUM_ROWS = [['대기 흡수',132,'abs'],['재복사→지표',94,'down'],['지표 방출',144,'E'],['대기→우주',58,'up'],['통과→우주',12,'pass']];
   function applyCO2(){
     const s = co2.value/100;
     const lv = s<0.04 ? 0 : (s<0.5 ? 1 : 2);
@@ -891,7 +898,7 @@
     $('nums').innerHTML = NUM_ROWS.map(([nm, base, k]) => {
       const v = m[k], cls = v>base ? 'up' : (v<base ? 'dn' : '');
       return `<div><span>${nm}</span><b class="${cls}">${v!==base ? `<s>${base}</s>` : ''}${v}${mark(v,base)}</b></div>`;
-    }).join('') + `<div class="full"><span>지표 유입 = 유출 ✓${m.E>144 ? ' · 더 높은 온도에서 새 평형' : ''}</span><b>50 + ${m.down} = ${m.E}</b></div>`;
+    }).join('') + `<div class="full">지표 유입 50 + ${m.down} = ${m.E} = 유출 ✓${m.E>144 ? ' 더 높은 온도에서 새 평형' : ''}</div><div class="note">* 단순 모형으로 계산한 새 평형값 (경향 참고용)</div>`;
     $('ground-warm').setAttribute('opacity', (0.45*s).toFixed(2));
     const h = 7 + 53*s; $('thermo-fill').setAttribute('y', 67-h); $('thermo-fill').setAttribute('height', h);
     $('co2val').textContent = s<0.04 ? '현재' : (s<0.5 ? '조금 증가' : (s<0.9 ? '많이 증가' : '크게 증가'));
@@ -930,7 +937,24 @@
     });
   };
 
+  /* ---------- 한 화면 맞춤 (zoom) ---------- */
+  const app = $('app');
+  let lastZ = 0;
+  function fit(){
+    if (innerWidth < 900){ app.style.zoom = ''; return; }
+    app.style.zoom = 1;
+    const h = app.offsetHeight, w = 1440;
+    const z = Math.min(innerWidth / w, innerHeight / h, 1.6);
+    if (Math.abs(z - lastZ) > 0.004) lastZ = z;
+    app.style.zoom = lastZ;
+  }
+  addEventListener('resize', fit);
+  addEventListener('load', fit);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  new ResizeObserver(() => fit()).observe(app);
+
   render();
+  fit();
 })();
 </script>
 </body>
