@@ -79,42 +79,41 @@
 
   /* ---- check panel ---- */
   .chk{padding:18px 20px}
-  .chk h2{margin:0 0 6px;font-size:20px;font-weight:900}
+  .chk h2{margin:0 0 4px;font-size:20px;font-weight:900}
   .chk .intro{margin:0 0 12px;font-size:14px}
   .lsel{display:flex;gap:6px;background:#efe9df;padding:4px;border-radius:12px;margin-bottom:12px}
   .lsel button{flex:1;border:0;background:transparent;border-radius:9px;min-height:38px;font-size:14px;font-weight:800;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:6px}
   .lsel button.cur{background:#fff;color:var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.08)}
   .lsel button .ico{width:18px;height:18px;border-radius:50%;border:2px solid #d9d0c2;display:inline-grid;place-items:center;font-size:11px;color:#fff}
   .lsel button.ok .ico{background:var(--ok);border-color:var(--ok)} .lsel button.ok .ico::after{content:"✓"}
-  .q{margin-bottom:10px}
-  .q .qt{font-size:14px;font-weight:800;margin:0 0 6px}
-  .q .qt .tag{display:inline-block;padding:1px 8px;border-radius:999px;font-size:12px;margin-right:4px;vertical-align:1px}
-  .q .qt .tag.in{background:#e7f6ec;color:var(--ok)} .q .qt .tag.out{background:#fdecea;color:var(--bad)}
-  .picks{display:flex;flex-wrap:wrap;gap:6px}
-  .pick{border:1.5px solid #d9d0c2;background:#fff;border-radius:999px;padding:5px 11px;font-size:12.5px;font-weight:600;color:#444;min-height:32px;display:inline-flex;align-items:center;gap:5px}
-  .pick i{width:10px;height:10px;border-radius:50%;display:inline-block}
-  .pick.sol i{background:var(--sol)} .pick.ter i{background:var(--ter)}
-  .pick.sel{border-color:var(--ink);background:var(--ink);color:#fff}
-  .pick.sel i{outline:2px solid #fff;outline-offset:-1px}
-  .pick.right{border-color:var(--ok);background:var(--ok);color:#fff}
-  .pick.wrong{border-color:var(--bad);background:var(--bad);color:#fff;text-decoration:line-through}
-  .pick.miss{border-color:var(--sol-dk);border-style:dashed;background:#fff7e8;color:var(--sol-dk)}
-  .sums{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
-  .sums label{display:flex;align-items:center;gap:6px;font-size:14px;font-weight:700}
-  .sums input{width:84px;min-height:36px;border:1.5px solid #d9d0c2;border-radius:10px;font:inherit;font-size:16px;font-weight:800;text-align:center;padding:2px 6px}
-  .sums input.right{border-color:var(--ok);background:var(--ok-bg)} .sums input.wrong{border-color:var(--bad);background:var(--bad-bg)}
-  .yn{display:flex;gap:6px}
+  .qt{font-size:14px;font-weight:800;margin:0 0 8px}
+  .rows{display:flex;flex-direction:column;gap:6px}
+  .row{display:flex;align-items:center;gap:8px;padding:6px 8px 6px 10px;border:1px solid var(--line);border-radius:12px;background:#fbfaf7}
+  .row .nm{flex:1;font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:7px;min-width:0}
+  .row .nm i{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
+  .row.sol .nm i{background:var(--sol)} .row.ter .nm i{background:var(--ter)}
+  .row .opt{display:flex;gap:4px}
+  .row .opt button{border:1.5px solid #d9d0c2;background:#fff;border-radius:999px;padding:4px 10px;font-size:12.5px;font-weight:700;min-height:32px;color:#555}
+  .row .opt button.sel{border-color:var(--ink);background:var(--ink);color:#fff}
+  .row.right{border-color:var(--ok);background:var(--ok-bg)} .row.wrong{border-color:var(--bad);background:var(--bad-bg)}
+  .row.right .opt button.sel{background:var(--ok);border-color:var(--ok)} .row.wrong .opt button.sel{background:var(--bad);border-color:var(--bad)}
+  .tally{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+  .tally div{padding:8px 12px;border-radius:12px;font-size:13px;font-weight:600;color:#555}
+  .tally .in{background:#e7f6ec} .tally .out{background:#fdecea}
+  .tally b{display:block;font-size:18px;font-weight:900;color:var(--ink)}
+  .yn{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+  .yn .qt{margin:0;flex:1}
   .yn button{border:1.5px solid #d9d0c2;background:#fff;border-radius:999px;padding:6px 16px;font-size:14px;font-weight:700;min-height:36px}
   .yn button.sel{border-color:var(--ink);background:var(--ink);color:#fff}
   .yn button.right{border-color:var(--ok);background:var(--ok);color:#fff} .yn button.wrong{border-color:var(--bad);background:var(--bad);color:#fff}
-  .chk .actions{display:flex;gap:8px;margin-top:6px}
+  .chk .actions{display:flex;gap:8px;margin-top:12px}
   .chk .actions button{flex:1;border:0;border-radius:12px;min-height:44px;font-weight:700;font-size:15px}
   .chk .actions .go{background:var(--ink);color:#fff}
   .chk .actions .re{background:#efe9df}
   .chk .done{margin:0 0 12px;padding:12px 14px;background:var(--ok-bg);border-radius:12px;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--ok)}
   .chk .done[hidden]{display:none}
   .chk .done button{border:0;border-radius:10px;min-height:40px;font-weight:800;font-size:14px;background:var(--ink);color:#fff}
-  .verdict{margin:8px 0 0;padding:8px 12px;border-radius:10px;font-size:13.5px;font-weight:700;display:none}
+  .verdict{margin:10px 0 0;padding:8px 12px;border-radius:10px;font-size:13.5px;font-weight:700;display:none}
   .verdict.ok{display:block;background:var(--ok-bg);color:var(--ok)} .verdict.no{display:block;background:var(--bad-bg);color:var(--bad)}
 
   /* ---- warming panel ---- */
@@ -376,7 +375,7 @@
     <!-- ===== TAB 2: 층별 평형 확인 ===== -->
     <div id="checkPanel" class="card chk" hidden>
       <h2>층별 평형 확인하기</h2>
-      <p class="intro">지표·대기·우주 각각에서 <b>들어온 양 = 나간 양</b>이 되는지 직접 확인해 보자. 화살표를 고르면 그림에서 해당 화살표만 밝게 보입니다.</p>
+      <p class="intro">각 층에서 <b>들어온 양 = 나간 양</b>인지 직접 확인해 보자.</p>
       <div class="lsel" id="lsel">
         <button data-layer="sfc"><span class="ico"></span>지표</button>
         <button data-layer="atm"><span class="ico"></span>대기</button>
@@ -709,7 +708,7 @@
       $('ground-warm').setAttribute('opacity', 0);
       for (const id in nodes) nodes[id].g.classList.add('on');
       $('br-ref').classList.add('on'); $('br-earth').classList.add('on');
-      selectLayer(chkLayer, true);
+      selectLayer(chkLayer);
     } else if (t==='warm'){
       focusArrow(null);
       warmLevel = -1;
@@ -732,28 +731,32 @@
   const ARROW_NAME = {sun100:'태양 복사 100', ref25:'대기·구름 반사 25', ref5:'지표 반사 5', abs20:'대기가 흡수한 태양 복사 20', abs50:'지표가 흡수한 태양 복사 50',
                       emit132:'지표 방출 → 대기 흡수 132', emit12:'지표 방출 → 우주 통과 12', back94:'대기 재복사 → 지표 94', atm58:'대기·구름 방출 → 우주 58'};
   const ARROW_VAL  = {sun100:100, ref25:25, ref5:5, abs20:20, abs50:50, emit132:132, emit12:12, back94:94, atm58:58};
-  const ARROW_ORDER = ['sun100','ref25','ref5','abs20','abs50','emit132','emit12','back94','atm58'];
   const CHECK = {
-    sfc:  {who:'sfc', me:'지표', in:['abs50','back94'], out:['emit132','emit12'],
-           ask:[['sfc','내 차례! 나한테 들어오는 에너지와 나가는 에너지를 골라서, 들어온 만큼 나가는지 확인해 줘.']],
+    sfc:  {who:'sfc', me:'지표', rows:['abs50','ref5','back94','emit132','emit12'],
+           ans:{abs50:'in', ref5:'none', back94:'in', emit132:'out', emit12:'out'},
+           ask:[['sfc','내 차례! 화살표가 나한테 들어오는 건지, 나가는 건지 골라서 들어온 만큼 나가는지 확인해 줘.']],
            trap:{ref5:'지표 반사 5는 내가 흡수한 게 아니라 튕겨낸 거야. 내 계산에는 넣지 않아.'},
            win:[['sfc','맞아! 들어온 건 50 + 94 = 144, 나간 건 132 + 12 = 144. 들어온 만큼 내보내니까 내 온도는 일정해.'],['atm','다음은 나야, 대기!']]},
-    atm:  {who:'atm', me:'대기', in:['abs20','emit132'], out:['back94','atm58'],
+    atm:  {who:'atm', me:'대기', rows:['abs20','ref25','emit132','back94','atm58'],
+           ans:{abs20:'in', ref25:'none', emit132:'in', back94:'out', atm58:'out'},
            ask:[['atm','이번엔 나! 내가 흡수하는 에너지와 내가 내보내는 에너지를 골라 봐.']],
            trap:{ref25:'반사 25는 구름이 튕겨낸 거라 내가 흡수한 게 아니야. 계산에서 빼야 해.'},
            win:[['atm','정답! 들어온 건 20 + 132 = 152, 나간 건 94 + 58 = 152. 나도 평형이야.'],['sun','마지막으로 우주를 확인해 보자.']]},
-    space:{who:'sun', me:'우주', in:['ref25','ref5','emit12','atm58'], out:['sun100'],
-           ask:[['sun','마지막은 우주. 지구에서 우주로 나가는 에너지와, 우주에서 지구로 들어가는 에너지를 모두 찾아 봐.']],
+    space:{who:'sun', me:'우주', rows:['sun100','ref25','ref5','emit12','atm58'],
+           ans:{sun100:'out', ref25:'in', ref5:'in', emit12:'in', atm58:'in'},
+           ask:[['sun','마지막은 우주. 우주에서 지구로 나간 에너지와 지구에서 우주로 돌아온 에너지를 구분해 봐.']],
            trap:{},
            win:[['sun','완벽해! 우주로 돌아온 25 + 5 + 12 + 58 = 100, 내가 보낸 100과 똑같아.'],['sfc','지표·대기·우주 모두 들어온 양 = 나간 양. 이게 열수지 평형!']]},
   };
+  const OPT = [['in','유입'],['out','유출'],['none','해당 없음']];
   const chkState = {};
-  for (const L in CHECK) chkState[L] = {in:new Set(), out:new Set(), sumIn:'', sumOut:'', yn:null, done:false, checked:false};
+  const freshState = () => ({pick:{}, yn:null, done:false, checked:false});
+  for (const L in CHECK) chkState[L] = freshState();
   let chkLayer = 'sfc';
 
   function focusArrow(id){ for (const k in nodes) nodes[k].g.style.opacity = id ? (k===id ? '1' : '.08') : ''; }
 
-  function selectLayer(L, keepState){
+  function selectLayer(L){
     chkLayer = L;
     focusArrow(null);
     document.querySelectorAll('#lsel button').forEach(b => { b.classList.toggle('cur', b.dataset.layer===L); b.classList.toggle('ok', chkState[b.dataset.layer].done); });
@@ -763,79 +766,73 @@
     say(chkState[L].done ? c.win : c.ask);
   }
 
-  function pickHTML(kind, L){
-    const st = chkState[L];
-    return `<div class="picks" data-kind="${kind}">` + ARROW_ORDER.map(id =>
-      `<button class="pick ${ARROWS[id].c}${st[kind].has(id)?' sel':''}" data-id="${id}"><i></i>${ARROW_NAME[id]}</button>`).join('') + '</div>';
-  }
   function renderCheck(){
     const L = chkLayer, c = CHECK[L], st = chkState[L];
     $('chkBody').innerHTML = `
-      <div class="q"><p class="qt"><span class="tag in">유입</span>① ${c.me}로 <b>들어오는</b> 에너지를 모두 고르세요</p>${pickHTML('in', L)}</div>
-      <div class="q"><p class="qt"><span class="tag out">유출</span>② ${c.me}에서 <b>나가는</b> 에너지를 모두 고르세요</p>${pickHTML('out', L)}</div>
-      <div class="q"><p class="qt">③ 합계를 계산해 보세요</p>
-        <div class="sums">
-          <label>유입 = <input type="number" inputmode="numeric" id="sumIn" value="${st.sumIn}" placeholder="?"></label>
-          <label>유출 = <input type="number" inputmode="numeric" id="sumOut" value="${st.sumOut}" placeholder="?"></label>
-        </div></div>
-      <div class="q"><p class="qt">④ ${c.me}는 들어온 양 = 나간 양일까요?</p>
-        <div class="yn"><button data-yn="예"${st.yn==='예'?' class="sel"':''}>예, 평형이다</button><button data-yn="아니오"${st.yn==='아니오'?' class="sel"':''}>아니오</button></div></div>
+      <p class="qt">① 각 화살표가 ${c.me}에 <b>들어오는지</b>, ${c.me}에서 <b>나가는지</b> 고르세요</p>
+      <div class="rows">${c.rows.map(id => `
+        <div class="row ${ARROWS[id].c}" data-id="${id}"><span class="nm"><i></i>${ARROW_NAME[id]}</span>
+          <span class="opt">${OPT.map(([v,t]) => `<button data-v="${v}"${st.pick[id]===v?' class="sel"':''}>${t}</button>`).join('')}</span></div>`).join('')}
+      </div>
+      <div class="tally"><div class="in">유입 합계<b id="tIn"></b></div><div class="out">유출 합계<b id="tOut"></b></div></div>
+      <div class="yn"><p class="qt">② ${c.me}는 들어온 양 = 나간 양?</p>
+        <button data-yn="예"${st.yn==='예'?' class="sel"':''}>예, 평형</button><button data-yn="아니오"${st.yn==='아니오'?' class="sel"':''}>아니오</button></div>
       <p class="verdict" id="verdict"></p>`;
     const body = $('chkBody');
-    body.querySelectorAll('.pick').forEach(b => {
-      const kind = b.closest('.picks').dataset.kind, id = b.dataset.id;
-      b.onclick = () => { st[kind].has(id) ? st[kind].delete(id) : st[kind].add(id); b.classList.toggle('sel', st[kind].has(id)); clearMarks(); };
-      b.onmouseenter = () => focusArrow(id);
-      b.onmouseleave = () => focusArrow(null);
+    body.querySelectorAll('.row').forEach(r => {
+      const id = r.dataset.id;
+      r.onmouseenter = () => focusArrow(id);
+      r.onmouseleave = () => focusArrow(null);
+      r.querySelectorAll('.opt button').forEach(b => b.onclick = () => {
+        st.pick[id] = b.dataset.v;
+        r.querySelectorAll('.opt button').forEach(x => x.classList.toggle('sel', x===b));
+        clearMarks(); tally();
+      });
     });
-    $('sumIn').oninput  = e => { st.sumIn  = e.target.value; clearMarks(); };
-    $('sumOut').oninput = e => { st.sumOut = e.target.value; clearMarks(); };
     body.querySelectorAll('.yn button').forEach(b => b.onclick = () => { st.yn = b.dataset.yn; body.querySelectorAll('.yn button').forEach(x => x.classList.toggle('sel', x===b)); clearMarks(); });
+    tally();
     if (st.checked) markCheck();
+  }
+  function tally(){
+    const st = chkState[chkLayer], c = CHECK[chkLayer];
+    for (const [kind, el] of [['in','tIn'],['out','tOut']]){
+      const ids = c.rows.filter(id => st.pick[id]===kind);
+      const sum = ids.reduce((a,id)=>a+ARROW_VAL[id],0);
+      $(el).textContent = !ids.length ? '—' : (ids.length===1 ? String(sum) : ids.map(id => ARROW_VAL[id]).join(' + ') + ' = ' + sum);
+    }
   }
   function clearMarks(){
     const st = chkState[chkLayer]; if (!st.checked) return;
     st.checked = false;
-    document.querySelectorAll('#chkBody .pick').forEach(b => b.classList.remove('right','wrong','miss'));
-    document.querySelectorAll('#chkBody input, #chkBody .yn button').forEach(x => x.classList.remove('right','wrong'));
+    document.querySelectorAll('#chkBody .row').forEach(r => r.classList.remove('right','wrong'));
+    document.querySelectorAll('#chkBody .yn button').forEach(x => x.classList.remove('right','wrong'));
     $('verdict').className = 'verdict';
   }
   function markCheck(){
     const L = chkLayer, c = CHECK[L], st = chkState[L];
-    for (const kind of ['in','out']){
-      const ans = new Set(c[kind]);
-      document.querySelectorAll(`#chkBody .picks[data-kind="${kind}"] .pick`).forEach(b => {
-        const id = b.dataset.id, sel = st[kind].has(id);
-        b.classList.remove('right','wrong','miss');
-        if (sel && ans.has(id)) b.classList.add('right');
-        else if (sel) b.classList.add('wrong');
-        else if (ans.has(id)) b.classList.add('miss');
-      });
-    }
-    const sumIn = c.in.reduce((a,x)=>a+ARROW_VAL[x],0), sumOut = c.out.reduce((a,x)=>a+ARROW_VAL[x],0);
-    $('sumIn').className  = +st.sumIn===sumIn  ? 'right' : 'wrong';
-    $('sumOut').className = +st.sumOut===sumOut ? 'right' : 'wrong';
+    document.querySelectorAll('#chkBody .row').forEach(r => {
+      const id = r.dataset.id; r.classList.remove('right','wrong');
+      if (st.pick[id]) r.classList.add(st.pick[id]===c.ans[id] ? 'right' : 'wrong');
+    });
     document.querySelectorAll('#chkBody .yn button').forEach(b => { b.classList.remove('right','wrong'); if (b.dataset.yn===st.yn) b.classList.add(st.yn==='예'?'right':'wrong'); });
+    const sumIn = c.rows.filter(id=>c.ans[id]==='in').reduce((a,id)=>a+ARROW_VAL[id],0), sumOut = c.rows.filter(id=>c.ans[id]==='out').reduce((a,id)=>a+ARROW_VAL[id],0);
     const v = $('verdict');
     v.className = 'verdict ' + (st.done ? 'ok' : 'no');
-    v.textContent = st.done ? `✓ ${c.me}: 유입 ${sumIn} = 유출 ${sumOut} → 평형` : '아직 맞지 않는 곳이 있어요. 빨간색(잘못 고름)·점선(빠짐)을 확인해 보세요.';
+    v.textContent = st.done ? `✓ ${c.me}: 유입 ${sumIn} = 유출 ${sumOut} → 평형` : '아직 맞지 않는 곳이 있어요. 빨간 줄을 다시 살펴보세요.';
   }
   function judge(){
     const L = chkLayer, c = CHECK[L], st = chkState[L];
+    const KN = {in:'유입', out:'유출', none:'계산에 넣지 않는 것'};
     const msgs = []; let ok = true;
-    const KN = {in:'유입', out:'유출'};
-    for (const kind of ['in','out']){
-      const ans = new Set(c[kind]);
-      const wrong = [...st[kind]].filter(x => !ans.has(x)), miss = c[kind].filter(x => !st[kind].has(x));
-      if (wrong.length || miss.length) ok = false;
-      wrong.forEach(x => msgs.push(c.trap[x] || `${ARROW_NAME[x]} — 이건 ${c.me}의 ${KN[kind]}이 아니야.`));
-      if (miss.length) msgs.push(`${KN[kind]}에서 빠진 것: ${miss.map(n => ARROW_NAME[n]).join(', ')}.`);
-    }
-    const sumIn = c.in.reduce((a,x)=>a+ARROW_VAL[x],0), sumOut = c.out.reduce((a,x)=>a+ARROW_VAL[x],0);
-    if (st.sumIn==='' || st.sumOut==='' ) { ok = false; msgs.push('유입·유출 합계를 아직 적지 않았어.'); }
-    else if (+st.sumIn!==sumIn || +st.sumOut!==sumOut){ ok = false; msgs.push('합계가 달라. 고른 화살표의 숫자를 다시 더해 봐.'); }
-    if (!st.yn){ ok = false; msgs.push('④ 평형인지 아닌지도 골라 줘.'); }
-    else if (st.yn!=='예'){ ok = false; msgs.push('들어온 양과 나간 양이 같으면 평형이야. 다시 생각해 봐.'); }
+    const blank = c.rows.filter(id => !st.pick[id]);
+    if (blank.length){ ok = false; msgs.push(`아직 고르지 않은 화살표가 ${blank.length}개 있어.`); }
+    c.rows.forEach(id => {
+      if (!st.pick[id] || st.pick[id]===c.ans[id]) return;
+      ok = false;
+      msgs.push(c.trap[id] || `${ARROW_NAME[id]} — 이건 ${c.me}의 ${KN[c.ans[id]]}이야.`);
+    });
+    if (!st.yn){ ok = false; msgs.push('② 평형인지 아닌지도 골라 줘.'); }
+    else if (st.yn!=='예'){ ok = false; msgs.push('들어온 양과 나간 양이 같으면 평형이야. 합계를 다시 비교해 봐.'); }
     st.checked = true; st.done = ok;
     markCheck();
     document.querySelectorAll('#lsel button').forEach(b => b.classList.toggle('ok', chkState[b.dataset.layer].done));
@@ -850,7 +847,7 @@
   }
   document.querySelectorAll('#lsel button').forEach(b => b.onclick = () => selectLayer(b.dataset.layer));
   $('chkCheck').onclick = judge;
-  $('chkReset').onclick = () => { chkState[chkLayer] = {in:new Set(), out:new Set(), sumIn:'', sumOut:'', yn:null, done:false, checked:false}; $('chkDone').hidden = true; selectLayer(chkLayer); };
+  $('chkReset').onclick = () => { chkState[chkLayer] = freshState(); $('chkDone').hidden = true; selectLayer(chkLayer); };
   $('toWarm').onclick = () => setTab('warm');
 
   /* ---------- warming slider ---------- */
