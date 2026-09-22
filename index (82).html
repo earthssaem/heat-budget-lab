@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>지구 열수지 평형 따라가기</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#faf7f2; --card:#ffffff; --ink:#2b2b2b; --muted:#6b6b6b; --line:#e8e2d8;
+    --sol:#f5a623; --sol-dk:#d98600; --ter:#e4544f; --ter-dk:#b93a36;
+    --space:#eef0fb; --atm:#e0f0fb; --ground:#dfd4c0; --ground-dk:#c9bca4;
+    --ok:#2e9e5b; --ok-bg:#e7f6ec; --bad:#d6453d; --bad-bg:#fdecea;
+    --accent:#3b6fd1; --radius:16px; --shadow:0 4px 18px rgba(60,40,10,.07);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;line-height:1.55}
+  button{font-family:inherit;cursor:pointer}
+  header{max-width:1280px;margin:0 auto;padding:18px 20px 6px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .brand .logo{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,#ffe4b3,#ffc46b);display:grid;place-items:center;font-size:26px;box-shadow:var(--shadow)}
+  h1{font-size:22px;margin:0;font-weight:900;letter-spacing:-.3px}
+  .brand p{margin:2px 0 0;font-size:13px;color:var(--muted)}
+  .tabs{display:flex;gap:6px;background:#efe9df;padding:5px;border-radius:14px}
+  .tab{border:0;background:transparent;padding:9px 16px;border-radius:10px;font-weight:700;font-size:14px;color:var(--muted);min-height:42px}
+  .tab.active{background:#fff;color:var(--ink);box-shadow:0 2px 8px rgba(0,0,0,.08)}
+  main{max-width:1280px;margin:0 auto;padding:10px 20px 20px;display:grid;grid-template-columns:minmax(0,62fr) minmax(320px,38fr);gap:16px;align-items:start}
+  .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--line)}
+  .figure{padding:12px;position:sticky;top:10px}
+  .figure svg{width:100%;height:auto;display:block}
+  .legend{display:flex;gap:16px;flex-wrap:wrap;padding:8px 8px 0;font-size:12.5px;color:var(--muted)}
+  .legend i{display:inline-block;width:22px;height:9px;border-radius:5px;vertical-align:middle;margin-right:6px}
+  .legend .s{background:var(--sol)} .legend .t{background:var(--ter)}
+  .panel{display:flex;flex-direction:column;gap:14px}
+  .step{padding:18px 20px}
+  .stepno{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.5px}
+  .step h2{margin:4px 0 8px;font-size:20px;font-weight:900;letter-spacing:-.3px}
+  .step p{margin:0;font-size:15px}
+  .step .ask{margin-top:10px;padding:10px 12px;background:#fff7e8;border-left:4px solid var(--sol);border-radius:8px;font-size:14px;font-weight:500}
+  .step .ask:empty{display:none}
+  .step .check{margin-top:10px;display:inline-block;padding:4px 10px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-weight:700;font-size:13px}
+  .step .check:empty{display:none}
+  .controls{display:flex;align-items:center;gap:10px;margin-top:16px}
+  .controls .nav{flex:1;border:0;border-radius:12px;min-height:48px;font-size:16px;font-weight:700;background:var(--ink);color:#fff}
+  .controls .nav.prev{background:#efe9df;color:var(--ink);flex:0 0 auto;padding:0 18px}
+  .controls .nav:disabled{opacity:.35;cursor:default}
+  .dots{display:flex;gap:5px;justify-content:center;margin-top:12px;flex-wrap:wrap}
+  .dots b{width:22px;height:6px;border-radius:3px;background:#e4ddd0;cursor:pointer}
+  .dots b.done{background:#ffd08a} .dots b.cur{background:var(--sol-dk)}
+  .sub{display:flex;gap:8px;margin-top:10px}
+  .sub button{flex:1;border:1px solid var(--line);background:#fff;border-radius:10px;min-height:38px;font-size:13px;font-weight:500;color:var(--muted)}
+  .sub button:hover{border-color:#bbb;color:var(--ink)}
+
+  .ledger-card{padding:14px 16px 16px}
+  .ledger-card h3{margin:0 0 6px;font-size:15px;font-weight:900}
+  .ledger-card .hint{font-size:12px;color:var(--muted);margin:0 0 10px}
+  table.ledger{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;table-layout:fixed}
+  .ledger th,.ledger td{padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+  .ledger thead th{font-size:14px;font-weight:900;text-align:center;border-bottom:2px solid #d9d0c2;cursor:pointer;border-radius:8px 8px 0 0;user-select:none}
+  .ledger thead th[data-layer]:hover{background:#f6f1e8}
+  .ledger thead th.pin{background:#fff1d6}
+  .ledger tbody th{text-align:left;font-weight:700;color:var(--muted);width:44px;font-size:12.5px;white-space:nowrap}
+  .chip{display:block;padding:2px 0;color:#444;font-size:12px;line-height:1.35}
+  .chip b{color:var(--ink)}
+  .chip.new{animation:pop .5s ease}
+  .sum{margin-top:4px;font-weight:900;font-size:15px;border-top:1px dashed #d9d0c2;padding-top:3px}
+  .sum.empty{color:#bbb}
+  tr.bal td{text-align:center;font-weight:800;padding:9px 4px}
+  .bal .ok{background:var(--ok-bg);color:var(--ok);border-radius:8px;padding:5px 6px;display:block}
+  .bal .no{background:#f4f1eb;color:#8a8175;border-radius:8px;padding:5px 6px;display:block;font-weight:600;font-size:12px}
+  @keyframes pop{from{background:#fff1d6;transform:translateX(-4px)}to{background:transparent}}
+
+  /* ---- warming panel ---- */
+  .warm{padding:18px 20px}
+  .warm h2{margin:0 0 6px;font-size:20px;font-weight:900}
+  .warm p{margin:0 0 10px;font-size:14.5px}
+  .slider{margin:12px 0 4px}
+  .slider label{display:flex;justify-content:space-between;font-size:13px;font-weight:700;margin-bottom:6px}
+  .slider input{width:100%;accent-color:var(--ter)}
+  .slider .ends{display:flex;justify-content:space-between;font-size:12px;color:var(--muted)}
+  .chain{display:grid;grid-template-columns:1fr;gap:8px;margin-top:14px}
+  .node{border:1px solid var(--line);border-radius:14px;padding:10px 12px;background:#fbfaf7;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .node .n{width:24px;height:24px;border-radius:50%;background:#e9e2d5;display:grid;place-items:center;font-weight:900;font-size:13px;flex:0 0 auto}
+  .node .q{flex:1;font-size:14px;font-weight:500;min-width:150px}
+  .node .opts{display:flex;gap:6px}
+  .node .opts button{border:1.5px solid #d9d0c2;background:#fff;border-radius:999px;padding:6px 14px;font-size:14px;font-weight:700;min-height:38px}
+  .node .opts button.sel{border-color:var(--ink);background:var(--ink);color:#fff}
+  .node.right{border-color:var(--ok);background:var(--ok-bg)}
+  .node.wrong{border-color:var(--bad);background:var(--bad-bg)}
+  .node.given .n{background:#ffd08a}
+  .node .ans{font-size:12px;color:var(--ok);font-weight:700;width:100%}
+  .node.wrong .ans{color:var(--bad)}
+  .warm .actions{display:flex;gap:8px;margin-top:12px}
+  .warm .actions button{flex:1;border:0;border-radius:12px;min-height:44px;font-weight:700;font-size:15px}
+  .warm .actions .go{background:var(--ink);color:#fff}
+  .warm .actions .re{background:#efe9df}
+  details{margin-top:12px;border-top:1px dashed var(--line);padding-top:10px}
+  summary{cursor:pointer;font-weight:700;font-size:14px}
+  details p{margin-top:8px;font-size:14px}
+
+  footer{max-width:1280px;margin:0 auto;padding:6px 20px 24px;font-size:12px;color:var(--muted);text-align:center}
+
+  /* ---- SVG ---- */
+  .arrow{filter:drop-shadow(0 2px 2px rgba(80,50,10,.10))}
+  .arrow path{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .9s ease,opacity .3s,stroke-width .3s}
+  .arrow polygon,.arrow .lbl{opacity:0;transition:opacity .35s .75s}
+  .arrow.on path{stroke-dashoffset:0}
+  .arrow.on polygon,.arrow.on .lbl{opacity:1}
+  svg.instant .arrow path{transition:stroke-width .3s,opacity .3s}
+  svg.instant .arrow polygon,svg.instant .arrow .lbl{transition:opacity .2s}
+  .arrow polygon{stroke-linejoin:round;stroke-width:3}
+  .arrow.cont path{stroke-linecap:butt}
+  .arrow.sol path{stroke:url(#gSol)} .arrow.sol polygon{fill:#f6a63a;stroke:#f6a63a}
+  .arrow.ter path{stroke:url(#gTer)} .arrow.ter polygon{fill:#ea6a62;stroke:#ea6a62}
+  .arrow .lbl rect{fill:#fff;stroke:none;filter:drop-shadow(0 1px 2px rgba(60,40,10,.12))}
+  .arrow text{font-family:inherit;font-weight:900;font-size:17px;dominant-baseline:central}
+  .arrow.sol text{fill:#c9780f} .arrow.ter text{fill:#c8433d}
+  .arrow text.name{font-size:11.5px;font-weight:700;fill:#7a7267;dominant-baseline:auto}
+  .bracket{opacity:0;transition:opacity .4s}
+  .bracket.on{opacity:1}
+  .bracket path{fill:none;stroke:#a89e8f;stroke-width:1.5;stroke-linecap:round}
+  .bracket text{font-weight:800;font-size:13.5px;fill:#6b6257;paint-order:stroke;stroke:#fff;stroke-width:4px}
+  .band-label{font-size:15px;font-weight:900;fill:#6b6b6b}
+  .glabel{font-size:12.5px;font-weight:700;fill:#6b5f4c}
+  .cloudwrap{filter:url(#fCloud)}
+  .face circle{fill:#4a3f33;stroke:none} .face path{fill:none;stroke:#4a3f33;stroke-width:1.8;stroke-linecap:round}
+  .face .hl{fill:#fff} .face .cheek{fill:#f4a6a0;opacity:.55}
+  .char{transform-box:fill-box;transform-origin:center bottom}
+  .char.talk{animation:hop .55s ease 2}
+  @keyframes hop{0%{transform:translateY(0)}35%{transform:translateY(-7px) scale(1.07)}70%{transform:translateY(0) scale(.98)}100%{transform:translateY(0)}}
+  .dialog{display:flex;flex-direction:column;gap:8px;padding:12px 6px 2px;min-height:64px}
+  .bubble{display:flex;gap:10px;align-items:flex-start;animation:bubbleIn .4s ease both}
+  .bubble:nth-child(2){animation-delay:.55s} .bubble:nth-child(3){animation-delay:1.1s}
+  @keyframes bubbleIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .bubble .av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;box-shadow:0 2px 6px rgba(60,40,10,.12);border:2px solid #fff;overflow:hidden}
+  .bubble .av svg{width:32px;height:32px}
+  .av.sun{background:#fff1c2} .av.atm{background:#e3f1fb} .av.sfc{background:#efe3cf}
+  .bubble .txt{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;padding:7px 12px;font-size:14px;line-height:1.45;box-shadow:0 2px 8px rgba(60,40,10,.06);max-width:640px}
+  .bubble .txt::before{content:"";position:absolute;left:-7px;top:13px;width:12px;height:12px;background:#fff;border-left:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
+  .bubble .txt .nm{font-size:11px;font-weight:800;color:var(--muted);margin-right:6px}
+  .bubble.sun .txt{border-color:#f5d78a} .bubble.sun .txt::before{border-color:#f5d78a}
+  .bubble.atm .txt{border-color:#b9d9ef} .bubble.atm .txt::before{border-color:#b9d9ef}
+  .bubble.sfc .txt{border-color:#d9c39d} .bubble.sfc .txt::before{border-color:#d9c39d}
+  svg.hl-sfc .arrow:not(.L-sfc),svg.hl-atm .arrow:not(.L-atm),svg.hl-space .arrow:not(.L-space){opacity:.13}
+  svg.hl-sfc #band-sfc,svg.hl-atm #band-atm,svg.hl-space #band-space{filter:brightness(.94)}
+  #thermo{opacity:0;transition:opacity .3s} svg.warm #thermo{opacity:1}
+  svg.warm #hint-warm{opacity:1} #hint-warm{opacity:0;transition:opacity .3s}
+
+  @media (max-width:900px){
+    main{grid-template-columns:1fr}
+    .figure{position:static}
+    header{padding:14px 14px 4px} main{padding:8px 14px 16px}
+    h1{font-size:19px}
+    .tab{padding:8px 12px;font-size:13px}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">
+    <div class="logo">🌍</div>
+    <div>
+      <h1>지구 열수지 평형 따라가기</h1>
+      <p>태양 복사 100은 어디로 갈까? — 지표·대기·우주, 들어온 만큼 나가는지 계산해 보기</p>
+    </div>
+  </div>
+  <nav class="tabs">
+    <button class="tab active" data-tab="flow">1. 열수지 평형</button>
+    <button class="tab" data-tab="warm">2. 이산화 탄소가 늘어나면?</button>
+  </nav>
+</header>
+
+<main>
+  <section class="card figure">
+    <svg id="fig" viewBox="0 0 960 540" aria-label="지구 열수지 평형 그림">
+      <defs>
+        <linearGradient id="gSpace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9ecfa"/><stop offset="1" stop-color="#f1f3fc"/></linearGradient>
+        <linearGradient id="gAtm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3f1fb"/><stop offset="1" stop-color="#eef7fd"/></linearGradient>
+        <linearGradient id="gGround" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e2d8c6"/><stop offset="1" stop-color="#d3c6ad"/></linearGradient>
+        <filter id="fCloud" x="-20%" y="-30%" width="140%" height="170%"><feDropShadow dx="0" dy="2.5" stdDeviation="2.2" flood-color="#5f7fa6" flood-opacity=".28"/></filter>
+        <g id="cloudShape" fill="#fff"><circle cx="-32" cy="4" r="16"/><circle cx="-10" cy="-8" r="22"/><circle cx="16" cy="-4" r="20"/><circle cx="36" cy="6" r="14"/><rect x="-46" y="2" width="92" height="14" rx="7"/></g>
+        <linearGradient id="gSol" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="540"><stop offset="0" stop-color="#ffd166"/><stop offset="1" stop-color="#f5a03a"/></linearGradient>
+        <linearGradient id="gTer" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="540"><stop offset="0" stop-color="#ff9b90"/><stop offset="1" stop-color="#e65a55"/></linearGradient>
+      </defs>
+      <!-- bands -->
+      <rect id="band-space" x="0" y="0" width="960" height="122" fill="url(#gSpace)"/>
+      <rect id="band-atm" x="0" y="122" width="960" height="290" fill="url(#gAtm)"/>
+      <rect id="band-sfc" x="0" y="412" width="960" height="128" fill="url(#gGround)"/>
+      <rect id="ground-warm" x="0" y="412" width="960" height="128" fill="#f07a5a" opacity="0"/>
+      <line x1="0" y1="122" x2="960" y2="122" stroke="#c9d3e6" stroke-width="1" stroke-dasharray="6 5"/>
+      <line x1="0" y1="412" x2="960" y2="412" stroke="#b8a98c" stroke-width="2"/>
+      <text class="band-label" x="26" y="68">우주</text>
+      <text class="band-label" x="26" y="272">대기</text>
+      <text class="band-label" x="26" y="482">지표</text>
+
+      <!-- sun -->
+      <g transform="translate(420,46)"><g class="char" id="char-sun">
+        <circle r="15" fill="#ffd54a" stroke="#f5a623" stroke-width="2"/>
+        <g class="face"><circle cx="-5" cy="-3" r="2"/><circle cx="5" cy="-3" r="2"/><circle class="hl" cx="-4.2" cy="-4" r=".7"/><circle class="hl" cx="5.8" cy="-4" r=".7"/><circle class="cheek" cx="-9" cy="2" r="2.6"/><circle class="cheek" cx="9" cy="2" r="2.6"/><path d="M-5,3.5 Q0,8 5,3.5"/></g>
+        <g stroke="#f5a623" stroke-width="2.5" stroke-linecap="round">
+          <line x1="0" y1="-24" x2="0" y2="-19"/><line x1="0" y1="19" x2="0" y2="24"/>
+          <line x1="-24" y1="0" x2="-19" y2="0"/><line x1="19" y1="0" x2="24" y2="0"/>
+          <line x1="-17" y1="-17" x2="-13.5" y2="-13.5"/><line x1="13.5" y1="13.5" x2="17" y2="17"/>
+          <line x1="-17" y1="17" x2="-13.5" y2="13.5"/><line x1="13.5" y1="-13.5" x2="17" y2="-17"/>
+        </g>
+      </g></g>
+
+      <!-- clouds -->
+      <g class="cloudwrap" transform="translate(415,302) scale(.72)">
+        <use href="#cloudShape"/>
+        <text x="0" y="8" font-size="14" font-weight="700" fill="#7f93aa" text-anchor="middle">구름</text>
+      </g>
+      <g transform="translate(660,248) scale(1.05)"><g class="cloudwrap char" id="char-atm">
+        <use href="#cloudShape"/>
+        <g class="face"><circle cx="-9" cy="-3" r="2.5"/><circle cx="9" cy="-3" r="2.5"/><circle class="hl" cx="-8" cy="-4" r=".9"/><circle class="hl" cx="10" cy="-4" r=".9"/><circle class="cheek" cx="-18" cy="4" r="3.6"/><circle class="cheek" cx="18" cy="4" r="3.6"/><path d="M-6,3 Q0,8.5 6,3"/></g>
+        <text x="0" y="31" font-size="10.5" font-weight="700" fill="#7f93aa" text-anchor="middle">대기·구름</text>
+      </g></g>
+      <!-- ground character: the ground itself has a face -->
+      <g transform="translate(160,466) scale(1.35)"><g class="char" id="char-sfc">
+        <g class="face"><circle cx="-12" cy="-5" r="3.2"/><circle cx="12" cy="-5" r="3.2"/><circle class="hl" cx="-11" cy="-6.3" r="1.1"/><circle class="hl" cx="13" cy="-6.3" r="1.1"/><circle class="cheek" cx="-24" cy="3" r="4.5"/><circle class="cheek" cx="24" cy="3" r="4.5"/><path d="M-8,3 Q0,10 8,3"/></g>
+      </g></g>
+      <!-- ground labels -->
+      <text class="glabel" x="470" y="448" text-anchor="middle">지표 흡수</text>
+      <text class="glabel" x="620" y="448" text-anchor="middle">대기 복사 흡수</text>
+      <text class="glabel" x="765" y="448" text-anchor="middle">지표 방출</text>
+
+      <!-- arrows are generated by JS into this group -->
+      <g id="arrows"></g>
+
+      <!-- brackets -->
+      <g class="bracket" id="br-ref">
+        <path d="M205,34 L205,26 L345,26 L345,34"/>
+        <text x="275" y="19" text-anchor="middle">반사 30</text>
+      </g>
+      <g class="bracket" id="br-earth">
+        <path d="M688,34 L688,26 L845,26 L845,34"/>
+        <text x="766" y="19" text-anchor="middle">지구 복사 70</text>
+      </g>
+
+      <!-- thermometer (warming tab) -->
+      <g id="thermo" transform="translate(905,428)">
+        <rect x="-7" y="0" width="14" height="70" rx="7" fill="#fff" stroke="#8a8175" stroke-width="1.5"/>
+        <rect id="thermo-fill" x="-4" y="60" width="8" height="7" rx="3" fill="#e4544f"/>
+        <circle cx="0" cy="76" r="11" fill="#e4544f" stroke="#8a8175" stroke-width="1.5"/>
+        <text x="0" y="104" text-anchor="middle" font-size="12" font-weight="700" fill="#6b5f4c">지표 온도</text>
+      </g>
+      <text id="hint-warm" x="26" y="522" font-size="12" font-weight="700" fill="#7a4a3a">※ 굵어진 화살표 = 증가 (교과서 흐름도 기준, 정량적 비율은 아님)</text>
+    </svg>
+    <div class="dialog" id="dialog"></div>
+    <div class="legend">
+      <span><i class="s"></i>태양 복사 (가시광선 중심)</span>
+      <span><i class="t"></i>지구 복사 (적외선)</span>
+      <span>· 화살표 굵기 = 에너지양</span>
+    </div>
+  </section>
+
+  <aside class="panel">
+    <!-- ===== TAB 1 ===== -->
+    <div id="flowPanel">
+      <div class="card step">
+        <div class="stepno" id="stepNo">STEP 0 / 8</div>
+        <h2 id="stepTitle"></h2>
+        <p id="stepText"></p>
+        <div class="ask" id="stepAsk"></div>
+        <div class="check" id="stepCheck"></div>
+        <div class="controls">
+          <button class="nav prev" id="prev">◀ 이전</button>
+          <button class="nav next" id="next">다음 ▶</button>
+        </div>
+        <div class="dots" id="dots"></div>
+        <div class="sub">
+          <button id="btnReset">처음부터</button>
+          <button id="btnAll">전체 보기</button>
+        </div>
+      </div>
+
+      <div class="card ledger-card">
+        <h3>에너지 계산표 (들어온 양 = 나간 양?)</h3>
+        <p class="hint">열 이름(지표·대기·우주)을 누르면 그 층과 관련된 화살표만 남습니다.</p>
+        <table class="ledger">
+          <thead><tr><th></th><th data-layer="sfc">지표</th><th data-layer="atm">대기</th><th data-layer="space">우주</th></tr></thead>
+          <tbody>
+            <tr><th>유입</th><td id="in-sfc"></td><td id="in-atm"></td><td id="in-space"></td></tr>
+            <tr><th>유출</th><td id="out-sfc"></td><td id="out-atm"></td><td id="out-space"></td></tr>
+            <tr class="bal"><th>평형?</th><td id="bal-sfc"></td><td id="bal-atm"></td><td id="bal-space"></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ===== TAB 2 ===== -->
+    <div id="warmPanel" class="card warm" hidden>
+      <h2>이산화 탄소가 늘어나면?</h2>
+      <p>대기 중 이산화 탄소 농도를 올려 보고, 그림에서 어떤 화살표가 굵어지는지 관찰한 뒤 아래 흐름도를 완성해 보자.</p>
+      <div class="slider">
+        <label><span>대기 중 이산화 탄소 농도</span><span id="co2val">현재</span></label>
+        <input type="range" id="co2" min="0" max="100" value="0">
+        <div class="ends"><span>현재</span><span>증가 →</span></div>
+      </div>
+
+      <div class="chain" id="chain">
+        <div class="node given"><span class="n">→</span><span class="q">대기 중 이산화 탄소 농도 <b>증가</b></span></div>
+        <div class="node" data-key="a"><span class="n">1</span><span class="q">대기가 흡수하는 에너지양이 132보다</span>
+          <span class="opts"><button data-v="증가">증가</button><button data-v="감소">감소</button></span><span class="ans"></span></div>
+        <div class="node" data-key="b"><span class="n">2</span><span class="q">대기가 지표로 방출하는 에너지양이 94보다</span>
+          <span class="opts"><button data-v="증가">증가</button><button data-v="감소">감소</button></span><span class="ans"></span></div>
+        <div class="node" data-key="c"><span class="n">3</span><span class="q">지표가 다시 흡수하는 에너지양이 94보다</span>
+          <span class="opts"><button data-v="증가">증가</button><button data-v="감소">감소</button></span><span class="ans"></span></div>
+        <div class="node" data-key="d"><span class="n">4</span><span class="q">지표 온도</span>
+          <span class="opts"><button data-v="상승">상승</button><button data-v="하강">하강</button></span><span class="ans"></span></div>
+      </div>
+      <div class="actions">
+        <button class="re" id="quizReset">다시</button>
+        <button class="go" id="quizCheck">정답 확인</button>
+      </div>
+      <details>
+        <summary>해설 보기</summary>
+        <p>이산화 탄소는 지표가 방출하는 적외선(지구 복사)을 잘 흡수하는 온실 기체임. 농도가 늘면 대기가 흡수하는 지구 복사(132)가 늘고, 데워진 대기가 지표로 되돌려 보내는 재복사(94)도 늘어남. 지표는 태양 복사 50에 더해 더 많은 재복사를 받으므로 유입 &gt; 유출이 되어 지표 온도가 상승함. 온도가 올라가면 지표 방출도 늘어나 결국 <b>더 높은 온도에서</b> 새로운 열수지 평형에 도달함.</p>
+      </details>
+    </div>
+  </aside>
+</main>
+<footer>© 2026 제작: 김연경(earthssaem@gmail.com)</footer>
+
+<script>
+(() => {
+  /* ---------- arrow definitions (textbook numbers: 대기과학 2016) ---------- */
+  const ARROWS = {
+    sun100: {pts:[[470,36],[470,124]], w:40, c:'sol', layers:['space'],
+             label:{x:506,y:74,num:'100',name:'태양 복사',anchor:'start'}},
+    ref25:  {pts:[[470,196],[415,300],[335,52]], w:12, c:'sol', layers:['space','atm'],
+             label:{x:362,y:185,num:'25',anchor:'end'}},
+    ref5:   {pts:[[430,406],[205,52]], w:6, c:'sol', cont:true, layers:['space','sfc'],
+             label:{x:372,y:336,num:'5',anchor:'end'}},
+    abs20:  {pts:[[470,236],[600,236]], w:9, c:'sol', cont:true, layers:['atm'],
+             label:{x:535,y:224,num:'20',anchor:'middle'}},
+    abs50:  {pts:[[470,124],[470,414]], w:20, c:'sol', cont:true, layers:['sfc'],
+             label:{x:496,y:388,num:'50',anchor:'start'}},
+    emit132:{pts:[[700,414],[700,272]], w:30, c:'ter', cont:true, layers:['sfc','atm'],
+             label:{x:722,y:352,num:'132',name:'대기 흡수',anchor:'start',follow:{cx:700,side:1}}},
+    emit12: {pts:[[830,414],[830,46]], w:8, c:'ter', cont:true, layers:['sfc','space'],
+             label:{x:848,y:236,num:'12',name:'대기 통과',anchor:'start'}},
+    back94: {pts:[[620,268],[620,414]], w:24, c:'ter', cont:true, layers:['atm','sfc'],
+             label:{x:600,y:352,num:'94',anchor:'end',follow:{cx:620,side:-1}}},
+    atm58:  {pts:[[700,228],[700,46]], w:18, c:'ter', cont:true, layers:['atm','space'],
+             label:{x:722,y:142,num:'58',name:'대기·구름 방출',anchor:'start'}},
+  };
+
+  const LAYER_NAME = {sfc:'지표', atm:'대기', space:'우주'};
+
+  /* ---------- steps ---------- */
+  const STEPS = [
+    {title:'열수지 평형이란?',
+     text:'지구가 흡수하는 태양 복사 에너지양과 지구가 방출하는 지구 복사 에너지양이 같아서 지구의 평균 온도가 일정하게 유지되는 상태. 태양에서 오는 에너지를 100이라 두고, 이 100이 어디로 가는지 하나씩 따라가 보자.',
+     ask:'Q. 지구는 계속 햇빛을 받는데 왜 끝없이 뜨거워지지 않을까?', show:[], ledger:[]},
+    {title:'① 태양 복사 100 도착',
+     text:'태양 복사 에너지 100이 대기 꼭대기에 도착함. 우주 입장에서는 100을 지구 쪽으로 내보낸 것이므로, 우주 칸의 유출에 100을 적음.',
+     show:['sun100'], ledger:[{col:'space',kind:'out',label:'태양 복사',v:100}]},
+    {title:'② 반사 30 — 지구를 데우지 못하는 몫',
+     text:'100 중 25는 구름과 대기에서, 5는 지표(눈·얼음·바다 표면)에서 반사되어 그대로 우주로 돌아감. 반사된 에너지는 지구를 데우지 못함. 우주 칸의 유입에 30.',
+     ask:'Q. 지구가 실제로 흡수하는 태양 복사는 얼마일까? (100 − 30)',
+     show:['ref25','ref5','br-ref'], ledger:[{col:'space',kind:'in',label:'반사(25+5)',v:30}]},
+    {title:'③ 대기·구름 흡수 20',
+     text:'남은 70 중 20은 대기와 구름이 흡수함. 대기 칸의 유입에 20.',
+     show:['abs20'], ledger:[{col:'atm',kind:'in',label:'태양 복사 흡수',v:20}]},
+    {title:'④ 지표 흡수 50',
+     text:'나머지 50은 지표까지 도달해 흡수됨. 지표 칸의 유입에 50. 여기까지 태양 복사 100의 행방: 반사 30 + 대기 흡수 20 + 지표 흡수 50 = 100.',
+     check:'✓ 30 + 20 + 50 = 100', show:['abs50'], ledger:[{col:'sfc',kind:'in',label:'태양 복사 흡수',v:50}]},
+    {title:'⑤ 지표 방출 144 — 왜 받은 것보다 많을까?',
+     text:'데워진 지표는 적외선(지구 복사)을 방출함. 그중 132는 대기(온실 기체·구름)가 흡수하고, 12는 대기를 그냥 통과해 우주로 나감. 지표 유출은 144인데 유입은 아직 50뿐. 들어온 양과 나간 양이 맞지 않음!',
+     ask:'Q. 지표가 50만 받고 144를 내보낸다면 점점 식어야 한다. 그런데 왜 식지 않을까? 무엇이 빠졌을까?',
+     show:['emit132','emit12'],
+     ledger:[{col:'sfc',kind:'out',label:'대기로 방출',v:132},{col:'sfc',kind:'out',label:'우주로 방출',v:12},
+             {col:'atm',kind:'in',label:'지구 복사 흡수',v:132},{col:'space',kind:'in',label:'지표면 방출',v:12}]},
+    {title:'⑥ 대기 재복사 94 — 온실 효과',
+     text:'대기도 데워져 적외선을 방출하는데, 그중 94가 아래쪽 지표로 되돌아옴. 이 되돌아오는 94가 바로 온실 효과. 지표 유입 = 50 + 94 = 144 = 유출 144. 지표는 들어온 양과 나간 양이 같아짐!',
+     check:'✓ 지표: 유입 144 = 유출 144', show:['back94'],
+     ledger:[{col:'sfc',kind:'in',label:'대기 재복사',v:94},{col:'atm',kind:'out',label:'지표로 재복사',v:94}]},
+    {title:'⑦ 대기 → 우주 58',
+     text:'대기가 방출하는 나머지 58은 위쪽 우주로 나감. 대기 유입 = 20 + 132 = 152, 유출 = 94 + 58 = 152. 대기도 들어온 양과 나간 양이 같아짐!',
+     check:'✓ 대기: 유입 152 = 유출 152', show:['atm58'],
+     ledger:[{col:'atm',kind:'out',label:'우주로 방출',v:58},{col:'space',kind:'in',label:'대기·구름 방출',v:58}]},
+    {title:'⑧ 우주 확인 — 세 곳 모두 들어온 양 = 나간 양',
+     text:'우주가 받은 것: 반사 30 + 지표면 방출 12 + 대기 방출 58 = 100 = 태양 복사 100. 지구가 우주로 내보내는 지구 복사는 12 + 58 = 70으로, 지구가 실제로 흡수한 태양 복사 70과 같음. 지표·대기·우주 세 곳 모두 들어온 양과 나간 양이 같으므로 지구는 열수지 평형 상태.',
+     ask:'정리: 들어온 만큼 내보낸다 → 온도 일정. 그렇다면 대기가 지구 복사를 더 많이 흡수하게 되면?',
+     check:'✓ 우주: 유입 100 = 유출 100  ·  지구 복사 70 = 흡수한 태양 복사 70',
+     show:['br-earth'], ledger:[]},
+  ];
+
+  /* ---------- character dialogue ---------- */
+  const FACE = '<g class="face"><circle cx="-5" cy="-2" r="2"/><circle cx="5" cy="-2" r="2"/><circle class="hl" cx="-4.2" cy="-2.8" r=".7"/><circle class="hl" cx="5.8" cy="-2.8" r=".7"/><circle class="cheek" cx="-9" cy="2.5" r="2.4"/><circle class="cheek" cx="9" cy="2.5" r="2.4"/><path d="M-5,4 Q0,8.5 5,4"/></g>';
+  const CH = {
+    sun:  {nm:'태양', ic:`<svg viewBox="-20 -20 40 40"><circle r="13" fill="#ffd54a" stroke="#f5a623" stroke-width="2"/><g stroke="#f5a623" stroke-width="2.2" stroke-linecap="round"><line x1="0" y1="-19" x2="0" y2="-16"/><line x1="0" y1="16" x2="0" y2="19"/><line x1="-19" y1="0" x2="-16" y2="0"/><line x1="16" y1="0" x2="19" y2="0"/><line x1="-13.5" y1="-13.5" x2="-11.3" y2="-11.3"/><line x1="11.3" y1="11.3" x2="13.5" y2="13.5"/><line x1="-13.5" y1="13.5" x2="-11.3" y2="11.3"/><line x1="11.3" y1="-11.3" x2="13.5" y2="-13.5"/></g>${FACE}</svg>`},
+    atm:  {nm:'대기', ic:`<svg viewBox="-20 -20 40 40"><g fill="#fff" filter="drop-shadow(0 1.5px 1.5px rgba(95,127,166,.35))"><circle cx="-10" cy="3" r="8"/><circle cx="-2" cy="-4" r="10"/><circle cx="8" cy="0" r="9"/><rect x="-16" y="4" width="32" height="8" rx="4"/></g>${FACE}</svg>`},
+    sfc:  {nm:'지표', ic:`<svg viewBox="-20 -20 40 40"><circle r="19" fill="#dccbb0"/>${FACE}</svg>`},
+  };
+  const TALK = [
+    [['sun','지구야, 너 매일 내 빛을 받는데 왜 계속 뜨거워지지 않아? 오늘 그 비밀을 숫자로 밝혀 보자.'],
+     ['sfc','좋아! 태양이 보내는 에너지를 100이라고 하자.']],
+    [['sun','100 발사! 지구 대기 꼭대기에 도착~ 우주에서 지구로 나간 양 100, 기록!']],
+    [['atm','구름이 25 튕겨냈어. 반짝!'],
+     ['sfc','나도 눈이랑 얼음으로 5 튕겨냈지.'],
+     ['sun','우주로 돌아온 30 접수. 얘네는 지구를 데우지 못했네.']],
+    [['atm','20은 내가 꿀꺽. 나도 조금 따뜻해졌어.']],
+    [['sfc','50 받았다! 따뜻해~ 30 + 20 + 50 = 100, 태양이 보낸 거 다 찾았네.']],
+    [['sfc','잠깐, 나 지금 144나 내보내고 있는데?! 50 받고 144 내면 난 얼어붙어야 하잖아…'],
+     ['atm','132는 내가 받았어. 12는 날 그냥 통과해서 우주로 갔고.']],
+    [['atm','미안, 나도 따뜻해져서 아래로 94 돌려보낼게.'],
+     ['sfc','50 + 94 = 144! 받은 만큼 내보내고 있었구나. 이게 온실 효과였어.']],
+    [['atm','나머지 58은 위로 보낼게. 나도 152 받고 152 냈다!']],
+    [['sun','최종 확인. 우주로 돌아온 30 + 12 + 58 = 100, 내가 보낸 100과 똑같아. 열수지 평형 인정!'],
+     ['atm','그런데 내가 이산화 탄소를 더 먹으면 어떻게 될까?']],
+  ];
+  const WARM_TALK = [
+    [['atm','지금은 들어온 만큼 내보내고 있어. 평형 상태!'],['sfc','슬라이더를 올려서 이산화 탄소를 늘려 봐.']],
+    [['atm','이산화 탄소가 늘었더니 지구 복사가 자꾸 걸려… 132보다 많이 흡수 중!'],['sfc','어? 대기가 돌려주는 게 94보다 많아졌어. 조금 더워지는데?']],
+    [['atm','너무 많이 먹었더니 나도 뜨거워. 아래로 더 많이 돌려보낼 수밖에 없어!'],['sfc','받는 게 내보내는 것보다 많아… 온도 올라간다! 더 뜨거워져야 다시 균형이 맞겠어.']],
+  ];
+  const dialog = document.getElementById('dialog');
+  function say(lines){
+    dialog.innerHTML = '';
+    document.querySelectorAll('.char').forEach(c => c.classList.remove('talk'));
+    lines.forEach(([who, text], i) => {
+      const b = document.createElement('div'); b.className = 'bubble '+who;
+      b.innerHTML = `<div class="av ${who}">${CH[who].ic}</div><div class="txt"><span class="nm">${CH[who].nm}</span>${text}</div>`;
+      dialog.append(b);
+      setTimeout(() => { const c = document.getElementById('char-'+who); if (c){ c.classList.remove('talk'); void c.getBoundingClientRect(); c.classList.add('talk'); } }, i*550);
+    });
+  }
+
+  /* ---------- build arrows ---------- */
+  const svg = document.getElementById('fig');
+  const gArrows = document.getElementById('arrows');
+  const NS = 'http://www.w3.org/2000/svg';
+  const el = (t, a={}) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
+  const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+  const nodes = {};
+
+  function geometry(cfg, w){
+    const pts = cfg.pts.map(p => p.slice());
+    const n = pts.length, p1 = pts[n-2], p2 = pts[n-1];
+    const dx = p2[0]-p1[0], dy = p2[1]-p1[1], L = Math.hypot(dx,dy);
+    const ux = dx/L, uy = dy/L;
+    const hl = clamp(w*1.05, 10, 24), hw = clamp(w*1.75, 14, 44);
+    const bx = p2[0]-ux*hl, by = p2[1]-uy*hl;           // base of head
+    pts[n-1] = [bx, by];
+    const nx = -uy, ny = ux;
+    const head = [[p2[0],p2[1]],[bx+nx*hw/2, by+ny*hw/2],[bx-nx*hw/2, by-ny*hw/2]];
+    const d = pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+    return {d, head: head.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')};
+  }
+
+  for (const id in ARROWS){
+    const cfg = ARROWS[id];
+    const g = el('g', {class:'arrow '+cfg.c+(cfg.cont?' cont':'')+' '+cfg.layers.map(l=>'L-'+l).join(' '), id:'ar-'+id});
+    const path = el('path', {'pathLength':'1', 'stroke-width':cfg.w});
+    const head = el('polygon');
+    g.append(path, head);
+    const lb = cfg.label;
+    const lblG = el('g', {class:'lbl'});
+    const rect = el('rect', {rx:9, ry:9});
+    const tnum = el('text', {x:lb.x, y:lb.y-6, 'text-anchor':lb.anchor||'middle'}); tnum.textContent = lb.num;
+    lblG.append(rect, tnum);
+    let tname = null;
+    if (lb.name){ tname = el('text', {class:'name', x:lb.x, y:lb.y+24, 'text-anchor':lb.anchor||'middle'}); tname.textContent = lb.name; lblG.append(tname); }
+    g.append(lblG);
+    gArrows.append(g);
+    nodes[id] = {g, path, head, tnum, tname, rect};
+    setWidth(id, cfg.w);
+  }
+  function fitPill(n){
+    try{
+      const b = n.tnum.getBBox();
+      n.rect.setAttribute('x', b.x-9); n.rect.setAttribute('y', b.y-3);
+      n.rect.setAttribute('width', b.width+18); n.rect.setAttribute('height', b.height+6);
+    }catch(e){}
+  }
+  const refit = () => { for (const id in nodes) fitPill(nodes[id]); };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(refit);
+  window.addEventListener('load', refit);
+  function setWidth(id, w){
+    const cfg = ARROWS[id], n = nodes[id], geo = geometry(cfg, w);
+    n.path.setAttribute('d', geo.d);
+    n.path.setAttribute('stroke-width', w);
+    n.head.setAttribute('points', geo.head);
+    const f = cfg.label.follow;
+    if (f){ const x = f.cx + f.side*(w/2 + 12); n.tnum.setAttribute('x', x); if (n.tname) n.tname.setAttribute('x', x); }
+    fitPill(n);
+  }
+
+  /* ---------- state: step navigation ---------- */
+  let cur = 0;
+  const $ = id => document.getElementById(id);
+  const dots = $('dots');
+  STEPS.forEach((_, i) => { const b = document.createElement('b'); b.title = 'STEP '+i; b.onclick = () => go(i); dots.append(b); });
+
+  function shownUpTo(i){ const s = new Set(); for (let k=0;k<=i;k++) STEPS[k].show.forEach(x=>s.add(x)); return s; }
+
+  function render(){
+    const s = STEPS[cur];
+    $('stepNo').textContent = `STEP ${cur} / ${STEPS.length-1}`;
+    $('stepTitle').textContent = s.title;
+    $('stepText').textContent = s.text;
+    $('stepAsk').textContent = s.ask || '';
+    $('stepCheck').textContent = s.check || '';
+    $('prev').disabled = cur===0;
+    $('next').textContent = cur===STEPS.length-1 ? '완료 ✓' : '다음 ▶';
+    $('next').disabled = cur===STEPS.length-1;
+    [...dots.children].forEach((b,i)=>{ b.className = i<cur?'done':(i===cur?'cur':''); });
+
+    const vis = shownUpTo(cur);
+    for (const id in nodes) nodes[id].g.classList.toggle('on', vis.has(id));
+    $('br-ref').classList.toggle('on', vis.has('br-ref'));
+    $('br-earth').classList.toggle('on', vis.has('br-earth'));
+    renderLedger();
+    say(TALK[cur]);
+  }
+
+  function renderLedger(){
+    const acc = {sfc:{in:[],out:[]}, atm:{in:[],out:[]}, space:{in:[],out:[]}};
+    const fresh = new Set(STEPS[cur].ledger);
+    for (let k=0;k<=cur;k++) STEPS[k].ledger.forEach(e => acc[e.col][e.kind].push(e));
+    for (const col in acc){
+      for (const kind of ['in','out']){
+        const td = $(`${kind}-${col}`); td.innerHTML = '';
+        const items = acc[col][kind];
+        items.forEach(e => { const c = document.createElement('span'); c.className = 'chip'+(fresh.has(e)?' new':''); c.innerHTML = `${e.label} <b>${e.v}</b>`; td.append(c); });
+        const sum = document.createElement('div');
+        const total = items.reduce((a,e)=>a+e.v,0);
+        sum.className = 'sum'+(items.length?'':' empty');
+        sum.textContent = items.length ? '= '+total : '—';
+        td.append(sum);
+      }
+      const i = acc[col].in.reduce((a,e)=>a+e.v,0), o = acc[col].out.reduce((a,e)=>a+e.v,0);
+      const b = $(`bal-${col}`);
+      if (i>0 && o>0 && i===o) b.innerHTML = `<span class="ok">✓ 평형 (${i})</span>`;
+      else if (i>0 || o>0) b.innerHTML = `<span class="no">${i} ≠ ${o}</span>`;
+      else b.innerHTML = `<span class="no">—</span>`;
+    }
+  }
+
+  function go(i){ cur = clamp(i, 0, STEPS.length-1); render(); }
+  $('prev').onclick = () => go(cur-1);
+  $('next').onclick = () => go(cur+1);
+  $('btnReset').onclick = () => go(0);
+  $('btnAll').onclick = () => go(STEPS.length-1);
+  document.addEventListener('keydown', e => {
+    if (document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
+    if (activeTab!=='flow') return;
+    if (e.key==='ArrowRight' || e.key===' ' || e.key==='Enter'){ e.preventDefault(); go(cur+1); }
+    if (e.key==='ArrowLeft'){ e.preventDefault(); go(cur-1); }
+    if (e.key==='Home'){ go(0); }
+  });
+
+  /* ---------- layer highlight ---------- */
+  let pinned = null;
+  document.querySelectorAll('.ledger thead th[data-layer]').forEach(th => {
+    const L = th.dataset.layer;
+    th.addEventListener('mouseenter', () => { if(!pinned) svg.classList.add('hl-'+L); });
+    th.addEventListener('mouseleave', () => { if(!pinned) svg.classList.remove('hl-'+L); });
+    th.addEventListener('click', () => {
+      svg.classList.remove('hl-sfc','hl-atm','hl-space');
+      document.querySelectorAll('.ledger thead th').forEach(t=>t.classList.remove('pin'));
+      if (pinned===L){ pinned = null; return; }
+      pinned = L; th.classList.add('pin'); svg.classList.add('hl-'+L);
+    });
+  });
+
+  /* ---------- tabs ---------- */
+  let activeTab = 'flow';
+  document.querySelectorAll('.tab').forEach(b => b.onclick = () => setTab(b.dataset.tab));
+  function setTab(t){
+    activeTab = t;
+    document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab===t));
+    $('flowPanel').hidden = t!=='flow';
+    $('warmPanel').hidden = t!=='warm';
+    svg.classList.remove('hl-sfc','hl-atm','hl-space'); pinned=null;
+    document.querySelectorAll('.ledger thead th').forEach(x=>x.classList.remove('pin'));
+    if (t==='warm'){
+      warmLevel = -1;
+      svg.classList.add('instant','warm');
+      for (const id in nodes) nodes[id].g.classList.add('on');
+      $('br-ref').classList.add('on'); $('br-earth').classList.add('on');
+      applyCO2();
+    } else {
+      svg.classList.remove('warm');
+      for (const id in ARROWS) { setWidth(id, ARROWS[id].w); }
+      nodes.emit132.tnum.textContent='132'; nodes.back94.tnum.textContent='94';
+      $('ground-warm').setAttribute('opacity', 0);
+      // keep 'instant' for one frame so arrows don't re-animate, then restore
+      requestAnimationFrame(()=>{ render(); requestAnimationFrame(()=>svg.classList.remove('instant')); });
+    }
+  }
+
+  /* ---------- warming slider ---------- */
+  const co2 = $('co2');
+  let warmLevel = -1;
+  function applyCO2(){
+    const s = co2.value/100;
+    const lv = s<0.04 ? 0 : (s<0.5 ? 1 : 2);
+    if (lv!==warmLevel){ warmLevel = lv; say(WARM_TALK[lv]); }
+    setWidth('emit132', 30*(1+0.7*s));
+    setWidth('back94',  24*(1+0.7*s));
+    nodes.emit132.tnum.textContent = s>0.04 ? '132 ↑' : '132';
+    nodes.back94.tnum.textContent  = s>0.04 ? '94 ↑'  : '94';
+    $('ground-warm').setAttribute('opacity', (0.45*s).toFixed(2));
+    const h = 7 + 53*s; $('thermo-fill').setAttribute('y', 67-h); $('thermo-fill').setAttribute('height', h);
+    $('co2val').textContent = s<0.04 ? '현재' : (s<0.5 ? '조금 증가' : (s<0.9 ? '많이 증가' : '크게 증가'));
+  }
+  co2.addEventListener('input', applyCO2);
+
+  /* ---------- chain quiz ---------- */
+  const ANSWER = {a:'증가', b:'증가', c:'증가', d:'상승'};
+  const picks = {};
+  document.querySelectorAll('.node[data-key] .opts button').forEach(btn => {
+    btn.onclick = () => {
+      const node = btn.closest('.node'), key = node.dataset.key;
+      picks[key] = btn.dataset.v;
+      node.querySelectorAll('.opts button').forEach(b => b.classList.toggle('sel', b===btn));
+      node.classList.remove('right','wrong'); node.querySelector('.ans').textContent='';
+    };
+  });
+  $('quizCheck').onclick = () => {
+    let okCount = 0, picked = 0;
+    document.querySelectorAll('.node[data-key]').forEach(node => {
+      const k = node.dataset.key, ans = node.querySelector('.ans');
+      if (!picks[k]) { node.classList.remove('right','wrong'); ans.textContent='선택하지 않았음'; return; }
+      const ok = picks[k]===ANSWER[k]; picked++; if (ok) okCount++;
+      node.classList.toggle('right', ok); node.classList.toggle('wrong', !ok);
+      ans.textContent = ok ? '정답' : `정답: ${ANSWER[k]}`;
+    });
+    if (picked<4) say([['sun','아직 고르지 않은 칸이 있어. 다 고르고 확인해 줘.']]);
+    else if (okCount===4) say([['sun','4문제 모두 정답! 대기가 더 많이 흡수 → 더 많이 돌려줌 → 지표가 더 받음 → 온도 상승. 완벽해.'],['sfc','그래서 온도가 올라가면 나도 더 많이 내보내고, 결국 더 높은 온도에서 다시 평형이 돼.']]);
+    else say([['sun',`${okCount}/4 정답. 틀린 칸의 정답을 보고, 그림에서 굵어진 화살표를 다시 따라가 봐.`]]);
+  };
+  $('quizReset').onclick = () => {
+    for (const k in picks) delete picks[k];
+    document.querySelectorAll('.node[data-key]').forEach(node => {
+      node.classList.remove('right','wrong'); node.querySelector('.ans').textContent='';
+      node.querySelectorAll('.opts button').forEach(b => b.classList.remove('sel'));
+    });
+  };
+
+  render();
+})();
+</script>
+</body>
+</html>
