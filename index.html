@@ -577,7 +577,7 @@
       {who:'sun', t:'그럼 지구에 도착하는 내 에너지를 100으로 놓고 따라가 보자. 동시에 일어나는 일을 하나씩 살펴보는 거야.'},
     ]},
     {title:'태양 복사 100 도착', ledger:[{col:'space',kind:'out',label:'태양 복사',v:100}], lines:[
-      {who:'sun', t:'태양 복사 100, 지구 도착! 우주에서 지구로 나왔으니 ‘우주 유출’에 100을 적어 줘.',
+      {who:'sun', t:'태양 복사 100, 지구 도착! 우주에서 지구로 나왔으니 ‘우주 유출’은 100이야.',
        show:['sun100'], hl:['sun100'], calc:'우주 유출: 태양 복사 100'},
     ]},
     {title:'반사 30', ledger:[{col:'space',kind:'in',label:'반사(25+5)',v:30}], lines:[
@@ -1030,7 +1030,7 @@
         });
         if (d.ans[k].some(id => !c.pick.includes(id))){ wrong = true; errs.push({p:2, who:d.who, t:`${d.me}의 ${KIND_NAME[k]}에 빠진 화살표가 있어. 그림을 다시 살펴봐.`}); }
         let totOk = false;
-        if (c.tot==='') errs.push({p:3, who:d.who, t:'고른 화살표의 숫자를 더해서 합계도 적어 줘.'});
+        if (c.tot==='') errs.push({p:3, who:d.who, t:'합계 칸이 비어 있어. 고른 화살표의 숫자를 더한 값이 합계야.'});
         else if (+c.tot!==keySum(L,k)){ c.totMark = 'wrong'; errs.push({p:3, who:d.who, t:'화살표의 숫자와 적은 합계가 달라. 한 번만 다시 더해 볼까?'}); }
         else { c.totMark = 'right'; totOk = true; }
         c.mark = wrong ? 'wrong' : (trap ? 'trap' : (totOk ? 'right' : 'wrong'));
