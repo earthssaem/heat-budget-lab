@@ -40,27 +40,27 @@
   .legend .s{background:var(--sol)} .legend .t{background:var(--ter)}
   .panel{display:flex;flex-direction:column;gap:14px}
   /* 1탭 패널: 높이를 고정해 대사 길이가 달라져도 버튼 위치와 전체 배율이 흔들리지 않게 함 */
-  .step{padding:18px 20px;display:flex;flex-direction:column;min-height:572px}
+  .step{padding:18px 20px;display:flex;flex-direction:column;min-height:520px}
   .stepno{font-size:12px;font-weight:700;color:var(--accent);letter-spacing:.5px}
   .step h2{margin:4px 0 10px;font-size:20px;font-weight:900;letter-spacing:-.3px}
   #view-ledger h2{margin-bottom:10px}
   #view-text{display:flex;flex-direction:column;flex:1}
   #view-text[hidden]{display:none}
   /* 대사 무대: 말하는 캐릭터 + 큰 대사 한 개 + 연결되는 계산식·핵심 정리 */
-  .stage{display:flex;flex-direction:column;gap:12px;flex:1;min-height:254px}
+  .stage{display:flex;flex-direction:column;gap:10px;flex:1;min-height:200px}
   .speaker{display:flex;align-items:center;gap:10px}
-  .speaker .av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;box-shadow:0 2px 6px rgba(60,40,10,.12);border:2px solid #fff;overflow:hidden}
-  .speaker .av svg{width:36px;height:36px}
-  .speaker b{font-size:15.5px;font-weight:900}
+  .speaker .av{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;box-shadow:0 2px 6px rgba(60,40,10,.12);border:2px solid #fff;overflow:hidden}
+  .speaker .av svg{width:33px;height:33px}
+  .speaker b{font-size:14.5px;font-weight:900}
   .speaker .cnt{margin-left:auto;font-size:12px;font-weight:700;color:var(--muted);background:#f4f0e8;border-radius:999px;padding:2px 9px}
   .speaker .cnt:empty{display:none}
-  .speech{position:relative;background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:14px 18px;box-shadow:0 2px 8px rgba(60,40,10,.06)}
+  .speech{position:relative;background:#fff;border:1.5px solid var(--line);border-radius:16px;padding:12px 16px;box-shadow:0 2px 8px rgba(60,40,10,.06)}
   .speech::before{content:"";position:absolute;left:18px;top:-8.5px;width:14px;height:14px;background:#fff;border-left:1.5px solid var(--line);border-top:1.5px solid var(--line);transform:rotate(45deg)}
   .speech.sun,.speech.sun::before{border-color:#f5d78a} .speech.atm,.speech.atm::before{border-color:#b9d9ef} .speech.sfc,.speech.sfc::before{border-color:#d9c39d}
-  .speech p{margin:0;font-size:21px;line-height:1.55;font-weight:500;word-break:keep-all;overflow-wrap:anywhere}
+  .speech p{margin:0;font-size:17.5px;line-height:1.55;font-weight:500;word-break:keep-all;overflow-wrap:anywhere}
   .note{display:flex;flex-direction:column;gap:8px;min-height:48px}
-  .note .calc{align-self:flex-start;padding:7px 14px;border-radius:12px;background:#fff7e8;border:1.5px solid #f3d9a4;font-size:16px;font-weight:800;color:#8a5a00}
-  .note .key{padding:9px 12px;background:#eef4ff;border-left:4px solid var(--accent);border-radius:8px;font-size:14.5px;font-weight:600;color:#2a4a86;line-height:1.5}
+  .note .calc{align-self:flex-start;padding:6px 12px;border-radius:12px;background:#fff7e8;border:1.5px solid #f3d9a4;font-size:14.5px;font-weight:800;color:#8a5a00}
+  .note .key{padding:8px 12px;background:#eef4ff;border-left:4px solid var(--accent);border-radius:8px;font-size:13.5px;font-weight:600;color:#2a4a86;line-height:1.5}
   .more{margin:4px 0 0;border-top:1px dashed var(--line);padding-top:4px}
   .more[hidden]{display:none}
   .more summary{font-size:13.5px;color:var(--muted)}
@@ -245,7 +245,7 @@
   .dialog{display:flex;flex-direction:column;gap:10px;padding:12px 6px 2px;min-height:160px}
   .dialog[hidden]{display:none}
   .dialog .speaker .av{width:40px;height:40px} .dialog .speaker .av svg{width:32px;height:32px}
-  .dialog .speech p{font-size:17px;line-height:1.5}
+  .dialog .speech p{font-size:16px;line-height:1.5}
   .dialog .speech::before{left:14px}
   .dnext{margin-left:8px;border:1px solid #d9d0c2;background:#fff;border-radius:999px;padding:4px 12px;min-height:28px;font-size:12.5px;font-weight:700;color:var(--ink)}
   .dnext:hover{border-color:#bbb}
@@ -266,7 +266,7 @@
     main{grid-template-columns:1fr}
     .dialog{min-height:64px}
     .step{min-height:0} .stage{min-height:0}
-    .speech p{font-size:18px}
+    .speech p{font-size:16px}
     header{padding:14px 14px 4px} main{padding:8px 14px 16px}
     h1{font-size:19px}
     .tab{padding:8px 12px;font-size:13px}
