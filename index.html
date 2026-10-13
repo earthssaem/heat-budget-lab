@@ -86,47 +86,57 @@
   .chk{padding:18px 20px}
   .chk h2{margin:0 0 4px;font-size:20px;font-weight:900}
   .chk .intro{margin:0 0 12px;font-size:14px}
-  .lsel{display:flex;gap:6px;background:#efe9df;padding:4px;border-radius:12px;margin-bottom:12px}
-  .lsel button{flex:1;border:0;background:transparent;border-radius:9px;min-height:38px;font-size:14px;font-weight:800;color:var(--muted);display:flex;align-items:center;justify-content:center;gap:6px}
-  .lsel button.cur{background:#fff;color:var(--ink);box-shadow:0 2px 6px rgba(0,0,0,.08)}
-  .lsel button .ico{width:18px;height:18px;border-radius:50%;border:2px solid #d9d0c2;display:inline-grid;place-items:center;font-size:11px;color:#fff}
-  .lsel button.ok .ico{background:var(--ok);border-color:var(--ok)} .lsel button.ok .ico::after{content:"✓"}
-  .qt{font-size:14px;font-weight:800;margin:0 0 8px}
-  .rows{display:flex;flex-direction:column;gap:6px}
-  .row{display:flex;align-items:center;flex-wrap:wrap;gap:6px 8px;padding:6px 8px 6px 10px;border:1px solid var(--line);border-radius:12px;background:#fbfaf7}
-  .row .nm{flex:1 1 100px;font-size:13.5px;font-weight:600;display:flex;align-items:center;gap:7px;min-width:0}
-  .row .nm i{width:10px;height:10px;border-radius:50%;flex:0 0 auto}
-  .row.sol .nm i{background:var(--sol)} .row.ter .nm i{background:var(--ter)}
-  .row .opt{display:flex;flex-wrap:wrap;justify-content:flex-end;gap:4px;margin-left:auto}
-  .row .opt button{border:1.5px solid #d9d0c2;background:#fff;border-radius:999px;padding:4px 10px;font-size:12.5px;font-weight:700;min-height:34px;color:#555}
-  .row .opt button.sel{border-color:var(--ink);background:var(--ink);color:#fff}
+  .chk .rule{margin:0 0 10px;padding:7px 12px;background:#fff7e8;border-left:4px solid var(--sol);border-radius:8px;font-size:13px;line-height:1.55}
+  .chk .rule .lb{display:inline-block;min-width:62px;font-weight:900}
   /* 채점 표시: 색 + 아이콘(✓ 정답, ✗ 오답, ! 함정) */
-  .mk{display:none;width:22px;height:22px;border-radius:50%;flex:0 0 auto;place-items:center;font-size:13px;font-weight:900;font-style:normal;color:#fff;line-height:1}
+  .mk{display:none;width:20px;height:20px;border-radius:50%;flex:0 0 auto;place-items:center;font-size:12px;font-weight:900;font-style:normal;color:#fff;line-height:1}
   .right>.mk,.wrong>.mk,.trap>.mk{display:inline-grid}
   .right>.mk{background:var(--ok)} .right>.mk::after{content:"✓"}
   .wrong>.mk{background:var(--bad)} .wrong>.mk::after{content:"✗"}
   .trap>.mk{background:var(--warn)} .trap>.mk::after{content:"!"}
-  .row.right{border-color:var(--ok);background:var(--ok-bg)} .row.wrong{border-color:var(--bad);background:var(--bad-bg)} .row.trap{border-color:var(--warn-ln);background:var(--warn-bg)}
-  .row.right .opt button.sel{background:var(--ok);border-color:var(--ok)} .row.wrong .opt button.sel{background:var(--bad);border-color:var(--bad)} .row.trap .opt button.sel{background:var(--warn);border-color:var(--warn)}
-  .sums{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .sumf{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px;padding:7px 10px;border-radius:12px;background:#f6f1e8;border:1.5px solid transparent;font-size:13px;font-weight:700;color:#555}
-  .sumf>span{flex:1 1 auto}
-  /* 숫자 키패드 + iOS 확대 방지를 위해 큰 글자 */
-  .sumf input{width:88px;min-height:44px;padding:2px 8px;border:2px solid #d9d0c2;border-radius:10px;background:#fff;font-family:inherit;font-size:24px;font-weight:900;text-align:center;color:var(--ink)}
-  .sumf input:focus{outline:none;border-color:var(--accent)}
-  .sumf.right{border-color:var(--ok);background:var(--ok-bg)} .sumf.wrong{border-color:var(--bad);background:var(--bad-bg)}
-  .sumf.right input{border-color:var(--ok)} .sumf.wrong input{border-color:var(--bad)}
-  .sumf .auto{flex:1 0 100%;font-size:12px;font-weight:600;color:var(--muted)}
-  .sumf .auto[hidden]{display:none}
+  /* 교과서 표: 구분 × 지표·대기·우주 */
+  table.ftab{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px}
+  .ftab th,.ftab td{border:1px solid #d6cfc3;padding:6px 5px;text-align:center}
+  .ftab thead th{background:#ebe6dd;font-size:14.5px;font-weight:900;height:36px}
+  .ftab thead th:first-child{width:82px}
+  .ftab thead th .mk{vertical-align:-4px;margin-right:5px}
+  .ftab tbody th{background:#f6f2ec;font-size:13px;font-weight:800;line-height:1.35}
+  .ftab td{position:relative;background:#fff;vertical-align:top;height:104px;cursor:pointer}
+  .ftab td.act{box-shadow:inset 0 0 0 3px var(--accent);background:#f4f8ff}
+  .ftab td.right{background:var(--ok-bg)} .ftab td.wrong{background:var(--bad-bg)} .ftab td.trap{background:var(--warn-bg)}
+  .ftab td>.mk{position:absolute;top:4px;right:4px}
+  .ftab .tot{width:76px;height:42px;padding:0;border:0;border-bottom:2px dashed #dcbcb2;border-radius:0;background:transparent;font-family:inherit;font-size:24px;font-weight:900;color:var(--ter-dk);text-align:center}
+  .ftab .tot::placeholder{font-size:14px;font-weight:700;color:#c9bfb2}
+  .ftab .tot:focus{outline:none;border-bottom:2px solid var(--accent)}
+  .ftab .tot.right{border-bottom:2px solid var(--ok)} .ftab .tot.wrong{border-bottom:2px solid var(--bad);background:#fff}
+  .ftab .eq{margin-top:5px;font-size:12.5px;font-weight:800;line-height:2;color:#8a5a4a}
+  .ftab .eq .ph{font-size:12px;font-weight:600;color:#b9b0a4}
+  .ftab .ans{font-size:24px;font-weight:900;color:var(--ter-dk);line-height:42px}
+  .ftab .eq.book{margin-top:2px;font-weight:700;line-height:1.5;color:var(--ter-dk);word-break:keep-all}
+  /* 칸에 넣은 화살표 = 그림과 같은 알약형 숫자 배지, 누르면 빠짐 */
+  .pc{display:inline-flex;align-items:center;border:0;border-radius:999px;padding:0 7px 0 9px;min-height:26px;background:#fff;box-shadow:0 1px 3px rgba(60,40,10,.2);font-size:14px;font-weight:900;vertical-align:middle}
+  .pc.sol{color:#c9780f} .pc.ter{color:#c8433d}
+  .pc::after{content:"×";margin-left:4px;font-size:12px;color:#b5aca0}
+  .pc.wrong{background:var(--bad);color:#fff} .pc.wrong::before{content:"✗";margin-right:3px}
+  .pc.trap{background:var(--warn);color:#fff} .pc.trap::before{content:"!";margin-right:4px}
+  .pc.wrong::after,.pc.trap::after{color:#fff}
+  .chk .howto{margin:10px 0 6px;font-size:12.5px;font-weight:700;color:var(--muted)}
+  .palette{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
+  .pb{display:flex;align-items:center;gap:7px;min-height:42px;padding:4px 8px;border:1.5px solid #e2dbcf;border-radius:12px;background:#fbfaf7;text-align:left;font-size:11.5px;font-weight:600;line-height:1.25;color:#555}
+  .pb b{flex:0 0 auto;min-width:38px;padding:2px 6px;border-radius:999px;background:#fff;box-shadow:0 1px 3px rgba(60,40,10,.18);text-align:center;font-size:14px;font-weight:900}
+  .pb.sol b{color:#c9780f} .pb.ter b{color:#c8433d}
+  .pb.in{border-color:var(--accent);background:#eaf1ff;color:var(--ink)}
+  .pb.in.sol b{background:#f6a63a;color:#fff} .pb.in.ter b{background:#ea6a62;color:#fff}
+  .verdicts{display:flex;flex-direction:column;gap:4px;margin-top:10px}
+  .verdicts:empty{display:none}
+  .verdicts div{padding:6px 12px;border-radius:10px;background:var(--ok-bg);color:var(--ok);font-size:13.5px;font-weight:700}
   .chk .actions{display:flex;gap:8px;margin-top:12px}
   .chk .actions button{flex:1;border:0;border-radius:12px;min-height:44px;font-weight:700;font-size:15px}
   .chk .actions .go{background:var(--ink);color:#fff}
   .chk .actions .re{background:#efe9df}
-  .chk .done{margin:0 0 12px;padding:12px 14px;background:var(--ok-bg);border-radius:12px;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--ok)}
+  .chk .done{margin:10px 0 0;padding:12px 14px;background:var(--ok-bg);border-radius:12px;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--ok)}
   .chk .done[hidden]{display:none}
   .chk .done button{border:0;border-radius:10px;min-height:40px;font-weight:800;font-size:14px;background:var(--ink);color:#fff}
-  .verdict{margin:10px 0 0;padding:8px 12px;border-radius:10px;font-size:13.5px;font-weight:700;display:none}
-  .verdict.ok{display:block;background:var(--ok-bg);color:var(--ok)} .verdict.no{display:block;background:var(--bad-bg);color:var(--bad)}
 
   /* ---- warming panel ---- */
   .warm{padding:16px 20px}
@@ -230,7 +240,8 @@
   .bubble.sfc .txt{border-color:#d9c39d} .bubble.sfc .txt::before{border-color:#d9c39d}
   svg.hl-sfc .arrow:not(.L-sfc),svg.hl-atm .arrow:not(.L-atm),svg.hl-space .arrow:not(.L-space){opacity:.13}
   svg.hl-sfc #band-sfc,svg.hl-atm #band-atm,svg.hl-space #band-space,svg.hb-sfc #band-sfc,svg.hb-atm #band-atm,svg.hb-space #band-space{filter:brightness(.94)}
-  svg .arrow.dim{opacity:.13}
+  svg.picking .arrow{cursor:pointer}
+  .arrow.pick .lbl rect{stroke:var(--accent);stroke-width:3}   /* 지금 고른 칸에 넣은 화살표 */
   #thermo{opacity:0;transition:opacity .3s} svg.warm #thermo{opacity:1}
   svg.warm #hint-warm{opacity:1} #hint-warm{opacity:0;transition:opacity .3s}
   #thermo-dir{animation:blink 1s ease-in-out infinite} @keyframes blink{50%{opacity:.25}}
@@ -422,17 +433,27 @@
     <!-- ===== TAB 2: 층별 평형 확인 ===== -->
     <div id="checkPanel" class="card chk" hidden>
       <h2>층별 평형 확인하기</h2>
-      <p class="intro">각 층에서 <b>들어온 양 = 나간 양</b>인지 직접 확인해 보세요.</p>
-      <div class="lsel" id="lsel">
-        <button data-layer="sfc"><span class="ico"></span>지표</button>
-        <button data-layer="atm"><span class="ico"></span>대기</button>
-        <button data-layer="space"><span class="ico"></span>우주</button>
+      <p class="intro">교과서 표처럼 각 층에 <b>들어온 에너지양(유입)</b>과 <b>나간 에너지양(유출)</b>을 채워 보세요.</p>
+      <div class="rule">
+        <div><span class="lb">지표·대기</span>그 층이 <b>흡수한</b> 에너지 = 유입, <b>방출한</b> 에너지 = 유출</div>
+        <div><span class="lb">우주</span>지구에서 우주로 <b>들어온</b> 에너지 = 유입, 우주에서 지구로 <b>나간</b> 에너지 = 유출</div>
       </div>
+      <table class="ftab" id="ftab">
+        <thead><tr><th>구분</th><th data-col="sfc"><i class="mk" aria-hidden="true"></i>지표</th><th data-col="atm"><i class="mk" aria-hidden="true"></i>대기</th><th data-col="space"><i class="mk" aria-hidden="true"></i>우주</th></tr></thead>
+        <tbody>
+          <tr><th>유입되는<br>에너지양</th><td data-l="sfc" data-k="in"></td><td data-l="atm" data-k="in"></td><td data-l="space" data-k="in"></td></tr>
+          <tr><th>유출되는<br>에너지양</th><td data-l="sfc" data-k="out"></td><td data-l="atm" data-k="out"></td><td data-l="space" data-k="out"></td></tr>
+        </tbody>
+      </table>
+      <div id="pickArea">
+        <p class="howto">① 표의 칸을 누르고 ② 그림의 화살표나 아래 단추를 눌러 넣은 뒤 ③ 합계를 적어요. (넣은 숫자를 누르면 빠져요)</p>
+        <div class="palette" id="palette"></div>
+      </div>
+      <div class="verdicts" id="verdicts"></div>
       <div class="done" id="chkDone" hidden>
         <b>🎉 세 곳 모두 들어온 양 = 나간 양! 지구는 열수지 평형 상태.</b>
         <button id="toWarm">3. 이산화 탄소가 늘어나면? →</button>
       </div>
-      <div id="chkBody"></div>
       <div class="actions">
         <button class="re" id="chkReset">다시</button>
         <button class="go" id="chkCheck">정답 확인</button>
@@ -783,7 +804,8 @@
     $('checkPanel').hidden = t!=='check';
     $('warmPanel').hidden = t!=='warm';
     svg.classList.remove('hl-sfc','hl-atm','hl-space','hb-sfc','hb-atm','hb-space'); pinned=null;
-    for (const k in nodes) nodes[k].g.classList.remove('dim');
+    for (const k in nodes) nodes[k].g.classList.remove('pick');
+    svg.classList.remove('picking');
     document.querySelectorAll('.ledger thead th').forEach(x=>x.classList.remove('pin'));
     stopWarm();
     if (t==='check'){
@@ -791,7 +813,7 @@
       baseArrows();
       for (const id in nodes) nodes[id].g.classList.add('on');
       $('br-ref').classList.add('on'); $('br-earth').classList.add('on');
-      selectLayer(chkLayer);
+      enterCheck();
     } else if (t==='warm'){
       focusArrow(null);
       svg.classList.add('instant','warm');
@@ -807,152 +829,164 @@
     }
   }
 
-  /* ---------- 층별 평형 확인 ---------- */
+  /* ---------- 층별 평형 확인 (교과서 표 채우기) ---------- */
   const ARROW_NAME = {sun100:'태양 복사 100', ref25:'대기·구름 반사 25', ref5:'지표 반사 5', abs20:'대기가 흡수한 태양 복사 20', abs50:'지표가 흡수한 태양 복사 50',
                       emit132:'지표 방출 → 대기 흡수 132', emit12:'지표 방출 → 우주 12', back94:'대기 재복사 → 지표 94', atm58:'대기·구름 방출 → 우주 58'};
   const ARROW_VAL  = {sun100:100, ref25:25, ref5:5, abs20:20, abs50:50, emit132:132, emit12:12, back94:94, atm58:58};
+  const PALETTE = ['sun100','ref25','ref5','abs20','abs50','emit132','emit12','back94','atm58'];
+  const COLS = ['sfc','atm','space'], KINDS = ['in','out'], KIND_NAME = {in:'유입', out:'유출'};
   // 교과서 표 기준: 지표·대기는 그 층이 흡수한 것(유입)과 방출한 것(유출)만 셈. 우주는 지구 ↔ 우주 사이의 출입.
-  const OPT_LAYER = [['in','유입(흡수)'],['out','유출(방출)'],['none','둘 다 아님']];
-  const OPT_SPACE = [['in','유입(지구 → 우주)'],['out','유출(우주 → 지구)'],['none','둘 다 아님']];
-  const Q_LAYER = me => `① 각 화살표가 ${me}가 <b>흡수한</b> 에너지(유입)인지, <b>방출한</b> 에너지(유출)인지 고르세요`;
-  const CHECK = {
-    sfc:  {who:'sfc', me:'지표', rows:['abs50','ref5','back94','emit132','emit12'],
-           ans:{abs50:'in', ref5:'none', back94:'in', emit132:'out', emit12:'out'},
-           q:Q_LAYER('지표'), opts:OPT_LAYER,
-           ask:[['sfc','내 차례! 내가 흡수한 에너지와 내가 방출한 에너지를 골라서, 들어온 만큼 나가는지 확인해 줘.']],
+  const LAYER = {
+    sfc:  {who:'sfc', me:'지표', ans:{in:['abs50','back94'], out:['emit132','emit12']},
+           book:{in:'태양 복사 에너지(50) + 대기의 재복사(94)', out:'대기로 방출(132) + 우주로 방출(12)'},
+           ask:'내 차례! 내가 흡수한 에너지와 내가 방출한 에너지를 골라서, 들어온 만큼 나가는지 확인해 줘.',
            trap:{ref5:'지표 반사 5는 나한테 닿자마자 튕겨 나갔어. 내가 받은 적이 없으니까 내보낸 것도 아니야.'},
-           win:[['sfc','맞아! 들어온 건 50 + 94 = 144, 나간 건 132 + 12 = 144. 들어온 만큼 내보내니까 내 온도는 일정해.'],['atm','다음은 나야, 대기!']]},
-    atm:  {who:'atm', me:'대기', rows:['abs20','ref25','abs50','emit132','emit12','back94','atm58'],
-           ans:{abs20:'in', ref25:'none', abs50:'none', emit132:'in', emit12:'none', back94:'out', atm58:'out'},
-           q:Q_LAYER('대기'), opts:OPT_LAYER,
-           ask:[['atm','이번엔 나! 내가 흡수하는 에너지와 내가 내보내는 에너지를 골라 봐.']],
+           win:'맞아! 들어온 건 50 + 94 = 144, 나간 건 132 + 12 = 144. 들어온 만큼 내보내니까 내 온도는 일정해.',
+           next:['sfc','내 차례! 내가 흡수한 에너지와 내가 방출한 에너지를 골라서, 들어온 만큼 나가는지 확인해 줘.']},
+    atm:  {who:'atm', me:'대기', ans:{in:['abs20','emit132'], out:['back94','atm58']},
+           book:{in:'대기와 구름 흡수(20) + 지구 복사 흡수(132)', out:'지표로 재복사(94) + 우주로 방출(58)'},
+           ask:'이번엔 나! 내가 흡수하는 에너지와 내가 내보내는 에너지를 골라 봐.',
            trap:{ref25:'반사 25는 구름에 닿자마자 튕겨 나갔어. 내가 받은 적이 없으니까 내보낸 것도 아니야.',
                  emit12:'이 12는 나를 그냥 통과해서 우주로 갔어. 내가 흡수하지 않았으니까 내 계산에는 넣지 않아.',
                  abs50:'이 50은 나를 통과해서 지표가 흡수했어. 내가 흡수한 태양 복사는 20뿐이야.'},
-           win:[['atm','정답! 들어온 건 20 + 132 = 152, 나간 건 94 + 58 = 152. 나도 평형이야.'],['sun','마지막으로 우주를 확인해 보자.']]},
-    space:{who:'sun', me:'우주', rows:['sun100','ref25','ref5','emit12','atm58'],
-           ans:{sun100:'out', ref25:'in', ref5:'in', emit12:'in', atm58:'in'},
-           q:'① 각 화살표가 지구에서 우주로 <b>들어온</b> 에너지(유입)인지, 우주에서 지구로 <b>나간</b> 에너지(유출)인지 고르세요', opts:OPT_SPACE,
-           ask:[['sun','마지막은 우주. 우주에서 지구로 나간 에너지와 지구에서 우주로 돌아온 에너지를 구분해 봐.']],
+           win:'정답! 들어온 건 20 + 132 = 152, 나간 건 94 + 58 = 152. 나도 평형이야.',
+           next:['atm','다음은 나야, 대기!']},
+    space:{who:'sun', me:'우주', ans:{in:['ref25','ref5','emit12','atm58'], out:['sun100']},
+           book:{in:'반사(30) + 지표면 방출(12) + 대기와 구름의 방출(58)', out:'태양 복사(100)'},
+           ask:'마지막은 우주. 우주에서 지구로 나간 에너지와 지구에서 우주로 돌아온 에너지를 구분해 봐.',
            trap:{},
-           win:[['sun','완벽해! 우주로 돌아온 25 + 5 + 12 + 58 = 100, 내가 보낸 100과 똑같아. 지표와 대기 계산에서 뺐던 반사 30도 우주에는 도착했으니까 여기서는 유입이야.'],['sfc','지표·대기·우주 모두 들어온 양 = 나간 양. 이게 열수지 평형!']]},
+           win:'완벽해! 우주로 돌아온 25 + 5 + 12 + 58 = 100, 내가 보낸 100과 똑같아. 지표와 대기 계산에서 뺐던 반사 30도 우주에는 도착했으니까 여기서는 유입이야.',
+           next:['sun','마지막으로 우주를 확인해 보자.']},
   };
-  const keySum = (c, kind) => c.rows.filter(id => c.ans[id]===kind).reduce((a,id)=>a+ARROW_VAL[id],0);
-  // 함정: 반사·통과 화살표(정답 '둘 다 아님')를 유입/유출로 고른 경우 → 노란색 !
-  const isTrap = (c, id, pick) => !!c.trap[id] && (pick==='in' || pick==='out');
-  const chkState = {};
-  const freshState = () => ({pick:{}, sumIn:'', sumOut:'', done:false, checked:false});
-  for (const L in CHECK) chkState[L] = freshState();
-  let chkLayer = 'sfc';
+  const roleOf = (L, id) => LAYER[L].ans.in.includes(id) ? 'in' : (LAYER[L].ans.out.includes(id) ? 'out' : 'none');
+  const keySum = (L, k) => LAYER[L].ans[k].reduce((a,id)=>a+ARROW_VAL[id],0);
+  const freshCell = () => ({pick:[], tot:'', mark:null, chip:{}, totMark:null});
+  const freshTable = () => Object.fromEntries(COLS.map(L => [L, {in:freshCell(), out:freshCell()}]));
+  let tbl = freshTable(), act = {L:'sfc', k:'in'};
+  const tdOf = (L, k) => document.querySelector(`#ftab td[data-l="${L}"][data-k="${k}"]`);
+  const colDone = L => KINDS.every(k => tbl[L][k].mark==='right');
 
   function focusArrow(id){ for (const k in nodes) nodes[k].g.style.opacity = id ? (k===id ? '1' : '.08') : ''; }
 
-  function selectLayer(L){
-    chkLayer = L;
-    focusArrow(null);
-    document.querySelectorAll('#lsel button').forEach(b => { b.classList.toggle('cur', b.dataset.layer===L); b.classList.toggle('ok', chkState[b.dataset.layer].done); });
-    // 문항에 나온 화살표만 남김 (대기를 통과하는 12·50도 남겨 두어야 함정이 드러나지 않음)
-    svg.classList.remove('hb-sfc','hb-atm','hb-space'); svg.classList.add('hb-'+L);
-    for (const k in nodes) nodes[k].g.classList.toggle('dim', !CHECK[L].rows.includes(k));
-    renderCheck();
-    const c = CHECK[L];
-    say(chkState[L].done ? c.win : c.ask);
+  $('palette').innerHTML = PALETTE.map(id => `<button class="pb ${ARROWS[id].c}" data-id="${id}"><b>${ARROW_VAL[id]}</b><span>${ARROW_NAME[id].replace(/\s*\d+$/, '')}</span></button>`).join('');
+
+  function renderCell(L, k){
+    const td = tdOf(L, k), c = tbl[L][k], d = LAYER[L];
+    td.className = (act.L===L && act.k===k ? 'act ' : '') + (c.mark || '');
+    if (c.mark==='right'){
+      td.innerHTML = `<i class="mk" aria-hidden="true"></i><div class="ans">${keySum(L,k)}</div><div class="eq book">= ${d.book[k]}</div>`;
+      return;
+    }
+    const chips = c.pick.map(id => `<button class="pc ${ARROWS[id].c}${c.chip[id] ? ' '+c.chip[id] : ''}" data-id="${id}" aria-label="${ARROW_NAME[id]} 빼기">${ARROW_VAL[id]}</button>`).join(' + ');
+    td.innerHTML = `<i class="mk" aria-hidden="true"></i><input class="tot${c.totMark ? ' '+c.totMark : ''}" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="합계" aria-label="${d.me} ${KIND_NAME[k]} 합계" value="${c.tot}">`
+      + `<div class="eq">${c.pick.length ? '= ' + chips : '<span class="ph">화살표를 넣어 주세요</span>'}</div>`;
+  }
+  // 칸 선택·팔레트·그림 표시·완료 상태를 한꺼번에 맞춤
+  function refreshCheck(){
+    const all = COLS.every(colDone), cur = all ? freshCell() : tbl[act.L][act.k];   // 다 맞히면 선택 표시를 없앰
+    document.querySelectorAll('#ftab td[data-l]').forEach(td => td.classList.toggle('act', !all && td.dataset.l===act.L && td.dataset.k===act.k));
+    document.querySelectorAll('#palette .pb').forEach(b => b.classList.toggle('in', cur.pick.includes(b.dataset.id)));
+    for (const id in nodes) nodes[id].g.classList.toggle('pick', cur.pick.includes(id));
+    svg.classList.remove('hb-sfc','hb-atm','hb-space'); svg.classList.add('hb-'+act.L);
+    document.querySelectorAll('#ftab thead th[data-col]').forEach(th => th.classList.toggle('right', colDone(th.dataset.col)));
+    $('verdicts').innerHTML = COLS.filter(colDone).map(L => `<div>✓ ${LAYER[L].me}: 유입 ${keySum(L,'in')} = 유출 ${keySum(L,'out')} → 평형</div>`).join('');
+    $('chkDone').hidden = !all; $('pickArea').hidden = all;
+  }
+  function setActive(L, k, quiet=false){
+    if (act.L===L && act.k===k) return;
+    const prevL = act.L; act = {L, k};
+    refreshCheck();
+    if (!quiet && L!==prevL) say([[LAYER[L].who, colDone(L) ? LAYER[L].win : LAYER[L].ask]]);
+  }
+  // 칸을 고치면 그 칸의 채점 표시만 지움
+  function touch(L, k, rerender){
+    const c = tbl[L][k];
+    c.mark = null; c.chip = {}; c.totMark = null;
+    if (rerender) renderCell(L, k);
+    else { const td = tdOf(L, k); td.classList.remove('right','wrong','trap'); const t = td.querySelector('.tot'); if (t) t.classList.remove('right','wrong'); td.querySelectorAll('.pc').forEach(p => p.classList.remove('wrong','trap')); }
+    refreshCheck();
+  }
+  function toggleArrow(id){
+    const c = tbl[act.L][act.k], i = c.pick.indexOf(id);
+    if (i>=0) c.pick.splice(i, 1); else c.pick.push(id);
+    touch(act.L, act.k, true);
+  }
+  function enterCheck(){
+    COLS.forEach(L => KINDS.forEach(k => renderCell(L, k)));
+    refreshCheck();
+    svg.classList.add('picking');
+    say([[LAYER[act.L].who, colDone(act.L) ? LAYER[act.L].win : LAYER[act.L].ask]]);
   }
 
-  function renderCheck(){
-    const L = chkLayer, c = CHECK[L], st = chkState[L];
-    $('chkBody').innerHTML = `
-      <p class="qt">${c.q}</p>
-      <div class="rows">${c.rows.map(id => `
-        <div class="row ${ARROWS[id].c}" data-id="${id}"><i class="mk" aria-hidden="true"></i><span class="nm"><i></i>${ARROW_NAME[id]}</span>
-          <span class="opt">${c.opts.map(([v,t]) => `<button data-v="${v}"${st.pick[id]===v?' class="sel"':''}>${t}</button>`).join('')}</span></div>`).join('')}
-      </div>
-      <p class="qt" style="margin-top:12px">② 유입 합계와 유출 합계를 계산해서 적어 보세요</p>
-      <div class="sums">
-        <label class="sumf" id="fIn"><span>유입 합계</span><input id="sumIn" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" value="${st.sumIn}"><i class="mk" aria-hidden="true"></i><small class="auto" id="tIn" hidden></small></label>
-        <label class="sumf" id="fOut"><span>유출 합계</span><input id="sumOut" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" value="${st.sumOut}"><i class="mk" aria-hidden="true"></i><small class="auto" id="tOut" hidden></small></label>
-      </div>
-      <p class="verdict" id="verdict"></p>`;
-    const body = $('chkBody');
-    body.querySelectorAll('.row').forEach(r => {
-      const id = r.dataset.id;
-      r.onmouseenter = () => focusArrow(id);
-      r.onmouseleave = () => focusArrow(null);
-      r.querySelectorAll('.opt button').forEach(b => b.onclick = () => {
-        st.pick[id] = b.dataset.v;
-        r.querySelectorAll('.opt button').forEach(x => x.classList.toggle('sel', x===b));
-        clearMarks();
-      });
-    });
-    for (const [inp, key] of [['sumIn','sumIn'],['sumOut','sumOut']]){
-      const f = $(inp);
-      f.addEventListener('input', () => { const v = f.value.replace(/\D/g,'').slice(0,4); if (v!==f.value) f.value = v; st[key] = v; clearMarks(); });
-      f.addEventListener('keydown', e => { if (e.key==='Enter'){ e.preventDefault(); f.blur(); judge(); } });
-    }
-    if (st.checked) markCheck();
-  }
-  // 고른 화살표의 자동 합계 — 정답 확인을 누른 뒤에만 보여 줌
-  function tally(){
-    const st = chkState[chkLayer], c = CHECK[chkLayer];
-    for (const [kind, id] of [['in','tIn'],['out','tOut']]){
-      const ids = c.rows.filter(a => st.pick[a]===kind);
-      const sum = ids.reduce((a,x)=>a+ARROW_VAL[x],0);
-      $(id).textContent = '고른 화살표: ' + (!ids.length ? '없음' : (ids.length===1 ? String(sum) : ids.map(x => ARROW_VAL[x]).join(' + ') + ' = ' + sum));
-    }
-  }
-  function clearMarks(){
-    const st = chkState[chkLayer]; if (!st.checked) return;
-    st.checked = false;
-    document.querySelectorAll('#chkBody .row, #chkBody .sumf').forEach(r => r.classList.remove('right','wrong','trap'));
-    $('tIn').hidden = $('tOut').hidden = true;
-    $('verdict').className = 'verdict';
-  }
-  function markCheck(){
-    const L = chkLayer, c = CHECK[L], st = chkState[L];
-    document.querySelectorAll('#chkBody .row').forEach(r => {
-      const id = r.dataset.id, p = st.pick[id]; r.classList.remove('right','wrong','trap');
-      if (p) r.classList.add(p===c.ans[id] ? 'right' : (isTrap(c, id, p) ? 'trap' : 'wrong'));
-    });
-    for (const [f, key, kind] of [['fIn','sumIn','in'],['fOut','sumOut','out']]){
-      $(f).classList.remove('right','wrong');
-      if (st[key]!=='') $(f).classList.add(+st[key]===keySum(c, kind) ? 'right' : 'wrong');
-    }
-    tally(); $('tIn').hidden = $('tOut').hidden = false;
-    const v = $('verdict');
-    v.className = 'verdict ' + (st.done ? 'ok' : 'no');
-    v.textContent = st.done ? `✓ ${c.me}: 유입 ${keySum(c,'in')} = 유출 ${keySum(c,'out')} → 평형` : '아직 맞지 않는 곳이 있어요. 표시된 줄을 다시 살펴보세요.';
-  }
   function judge(){
-    const L = chkLayer, c = CHECK[L], st = chkState[L];
-    const KN = {in:'유입', out:'유출', none:'계산에 넣지 않는 것'};
-    const blank = [], traps = [], wrongs = [], sums = [];
-    const nBlank = c.rows.filter(id => !st.pick[id]).length;
-    if (nBlank) blank.push(`아직 고르지 않은 화살표가 ${nBlank}개 있어.`);
-    c.rows.forEach(id => {
-      const p = st.pick[id];
-      if (!p || p===c.ans[id]) return;
-      if (isTrap(c, id, p)) traps.push(c.trap[id]);
-      else wrongs.push(`${ARROW_NAME[id]} — 이건 ${c.me}의 ${KN[c.ans[id]]}이야.`);
+    const errs = [], newly = [];
+    COLS.forEach(L => {
+      const d = LAYER[L], wasDone = colDone(L);
+      KINDS.forEach(k => {
+        const c = tbl[L][k];
+        c.chip = {}; c.totMark = null; c.mark = null;
+        if (!c.pick.length && c.tot==='') return;          // 아직 비어 있는 칸은 채점하지 않음
+        let wrong = false, trap = false;
+        c.pick.forEach(id => {
+          if (d.ans[k].includes(id)) return;
+          if (d.trap[id]){ trap = true; c.chip[id] = 'trap'; errs.push({p:0, who:d.who, t:d.trap[id]}); }
+          else {
+            wrong = true; c.chip[id] = 'wrong';
+            const r = roleOf(L, id);
+            errs.push({p:1, who:d.who, t: r==='none' ? `${ARROW_NAME[id]} — 이건 ${d.me} 계산에 넣지 않아.` : `${ARROW_NAME[id]} — 이건 ${d.me}의 ${KIND_NAME[r]}이야.`});
+          }
+        });
+        if (d.ans[k].some(id => !c.pick.includes(id))){ wrong = true; errs.push({p:2, who:d.who, t:`${d.me} ${KIND_NAME[k]} 칸에 빠진 화살표가 있어.`}); }
+        let totOk = false;
+        if (c.tot==='') errs.push({p:3, who:d.who, t:'합계도 계산해서 적어 줘.'});
+        else if (+c.tot!==keySum(L,k)){ c.totMark = 'wrong'; errs.push({p:3, who:d.who, t:'합계가 맞지 않아. 유입과 유출로 고른 화살표의 숫자를 다시 더해 봐.'}); }
+        else { c.totMark = 'right'; totOk = true; }
+        c.mark = wrong ? 'wrong' : (trap ? 'trap' : (totOk ? 'right' : 'wrong'));
+      });
+      KINDS.forEach(k => renderCell(L, k));
+      if (!wasDone && colDone(L)) newly.push(L);
     });
-    if (st.sumIn==='' || st.sumOut==='') sums.push('② 합계도 계산해서 적어 줘.');
-    else if (+st.sumIn!==keySum(c,'in') || +st.sumOut!==keySum(c,'out')) sums.push('합계가 맞지 않아. 유입과 유출로 고른 화살표의 숫자를 다시 더해 봐.');
-    const msgs = [...blank, ...traps, ...wrongs, ...sums];
-    const ok = !msgs.length;
-    st.checked = true; st.done = ok;
-    markCheck();
-    document.querySelectorAll('#lsel button').forEach(b => b.classList.toggle('ok', chkState[b.dataset.layer].done));
-    if (ok){
-      say(c.win);
-      const all = Object.values(chkState).every(x => x.done);
-      $('chkDone').hidden = !all;
-      if (!all){ const next = ['sfc','atm','space'].find(k => !chkState[k].done); setTimeout(() => { if (activeTab==='check' && chkLayer===L) selectLayer(next); }, 2200); }
-    } else {
-      say([[c.who, '음, 아직이야. ' + msgs[0]], ...msgs.slice(1,3).map(m => [c.who, m])]);
+    const left = COLS.flatMap(L => KINDS.map(k => ({L, k}))).filter(x => tbl[x.L][x.k].mark!=='right');
+    if (!errs.length && left.length && tbl[act.L][act.k].mark==='right') setActive(left[0].L, left[0].k, true);   // 다음 칸으로
+    refreshCheck();
+    if (errs.length){
+      const seen = new Set(), lines = errs.sort((a,b)=>a.p-b.p).filter(e => !seen.has(e.t) && seen.add(e.t)).slice(0, 3).map(e => [e.who, e.t]);
+      lines[0] = [lines[0][0], '음, 아직이야. ' + lines[0][1]];
+      say(lines);
+    } else if (newly.length){
+      const lines = newly.map(L => [LAYER[L].who, LAYER[L].win]);
+      if (!left.length) lines.push(['sfc','지표·대기·우주 모두 들어온 양 = 나간 양. 이게 열수지 평형!']);
+      else if (lines.length<3) lines.push(LAYER[left[0].L].next);
+      say(lines);
+    } else if (left.length===6){
+      say([[LAYER[act.L].who, '표의 칸을 누르고, 화살표를 넣은 뒤 합계를 적어 줘.']]);
+    } else if (left.length){
+      say([[LAYER[act.L].who, '맞은 칸에는 ✓ 표시가 돼. 남은 칸도 채워 봐.']]);
     }
   }
-  document.querySelectorAll('#lsel button').forEach(b => b.onclick = () => selectLayer(b.dataset.layer));
+
+  const ftab = $('ftab');
+  ftab.addEventListener('click', e => {
+    const td = e.target.closest('td[data-l]'); if (!td) return;
+    setActive(td.dataset.l, td.dataset.k);
+    const pc = e.target.closest('.pc'); if (pc) toggleArrow(pc.dataset.id);
+  });
+  ftab.addEventListener('focusin', e => { if (e.target.matches('.tot')){ const td = e.target.closest('td'); setActive(td.dataset.l, td.dataset.k); } });
+  ftab.addEventListener('input', e => {
+    if (!e.target.matches('.tot')) return;
+    const td = e.target.closest('td'), c = tbl[td.dataset.l][td.dataset.k];
+    const v = e.target.value.replace(/\D/g,'').slice(0,4); if (v!==e.target.value) e.target.value = v;
+    c.tot = v; touch(td.dataset.l, td.dataset.k, false);
+  });
+  ftab.addEventListener('keydown', e => { if (e.key==='Enter' && e.target.matches('.tot')){ e.preventDefault(); e.target.blur(); judge(); } });
+  $('palette').addEventListener('click', e => { const b = e.target.closest('.pb'); if (b) toggleArrow(b.dataset.id); });
+  // 그림의 화살표를 눌러도 지금 고른 칸에 넣거나 뺌
+  svg.addEventListener('click', e => {
+    if (activeTab!=='check') return;
+    const g = e.target.closest('.arrow'); if (g) toggleArrow(g.id.slice(3));
+  });
   $('chkCheck').onclick = judge;
-  $('chkReset').onclick = () => { chkState[chkLayer] = freshState(); $('chkDone').hidden = true; selectLayer(chkLayer); };
+  $('chkReset').onclick = () => { tbl = freshTable(); act = {L:'sfc', k:'in'}; enterCheck(); };
   $('toWarm').onclick = () => setTab('warm');
 
   /* ---------- warming slider ---------- */
