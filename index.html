@@ -122,10 +122,9 @@
   .ftab td.act{box-shadow:inset 0 0 0 3px var(--accent);background:#f4f8ff}
   .ftab td.right{background:var(--ok-bg)} .ftab td.wrong{background:var(--bad-bg)} .ftab td.trap{background:var(--warn-bg)}
   .ftab td>.mk{position:absolute;top:4px;right:4px}
-  .ftab .tot{width:76px;height:42px;padding:0;border:0;border-bottom:2px dashed #dcbcb2;border-radius:0;background:transparent;font-family:inherit;font-size:24px;font-weight:900;color:var(--ter-dk);text-align:center}
-  .ftab .tot::placeholder{font-size:14px;font-weight:700;color:#c9bfb2}
-  .ftab .tot:focus{outline:none;border-bottom:2px solid var(--accent)}
-  .ftab .tot.right{border-bottom:2px solid var(--ok)} .ftab .tot.wrong{border-bottom:2px solid var(--bad);background:#fff}
+  /* 합계는 고른 화살표의 숫자를 자동으로 더해 보여 줌 */
+  .ftab .tot{width:76px;height:42px;margin:0 auto;border-bottom:2px dashed #dcbcb2;font-size:24px;font-weight:900;line-height:42px;color:var(--ter-dk);text-align:center}
+  .ftab .tot.empty{font-size:14px;font-weight:700;color:#c9bfb2}
   .ftab .eq{margin-top:5px;font-size:12.5px;font-weight:800;line-height:2;color:#8a5a4a}
   .ftab .eq .ph{font-size:12px;font-weight:600;color:#b9b0a4}
   .ftab .ans{font-size:24px;font-weight:900;color:var(--ter-dk);line-height:42px}
@@ -468,7 +467,7 @@
         </tbody>
       </table>
       <div id="pickArea">
-        <p class="howto">① 표의 칸을 누르고 ② 그림의 화살표나 아래 단추를 눌러 넣은 뒤 ③ 합계를 적어요. <b>잘못 넣었으면 한 번 더 누르면 빠져요.</b></p>
+        <p class="howto">① 표의 칸을 누르고 ② 그림의 화살표나 아래 단추를 눌러 넣어요. 합계는 자동으로 계산돼요. <b>잘못 넣었으면 한 번 더 누르면 빠져요.</b></p>
         <div class="palette" id="palette"></div>
       </div>
       <div class="verdicts" id="verdicts"></div>
@@ -956,7 +955,7 @@
   const eun = w => w + (hasBatchim(w) ? '은' : '는');
   const roleOf = (L, id) => LAYER[L].ans.in.includes(id) ? 'in' : (LAYER[L].ans.out.includes(id) ? 'out' : 'none');
   const keySum = (L, k) => LAYER[L].ans[k].reduce((a,id)=>a+ARROW_VAL[id],0);
-  const freshCell = () => ({pick:[], tot:'', mark:null, chip:{}, totMark:null});
+  const freshCell = () => ({pick:[], mark:null, chip:{}});
   const freshTable = () => Object.fromEntries(COLS.map(L => [L, {in:freshCell(), out:freshCell()}]));
   let tbl = freshTable(), act = {L:'sfc', k:'in'};
   const tdOf = (L, k) => document.querySelector(`#ftab td[data-l="${L}"][data-k="${k}"]`);
@@ -972,7 +971,8 @@
       return;
     }
     const chips = c.pick.map(id => `<button class="pc ${ARROWS[id].c}${c.chip[id] ? ' '+c.chip[id] : ''}" data-id="${id}" aria-label="${ARROW_NAME[id]} 빼기">${ARROW_VAL[id]}</button>`).join(' + ');
-    td.innerHTML = `<i class="mk" aria-hidden="true"></i><input class="tot${c.totMark ? ' '+c.totMark : ''}" type="text" inputmode="numeric" pattern="[0-9]*" maxlength="4" autocomplete="off" placeholder="합계" aria-label="${d.me} ${KIND_NAME[k]} 합계" value="${c.tot}">`
+    const sum = c.pick.reduce((a, id) => a + ARROW_VAL[id], 0);
+    td.innerHTML = `<i class="mk" aria-hidden="true"></i><div class="tot${c.pick.length ? '' : ' empty'}" aria-label="${d.me} ${KIND_NAME[k]} 합계">${c.pick.length ? sum : '합계'}</div>`
       + `<div class="eq">${c.pick.length ? '= ' + chips : '<span class="ph">화살표를 넣어 주세요</span>'}</div>`;
   }
   // 칸 선택·팔레트·그림 표시·완료 상태를 한꺼번에 맞춤
@@ -993,17 +993,16 @@
     if (!quiet && L!==prevL) say(layerSay(L));
   }
   // 칸을 고치면 그 칸의 채점 표시만 지움
-  function touch(L, k, rerender){
+  function touch(L, k){
     const c = tbl[L][k];
-    c.mark = null; c.chip = {}; c.totMark = null;
-    if (rerender) renderCell(L, k);
-    else { const td = tdOf(L, k); td.classList.remove('right','wrong','trap'); const t = td.querySelector('.tot'); if (t) t.classList.remove('right','wrong'); td.querySelectorAll('.pc').forEach(p => p.classList.remove('wrong','trap')); }
+    c.mark = null; c.chip = {};
+    renderCell(L, k);
     refreshCheck();
   }
   function toggleArrow(id){
     const c = tbl[act.L][act.k], i = c.pick.indexOf(id);
     if (i>=0) c.pick.splice(i, 1); else c.pick.push(id);
-    touch(act.L, act.k, true);
+    touch(act.L, act.k);
   }
   function enterCheck(){
     COLS.forEach(L => KINDS.forEach(k => renderCell(L, k)));
@@ -1018,8 +1017,8 @@
       const d = LAYER[L], wasDone = colDone(L);
       KINDS.forEach(k => {
         const c = tbl[L][k];
-        c.chip = {}; c.totMark = null; c.mark = null;
-        if (!c.pick.length && c.tot==='') return;          // 아직 비어 있는 칸은 채점하지 않음
+        c.chip = {}; c.mark = null;
+        if (!c.pick.length) return;          // 아직 비어 있는 칸은 채점하지 않음
         let wrong = false, trap = false;
         c.pick.forEach(id => {
           if (d.ans[k].includes(id)) return;
@@ -1031,11 +1030,7 @@
           }
         });
         if (d.ans[k].some(id => !c.pick.includes(id))){ wrong = true; errs.push({p:2, who:d.who, t:`${d.me}의 ${KIND_NAME[k]}에 빠진 화살표가 있어. 그림을 다시 살펴봐.`}); }
-        let totOk = false;
-        if (c.tot==='') errs.push({p:3, who:d.who, t:'합계 칸이 비어 있어. 고른 화살표의 숫자를 더한 값이 합계야.'});
-        else if (+c.tot!==keySum(L,k)){ c.totMark = 'wrong'; errs.push({p:3, who:d.who, t:'화살표의 숫자와 적은 합계가 달라. 한 번만 다시 더해 볼까?'}); }
-        else { c.totMark = 'right'; totOk = true; }
-        c.mark = wrong ? 'wrong' : (trap ? 'trap' : (totOk ? 'right' : 'wrong'));
+        c.mark = wrong ? 'wrong' : (trap ? 'trap' : 'right');
       });
       KINDS.forEach(k => renderCell(L, k));
       if (!wasDone && colDone(L)) newly.push(L);
@@ -1052,7 +1047,7 @@
       else lines.push(LAYER[left[0].L].next);
       say(lines);
     } else if (left.length===6){
-      say([[LAYER[act.L].who, '먼저 표의 칸을 고르고, 화살표를 넣어 줘. 그다음 합계를 적으면 돼.']]);
+      say([[LAYER[act.L].who, '먼저 표의 칸을 고르고, 화살표를 넣어 줘. 합계는 자동으로 계산돼.']]);
     } else if (left.length){
       say([[LAYER[act.L].who, '✓ 표시가 있는 칸은 맞았어. 남은 칸도 이어서 확인해 보자.']]);
     }
@@ -1064,14 +1059,6 @@
     setActive(td.dataset.l, td.dataset.k);
     const pc = e.target.closest('.pc'); if (pc) toggleArrow(pc.dataset.id);
   });
-  ftab.addEventListener('focusin', e => { if (e.target.matches('.tot')){ const td = e.target.closest('td'); setActive(td.dataset.l, td.dataset.k); } });
-  ftab.addEventListener('input', e => {
-    if (!e.target.matches('.tot')) return;
-    const td = e.target.closest('td'), c = tbl[td.dataset.l][td.dataset.k];
-    const v = e.target.value.replace(/\D/g,'').slice(0,4); if (v!==e.target.value) e.target.value = v;
-    c.tot = v; touch(td.dataset.l, td.dataset.k, false);
-  });
-  ftab.addEventListener('keydown', e => { if (e.key==='Enter' && e.target.matches('.tot')){ e.preventDefault(); e.target.blur(); judge(); } });
   $('palette').addEventListener('click', e => { const b = e.target.closest('.pb'); if (b) toggleArrow(b.dataset.id); });
   // 그림의 화살표를 눌러도 지금 고른 칸에 넣거나 뺌
   svg.addEventListener('click', e => {
