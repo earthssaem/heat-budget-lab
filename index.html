@@ -134,7 +134,7 @@
   .pc.sol{color:#c9780f} .pc.ter{color:#c8433d}
   .pc.wrong{background:var(--bad);color:#fff;text-decoration:line-through;text-decoration-thickness:2px}
   .pc.trap{background:var(--warn);color:#fff} .pc.trap::before{content:"!";margin-right:4px}
-  .chk .howto{margin:10px 0 6px;font-size:12.5px;font-weight:700;color:var(--muted)}
+  .chk .howto{margin:10px 0 6px;font-size:12.5px;font-weight:700;color:var(--muted);word-break:keep-all}
   .palette{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}
   .pb{display:flex;align-items:center;gap:7px;min-height:42px;padding:4px 8px;border:1.5px solid #e2dbcf;border-radius:12px;background:#fbfaf7;text-align:left;font-size:11.5px;font-weight:600;line-height:1.25;color:#555}
   .pb b{flex:0 0 auto;min-width:38px;padding:2px 6px;border-radius:999px;background:#fff;box-shadow:0 1px 3px rgba(60,40,10,.18);text-align:center;font-size:14px;font-weight:900}
@@ -454,7 +454,7 @@
     <!-- ===== TAB 2: 층별 평형 확인 ===== -->
     <div id="checkPanel" class="card chk" hidden>
       <h2>층별 평형 확인하기</h2>
-      <p class="intro">교과서 표처럼 각 층에 <b>들어온 에너지양(유입)</b>과 <b>나간 에너지양(유출)</b>을 채워 보세요.</p>
+      <p class="intro">각 층에 <b>들어온 에너지양(유입)</b>과 <b>나간 에너지양(유출)</b>을 채워 보세요.</p>
       <div class="rule">
         <div><span class="lb">지표·대기</span>그 층이 <b>흡수한</b> 에너지 = 유입, <b>방출한</b> 에너지 = 유출</div>
         <div><span class="lb">우주</span>지구에서 우주로 <b>들어온</b> 에너지 = 유입, 우주에서 지구로 <b>나간</b> 에너지 = 유출</div>
@@ -467,7 +467,7 @@
         </tbody>
       </table>
       <div id="pickArea">
-        <p class="howto">① 표의 칸을 누르고 ② 그림의 화살표나 아래 단추를 눌러 넣어요. 합계는 자동으로 계산돼요. <b>잘못 넣었으면 한 번 더 누르면 빠져요.</b></p>
+        <p class="howto">칸을 고른 뒤 화살표를 누르면 들어가요. <b>다시 누르면 빠지고</b>, 합계는 자동으로 계산돼요.</p>
         <div class="palette" id="palette"></div>
       </div>
       <div class="verdicts" id="verdicts"></div>
