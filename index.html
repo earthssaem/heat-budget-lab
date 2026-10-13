@@ -520,8 +520,9 @@
     // 객체 순서 = 그리기 순서: sun100·abs50 을 가지들보다 뒤에 두어 굵은 줄기가 가지의 시작을 덮음.
     ref25:  {pts:[[470,118],[415,300],[335,52]], w:12, c:'sol', cont:true, layers:['space','atm'],
              label:{x:350,y:185,num:'25',anchor:'end'}},
-    ref5:   {pts:[[430,406],[205,52]], w:6, c:'sol', cont:true, layers:['space','sfc'],
-             label:{x:358,y:336,num:'5',anchor:'end'}},
+    // 지표 반사 5: 100 화살표 머리에서 갈라져(50 줄기 옆을 따라 내려와) 지표에 닿은 뒤 바로 꺾여 우주로 (ref25의 구름 반사와 같은 모양).
+    ref5:   {pts:[[470,118],[438,408],[205,52]], w:6, c:'sol', cont:true, layers:['space','sfc'],
+             label:{x:365,y:336,num:'5',anchor:'end'}},
     abs20:  {pts:[[470,118],[470,236],[600,236]], w:9, c:'sol', cont:true, layers:['atm'],
              label:{x:535,y:222,num:'20',anchor:'middle'}},
     sun100: {pts:[[470,36],[470,124]], w:40, c:'sol', layers:['space'],
