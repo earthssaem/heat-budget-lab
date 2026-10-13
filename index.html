@@ -59,7 +59,6 @@
   .speech.sun,.speech.sun::before{border-color:#f5d78a} .speech.atm,.speech.atm::before{border-color:#b9d9ef} .speech.sfc,.speech.sfc::before{border-color:#d9c39d}
   .speech p{margin:0;font-size:17.5px;line-height:1.55;font-weight:500;word-break:keep-all;overflow-wrap:anywhere}
   .note{display:flex;flex-direction:column;gap:8px;min-height:48px}
-  .note .calc{align-self:flex-start;padding:6px 12px;border-radius:12px;background:#fff7e8;border:1.5px solid #f3d9a4;font-size:14.5px;font-weight:800;color:#8a5a00}
   .note .key{padding:8px 12px;background:#eef4ff;border-left:4px solid var(--accent);border-radius:8px;font-size:13.5px;font-weight:600;color:#2a4a86;line-height:1.5}
   .more{margin:4px 0 0;border-top:1px dashed var(--line);padding-top:4px}
   .more[hidden]{display:none}
@@ -485,7 +484,7 @@
     ]},
     {title:'태양 복사 100 도착', ledger:[{col:'space',kind:'out',label:'태양 복사',v:100}], lines:[
       {who:'sun', t:'태양 복사 100, 지구 도착! 우주에서 지구로 나왔으니 ‘우주 유출’은 100이야.',
-       show:['solar'], hl:['solar'], calc:'우주 유출: 태양 복사 100'},
+       show:['solar'], hl:['solar']},
     ]},
     {title:'반사·산란 30', ledger:[{col:'space',kind:'in',label:'반사·산란(23+7)',v:30}], lines:[
       {who:'atm', t:'100 중 23은 대기와 구름에서 반사되거나 산란돼. 흡수되지 않고 우주로 돌아가는 거야.',
@@ -493,17 +492,17 @@
       {who:'sfc', t:'내 표면에서도 7이 반사돼. 이 에너지는 나를 데우지 못하고 돌아가지.',
        show:['refS','br-ref'], hl:['refS']},
       {who:'sun', t:'벌써 30이 돌아왔네. 그럼 지구가 실제로 흡수하는 에너지는 얼마일까?',
-       hl:['refA','refS'], calc:'반사·산란 23 + 7 = 30 → 우주 유입 30'},
+       hl:['refA','refS']},
     ]},
     {title:'대기·구름 흡수 23', ledger:[{col:'atm',kind:'in',label:'태양 복사 흡수',v:23}], lines:[
       {who:'atm', t:'반사되지 않은 70 중 23은 대기와 구름이 흡수해. 햇빛이 지표만 데우는 건 아니거든.',
-       show:['absA'], hl:['absA'], calc:'100 − 반사·산란 30 = 70 → 그중 대기 흡수 23'},
+       show:['absA'], hl:['absA']},
     ]},
     {title:'지표 흡수 47', ledger:[{col:'sfc',kind:'in',label:'태양 복사 흡수',v:47}], lines:[
       {who:'sfc', t:'나머지 47은 내가 흡수해. 땅과 바다가 햇빛을 받아 따뜻해지는 거지.',
-       show:['absS'], hl:['absS'], calc:'지표 유입: 태양 복사 47'},
+       show:['absS'], hl:['absS']},
       {who:'sun', t:'반사·산란 30, 대기 흡수 23, 지표 흡수 47. 좋아, 100의 행방을 모두 찾았어!',
-       hl:['refA','refS','absA','absS'], calc:'반사·산란 30 + 대기 흡수 23 + 지표 흡수 47 = 100',
+       hl:['refA','refS','absA','absS'],
        key:'지구가 실제로 흡수하는 태양 복사는 23 + 47 = 70이에요.'},
       {who:'sun', t:'이렇게 지구가 에너지를 받으면 계속 뜨거워져야 하는데, 왜 그렇지 않지?',
        hl:['absA','absS']},
@@ -513,7 +512,7 @@
              {col:'atm',kind:'in',label:'지구 복사 흡수',v:104},{col:'space',kind:'in',label:'지표면 방출',v:12}],
      lines:[
       {who:'sfc', t:'나도 흡수만 하지 않고 방출도 하기 때문이야. 적외선으로 방출하는 양이 모두 116이야.',
-       show:['emitA','emitP'], hl:['emitA','emitP'], calc:'지표 방출 116 = 대기로 104 + 우주로 12'},
+       show:['emitA','emitP'], hl:['emitA','emitP']},
       {who:'atm', t:'그중 104는 온실 기체와 구름이 흡수해. 나머지 12는 대기를 통과해서 우주로 나가고.',
        hl:['emitA','emitP']},
     ]},
@@ -522,11 +521,11 @@
              {col:'atm',kind:'in',label:'물의 증발',v:24},{col:'atm',kind:'in',label:'대류와 전도',v:5}],
      lines:[
       {who:'sfc', t:'적외선만 있는 게 아니야. 바다와 땅의 물이 증발하면서 24를, 대류와 전도로 5를 대기에 옮겨.',
-       show:['evap','cond'], hl:['evap','cond'], calc:'물의 증발 24 + 대류와 전도 5 = 29'},
+       show:['evap','cond'], hl:['evap','cond']},
       {who:'atm', t:'수증기가 응결할 때 숨은열이 나오고, 데워진 공기가 올라오며 열을 전해. 이 29도 내가 흡수해.',
        hl:['evap','cond'], key:'지표는 복사뿐 아니라 물의 증발, 대류와 전도로도 대기에 에너지를 전달해요.'},
       {who:'sun', t:'47 받고 116 + 24 + 5 = 145를 내보낸다고? 그것만 받는다면 점점 식을 텐데. 아직 못 찾은 에너지가 있나 봐.',
-       hl:['absS','emitA','emitP','evap','cond'], calc:'지표: 흡수 47 < 내보냄 116 + 24 + 5 = 145'},
+       hl:['absS','emitA','emitP','evap','cond']},
     ]},
     {title:'대기 재복사와 온실 효과',
      ledger:[{col:'sfc',kind:'in',label:'대기 재복사',v:98},{col:'atm',kind:'out',label:'지표로 재복사',v:98}],
@@ -535,7 +534,7 @@
       {who:'atm', t:'내가 빠졌네! 나도 적외선을 방출하고, 그중 98이 지표에 흡수돼. 이걸 대기의 재복사라고 해.',
        show:['back'], hl:['back']},
       {who:'sfc', t:'태양에서 47, 대기에서 98. 합하면 145! 내보내는 양과 딱 맞네.',
-       hl:['absS','back','emitA','emitP','evap','cond'], calc:'흡수 47 + 98 = 내보냄 116 + 24 + 5 = 145'},
+       hl:['absS','back','emitA','emitP','evap','cond']},
       {who:'sun', t:'계산은 맞는데… 내가 보낸 건 100이잖아. 에너지가 늘어난 건 아니지?',
        hl:['solar','emitA','emitP']},
       {who:'atm', t:'새로 생긴 건 아니야. 지표와 나 사이에서도 에너지가 오가거든. 내가 적외선을 흡수하고 재복사해서 지표가 더 따뜻하게 유지되는 게 온실 효과야.',
@@ -547,14 +546,14 @@
       {who:'atm', t:'지표 쪽으로만 방출하는 건 아니야. 우주로 방출하는 적외선도 58 있어.',
        show:['atmUp'], hl:['atmUp']},
       {who:'atm', t:'내 계산도 맞춰 볼까? 흡수는 23 + 104 + 24 + 5, 방출은 98 + 58. 둘 다 156이니까 나도 평형이야.',
-       hl:['absA','emitA','evap','cond','back','atmUp'], calc:'대기: 흡수 23 + 104 + 24 + 5 = 방출 98 + 58 = 156',
+       hl:['absA','emitA','evap','cond','back','atmUp'],
        key:'대기도 들어온 양과 나간 양이 같아요.'},
     ]},
     {title:'세 곳 모두 유입 = 유출', ledger:[], lines:[
       {who:'sun', t:'마지막 점검! 우주로 돌아온 건 반사·산란 30, 지표 복사 12, 대기 복사 58. 모두 더하면 내가 보낸 100과 같아.',
-       show:['br-earth'], hl:['solar','refA','refS','emitP','atmUp'], calc:'우주 유입 30 + 12 + 58 = 100 = 유출 100'},
+       show:['br-earth'], hl:['solar','refA','refS','emitP','atmUp']},
       {who:'sfc', t:'반사된 30을 빼고 보면 더 분명해. 지구가 흡수한 태양 복사도 70, 우주로 방출한 지구 복사도 70이야.',
-       hl:['emitP','atmUp','absA','absS'], calc:'지구 복사 12 + 58 = 70 = 흡수한 태양 복사 23 + 47',
+       hl:['emitP','atmUp','absA','absS'],
        key:'세 곳 모두 유입 = 유출이므로 지구는 열수지 평형 상태예요.'},
       {who:'atm', t:'이 균형 덕분에 지구의 평균 온도가 일정하게 유지돼. 이제 네가 직접 계산해 볼래?'},
     ]},
@@ -681,7 +680,7 @@
     $('sayCnt').textContent = s.lines.length>1 ? `${li+1} / ${s.lines.length}` : '';
     $('speech').className = 'speech '+ln.who;
     $('sayText').textContent = ln.t;
-    $('sayNote').innerHTML = (ln.calc ? `<div class="calc">${ln.calc}</div>` : '') + (ln.key ? `<div class="key">${ln.key}</div>` : '');
+    $('sayNote').innerHTML = ln.key ? `<div class="key">${ln.key}</div>` : '';   // 계산은 2탭에서 직접 하므로 대사 아래에는 핵심 정리만
     const more = $('stepMore');
     more.hidden = !s.more; $('stepMoreText').textContent = s.more || '';
     if (shownStep!==cur) more.open = false;   // 단계가 바뀌면 '더 알아보기'를 접음
@@ -1027,34 +1026,33 @@
   // line.st = 그림 상태: base(지금 평형) · A(늘어난 직후) · rise(직후, 지표 온도 오르는 중) · B(새 평형)
   const WARM_STEPS = [
     {title:'지금은 열수지 평형', lines:[
-      {who:'atm', st:'base', t:'지금 그림은 1탭에서 확인한 열수지 평형 상태야. 지표도 나도 흡수한 만큼 내보내고 있어.',
-       calc:`지표: 흡수 47 + ${O.down} = 내보냄 ${O.E} + 24 + 5`},
+      {who:'atm', st:'base', t:'지금 그림은 1탭에서 확인한 열수지 평형 상태야. 지표도 나도 흡수한 만큼 내보내고 있어.'},
       {who:'sfc', st:'base', t:'그런데 대기 중 이산화 탄소가 늘어나면 어떻게 될까? 이산화 탄소는 적외선을 잘 흡수하는 온실 기체야.'},
     ]},
     {title:'대기가 적외선을 더 많이 흡수', lines:[
       {who:'atm', st:'A', t:`이산화 탄소가 늘면 지표가 방출한 적외선을 더 많이 흡수해. 흡수량이 ${O.abs}에서 ${A.abs}${ro(A.abs)} 커졌어.`,
-       hl:['emitA'], calc:`대기 흡수 ${O.abs} → ${A.abs}`},
+       hl:['emitA']},
       {who:'atm', st:'A', t:`그만큼 나를 그냥 통과해 우주로 나가는 적외선은 줄어. ${O.pass}에서 ${A.pass}${ro(A.pass)} 줄었지.`,
-       hl:['emitP'], calc:`대기 통과 ${O.pass} → ${A.pass}`},
+       hl:['emitP']},
     ]},
     {title:'대기의 재복사 증가', lines:[
       {who:'atm', st:'A', t:`흡수한 에너지가 늘면 나도 적외선을 더 많이 방출해. 지표로 향하는 재복사가 ${O.down}에서 ${A.down}${ro(A.down)} 늘어.`,
-       hl:['back'], calc:`대기 재복사 ${O.down} → ${A.down}`},
+       hl:['back']},
       {who:'sfc', st:'A', t:`태양에서 47, 대기에서 ${A.down}. 받는 양은 ${A_in}인데, 내보내는 양은 아직 ${O_outAll}${ya(O_outAll)}. 들어오는 게 더 많아.`,
-       hl:['absS','back','emitA','emitP','evap','cond'], calc:`지표: 받음 47 + ${A.down} = ${A_in} > 내보냄 ${O_outAll}`},
+       hl:['absS','back','emitA','emitP','evap','cond']},
       {who:'sun', st:'A', t:'들어오는 에너지가 나가는 것보다 많으면 지표는 어떻게 될까?'},
     ]},
     {title:'지표 온도 상승', lines:[
       {who:'sfc', st:'rise', t:'남는 에너지만큼 내 온도가 올라가. 이산화 탄소가 늘어난 직후는 아직 평형이 아니야.',
        key:'흡수량이 방출량보다 많으면 온도가 올라가요.'},
       {who:'sun', st:'rise', t:`우주로 나가는 지구 복사도 ${A.pass} + ${A.up} = ${A_out}${ro(A_out)} 줄었네. 지구가 흡수한 70보다 적어.`,
-       hl:['emitP','atmUp'], calc:`지구 복사 ${A.pass} + ${A.up} = ${A_out} < 70`},
+       hl:['emitP','atmUp']},
     ]},
     {title:'새로운 열수지 평형', lines:[
       {who:'sfc', st:'B', t:`온도가 오르면 나도 적외선을 더 많이 방출해. 적외선 방출이 ${O.E}에서 ${B.E}까지 늘었어.`,
-       hl:['emitA','emitP'], calc:`지표 방출 ${O.E} → ${B.E}`},
+       hl:['emitA','emitP']},
       {who:'sfc', st:'B', t:`받는 양 47 + ${B.down}, 내보내는 양 ${B.E} + 24 + 5. 둘이 같아졌으니 다시 들어온 만큼 내보내고 있어.`,
-       hl:['absS','back','emitA','emitP','evap','cond'], calc:`지표: 47 + ${B.down} = ${B.E} + 24 + 5 = ${B_outAll}`},
+       hl:['absS','back','emitA','emitP','evap','cond']},
       {who:'atm', st:'B', t:'다시 평형이 됐지만, 처음보다 더 높은 온도에서 이룬 새 평형이야. 나도 흡수와 방출이 모두 늘었어.',
        key:'이산화 탄소가 늘면 더 높은 온도에서 새로운 열수지 평형에 도달해요.'},
     ]},
@@ -1062,7 +1060,7 @@
      lines:[
       {who:'sun', st:'B', t:'내가 보내는 100은 그대로야. 그럼 새 평형에서 우주로 나가는 지구 복사는 얼마일까?'},
       {who:'atm', st:'B', t:`지표에서 바로 나가는 ${B.pass}, 내가 우주로 보내는 ${B.up}. 합하면 70으로 처음과 같아.`,
-       hl:['emitP','atmUp'], calc:`지구 복사 ${B.pass} + ${B.up} = 70`},
+       hl:['emitP','atmUp']},
       {who:'sun', st:'B', t:'우주와 주고받는 양은 처음과 같은데 지표는 더 따뜻해졌네. 온실 효과가 강해진 거야.',
        key:'온실 기체가 늘어 온실 효과가 강해지면 지구의 평균 온도가 높아져요. 이것이 지구 온난화예요.'},
     ]},
