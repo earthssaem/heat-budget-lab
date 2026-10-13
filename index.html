@@ -241,21 +241,15 @@
   .char{transform-box:fill-box;transform-origin:center bottom}
   .char.talk{animation:hop .55s ease 2}
   @keyframes hop{0%{transform:translateY(0)}35%{transform:translateY(-7px) scale(1.07)}70%{transform:translateY(0) scale(.98)}100%{transform:translateY(0)}}
-  /* 그림 아래 대화는 2·3탭에서만 씀(말풍선 최대 3개). 1탭의 대사는 오른쪽 패널로 옮겨감 */
-  .dialog{display:flex;flex-direction:column;gap:8px;padding:12px 6px 2px;min-height:158px}
+  /* 그림 아래 대화(2·3탭): 1탭과 같은 스타일. 여러 줄이면 '다음 ▶'으로 한 줄씩. 1탭의 대사는 오른쪽 패널로 옮겨감 */
+  .dialog{display:flex;flex-direction:column;gap:10px;padding:12px 6px 2px;min-height:160px}
   .dialog[hidden]{display:none}
-  .bubble{display:flex;gap:10px;align-items:flex-start;animation:bubbleIn .4s ease both}
-  .bubble:nth-child(2){animation-delay:.55s} .bubble:nth-child(3){animation-delay:1.1s} .bubble:nth-child(4){animation-delay:1.65s}
-  @keyframes bubbleIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
-  .bubble .av{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;box-shadow:0 2px 6px rgba(60,40,10,.12);border:2px solid #fff;overflow:hidden}
-  .bubble .av svg{width:32px;height:32px}
+  .dialog .speaker .av{width:40px;height:40px} .dialog .speaker .av svg{width:32px;height:32px}
+  .dialog .speech p{font-size:17px;line-height:1.5}
+  .dialog .speech::before{left:14px}
+  .dnext{margin-left:8px;border:1px solid #d9d0c2;background:#fff;border-radius:999px;padding:4px 12px;min-height:28px;font-size:12.5px;font-weight:700;color:var(--ink)}
+  .dnext:hover{border-color:#bbb}
   .av.sun{background:#fff1c2} .av.atm{background:#e3f1fb} .av.sfc{background:#efe3cf}
-  .bubble .txt{position:relative;background:#fff;border:1px solid var(--line);border-radius:14px;padding:7px 12px;font-size:14px;line-height:1.45;box-shadow:0 2px 8px rgba(60,40,10,.06);max-width:640px}
-  .bubble .txt::before{content:"";position:absolute;left:-7px;top:13px;width:12px;height:12px;background:#fff;border-left:1px solid var(--line);border-bottom:1px solid var(--line);transform:rotate(45deg)}
-  .bubble .txt .nm{font-size:11px;font-weight:800;color:var(--muted);margin-right:6px}
-  .bubble.sun .txt{border-color:#f5d78a} .bubble.sun .txt::before{border-color:#f5d78a}
-  .bubble.atm .txt{border-color:#b9d9ef} .bubble.atm .txt::before{border-color:#b9d9ef}
-  .bubble.sfc .txt{border-color:#d9c39d} .bubble.sfc .txt::before{border-color:#d9c39d}
   svg.hl-sfc .arrow:not(.L-sfc),svg.hl-atm .arrow:not(.L-atm),svg.hl-space .arrow:not(.L-space){opacity:.13}
   svg.hl-sfc #band-sfc,svg.hl-atm #band-atm,svg.hl-space #band-space,svg.hb-sfc #band-sfc,svg.hb-atm #band-atm,svg.hb-space #band-space{filter:brightness(.94)}
   svg.picking .arrow{cursor:pointer}
@@ -574,31 +568,31 @@
      ledger: 이 단계에 들어오면 계산표에 추가되는 항목(대사 이동과 무관하게 단계당 한 번) */
   const STEPS = [
     {title:'열수지 평형이란?', ledger:[], lines:[
-      {who:'sun', t:'지구는 매일 내 빛을 받는데, 왜 끝없이 뜨거워지지 않을까? 오늘은 그 이유를 숫자로 따라가 보자.'},
-      {who:'sfc', t:'들어온 만큼 내보내면 온도는 일정하게 유지돼. 이렇게 흡수량과 방출량이 같은 상태가 열수지 평형이야.',
+      {who:'sun', t:'지구야, 너 매일 내 빛을 받는데 왜 계속 뜨거워지지 않아? 오늘 그 비밀을 숫자로 밝혀 보자.'},
+      {who:'sfc', t:'비밀이랄 것도 없어. 받은 만큼 내보내면 온도는 그대로거든. 이 상태가 열수지 평형이야.',
        key:'열수지 평형: 지구가 흡수하는 태양 복사 = 지구가 방출하는 지구 복사 → 평균 온도가 일정해요.'},
-      {who:'sun', t:'내가 보내는 에너지를 100이라 두자. 모든 교환은 동시에 일어나지만, 100의 행방을 하나씩 살펴볼게.'},
+      {who:'sun', t:'좋아, 내 에너지를 100이라 하자. 교환은 전부 동시에 일어나지만, 100의 행방을 하나씩 추적해 볼게.'},
     ]},
     {title:'태양 복사 100 도착', ledger:[{col:'space',kind:'out',label:'태양 복사',v:100}], lines:[
-      {who:'sun', t:'100이 대기 꼭대기에 도착했어. 우주에서 지구 쪽으로 나간 양이니까, 우주 칸의 유출에 100을 적어.',
+      {who:'sun', t:'100 출발! 대기 꼭대기에 도착했어. 우주에서 지구로 나간 양이니까 우주 칸의 유출에 100, 기록!',
        show:['sun100'], hl:['sun100'], calc:'우주 유출: 태양 복사 100'},
     ]},
     {title:'반사 30', ledger:[{col:'space',kind:'in',label:'반사(25+5)',v:30}], lines:[
-      {who:'atm', t:'100 중 25는 구름과 대기에 닿자마자 우주로 되돌아가. 지구를 데우지 못한 몫이야.',
+      {who:'atm', t:'25는 구름에 닿자마자 튕겨 나갔어. 구름은 거울 같은 데가 있거든. 지구를 데우지 못한 몫이야.',
        show:['ref25'], hl:['ref25']},
-      {who:'sfc', t:'5는 눈·얼음·바다 표면에서 반사돼. 내가 흡수한 게 아니라 닿자마자 그대로 튕겨 나간 거야.',
+      {who:'sfc', t:'나도 눈이랑 얼음, 바다 표면으로 5를 튕겨냈지. 받은 게 아니라 닿자마자 그대로 돌려보낸 거야.',
        show:['ref5','br-ref'], hl:['ref5']},
-      {who:'sun', t:'우주로 돌아온 양은 25 + 5 = 30. 그러면 지구가 실제로 흡수하는 태양 복사는 얼마일까?',
+      {who:'sun', t:'우주로 돌아온 30 접수. 얘네는 지구를 데우지 못했네. 그럼 지구가 실제로 흡수한 건 얼마일까?',
        hl:['ref25','ref5'], calc:'반사 25 + 5 = 30 → 우주 유입 30'},
     ]},
     {title:'대기·구름 흡수 20', ledger:[{col:'atm',kind:'in',label:'태양 복사 흡수',v:20}], lines:[
-      {who:'atm', t:'반사되고 남은 70 중 20은 내가 흡수해. 구름과 수증기 같은 대기 성분이 받아들이는 몫이야.',
+      {who:'atm', t:'남은 70 중 20은 내 몫이야. 구름과 수증기가 흡수했어. 덕분에 나도 조금 따뜻해졌지.',
        show:['abs20'], hl:['abs20'], calc:'100 − 반사 30 = 70 → 그중 대기 흡수 20'},
     ]},
     {title:'지표 흡수 50', ledger:[{col:'sfc',kind:'in',label:'태양 복사 흡수',v:50}], lines:[
-      {who:'sfc', t:'나머지 50은 나까지 도달해서 흡수돼. 지표 칸의 유입에 50.',
+      {who:'sfc', t:'나머지 50은 나까지 도착했어. 햇볕 쬐는 기분 좋네. 지표 칸의 유입에 50.',
        show:['abs50'], hl:['abs50'], calc:'지표 유입: 태양 복사 50'},
-      {who:'sun', t:'여기까지 100의 행방을 정리하면 반사 30, 대기 흡수 20, 지표 흡수 50. 모두 합하면 100이야.',
+      {who:'sun', t:'자, 100의 행방을 정리해 보자. 반사 30, 대기 흡수 20, 지표 흡수 50. 하나도 빠짐없이 100이야.',
        hl:['ref25','ref5','abs20','abs50'], calc:'반사 30 + 대기 흡수 20 + 지표 흡수 50 = 100',
        key:'지구가 실제로 흡수하는 태양 복사는 20 + 50 = 70이에요.'},
     ]},
@@ -606,42 +600,42 @@
      ledger:[{col:'sfc',kind:'out',label:'대기로 방출',v:132},{col:'sfc',kind:'out',label:'우주로 방출',v:12},
              {col:'atm',kind:'in',label:'지구 복사 흡수',v:132},{col:'space',kind:'in',label:'지표면 방출',v:12}],
      lines:[
-      {who:'sfc', t:'데워진 나는 적외선, 즉 지구 복사를 방출해. 그 양이 144야. 지금까지 확인한 유입 50보다 훨씬 많지.',
+      {who:'sfc', t:'잠깐, 나 지금 144나 내보내고 있는데? 데워진 몸에서 적외선이 나가는 거야. 찾은 유입은 50뿐인데…',
        show:['emit132','emit12'], hl:['emit132','emit12'], calc:'지표 방출 144 = 대기로 132 + 우주로 12'},
-      {who:'atm', t:'그중 132는 내가 흡수해. 온실 기체와 구름이 적외선을 잘 흡수하거든. 12는 나를 그냥 통과해서 우주로 나가.',
+      {who:'atm', t:'그중 132는 내가 받았어. 온실 기체와 구름이 적외선을 잘 붙잡거든. 12는 날 그냥 통과해 우주로 갔고.',
        hl:['emit132','emit12']},
-      {who:'sun', t:'지표가 50만 받고 144를 내보낸다면 점점 식어야 할 텐데, 왜 식지 않을까? 무엇이 빠졌을까?',
+      {who:'sun', t:'50을 받고 144를 내보내면 지표는 점점 식어야 할 텐데? 그런데 왜 멀쩡하지? 무엇이 빠졌을까?',
        hl:['abs50','emit132','emit12']},
     ]},
     {title:'대기 재복사와 온실 효과',
      ledger:[{col:'sfc',kind:'in',label:'대기 재복사',v:94},{col:'atm',kind:'out',label:'지표로 재복사',v:94}],
      more:'대기가 적외선을 흡수·재복사하지 않는다면 지구의 평균 지표 온도는 약 −18℃가 돼요. 실제 평균은 약 15℃로, 이 차이가 대기의 온실 효과 때문이에요.',
      lines:[
-      {who:'atm', t:'나도 적외선을 방출해. 그중 94가 지표로 향하고 있어.',
+      {who:'atm', t:'걱정 마. 나도 적외선을 방출하고 있어. 그중 94가 지금 너한테 가고 있거든.',
        show:['back94'], hl:['back94']},
-      {who:'sfc', t:'태양에서 50, 대기에서 94를 받으니 총 144야. 내가 방출하는 양과 같네!',
+      {who:'sfc', t:'태양에서 50, 대기에서 94. 합치면 144, 내보내는 양과 딱 맞네! 받은 만큼 내보내고 있었구나.',
        hl:['abs50','back94','emit132','emit12'], calc:'흡수 50 + 94 = 방출 132 + 12 = 144'},
-      {who:'sun', t:'나는 100을 보냈는데, 지표는 어떻게 144를 방출할까?',
+      {who:'sun', t:'잠깐, 난 100만 보냈는데 지표는 어떻게 144나 방출하는 거야?',
        hl:['sun100','emit132','emit12']},
-      {who:'atm', t:'지표는 나에게서도 에너지를 받거든. 지표와 대기 사이에서도 에너지가 오가고 있어.',
+      {who:'atm', t:'새로 생긴 에너지가 아니야. 지표는 나한테서도 받거든. 지표와 나 사이를 오가는 에너지가 더해진 숫자야.',
        hl:['emit132','back94'], key:'대기의 적외선 흡수와 재복사로 지표가 더 높은 온도로 유지돼요.'},
     ]},
     {title:'대기 → 우주 58',
      ledger:[{col:'atm',kind:'out',label:'우주로 방출',v:58},{col:'space',kind:'in',label:'대기·구름 방출',v:58}],
      lines:[
-      {who:'atm', t:'내가 방출하는 적외선 중 나머지 58은 우주로 나가.',
+      {who:'atm', t:'내가 방출하는 적외선 중 나머지 58은 위쪽 우주로 보내.',
        show:['atm58'], hl:['atm58']},
-      {who:'atm', t:'내 쪽도 맞춰 보자. 흡수한 양은 20 + 132, 방출한 양은 94 + 58. 둘 다 152로 같아.',
+      {who:'atm', t:'내 쪽도 결산해 보자. 받은 건 20 + 132, 내보낸 건 94 + 58. 둘 다 152, 나도 평형!',
        hl:['abs20','emit132','back94','atm58'], calc:'대기: 흡수 20 + 132 = 방출 94 + 58 = 152',
        key:'대기도 들어온 양과 나간 양이 같아요.'},
     ]},
     {title:'세 곳 모두 유입 = 유출', ledger:[], lines:[
-      {who:'sun', t:'마지막은 우주. 돌아온 에너지는 반사 30, 지표에서 12, 대기에서 58. 합하면 100, 내가 보낸 양과 같아.',
+      {who:'sun', t:'최종 점검. 우주로 돌아온 건 반사 30, 지표에서 12, 대기에서 58. 합하면 100, 내가 보낸 양과 딱 맞아.',
        show:['br-earth'], hl:['sun100','ref25','ref5','emit12','atm58'], calc:'우주 유입 30 + 12 + 58 = 100 = 유출 100'},
-      {who:'sfc', t:'지구 복사로 나간 12 + 58 = 70은 지구가 흡수한 태양 복사 70과 같아. 세 곳 모두 유입 = 유출이야.',
+      {who:'sfc', t:'지구 복사로 나간 12 + 58 = 70은 지구가 흡수한 태양 복사 70과 같아. 세 곳 모두 평형 인정!',
        hl:['emit12','atm58','abs20','abs50'], calc:'지구 복사 12 + 58 = 70 = 흡수한 태양 복사 20 + 50',
        key:'세 곳 모두 유입 = 유출이므로 지구는 열수지 평형 상태예요.'},
-      {who:'atm', t:'이 교환은 전부 동시에 일어나. 그런데 이산화 탄소가 늘어 내가 적외선을 더 많이 흡수하면 어떻게 될까?'},
+      {who:'atm', t:'이 교환은 지금도 전부 동시에 일어나. 그런데 이산화 탄소가 늘어 내가 적외선을 더 붙잡으면 어떻게 될까?'},
     ]},
   ];
 
@@ -666,17 +660,19 @@
     downB:[['sfc','받는 게 줄어든 만큼 나도 덜 내보내게 됐어. 그래도 방출은 처음 144보다 커.'],
            ['atm','이산화 탄소가 처음보다는 많으니까, 처음보다 높은 온도에서 다시 평형을 이룬 거야.']],
   };
+  // 2·3탭 그림 아래 대화: 한 번에 한 캐릭터의 대사만 보여 주고, 여러 줄이면 '다음 ▶'으로 넘김
   const dialog = document.getElementById('dialog');
-  function say(lines){
-    dialog.innerHTML = '';
-    document.querySelectorAll('.char').forEach(c => c.classList.remove('talk'));
-    lines.forEach(([who, text], i) => {
-      const b = document.createElement('div'); b.className = 'bubble '+who;
-      b.innerHTML = `<div class="av ${who}">${CH[who].ic}</div><div class="txt"><span class="nm">${CH[who].nm}</span>${text}</div>`;
-      dialog.append(b);
-      setTimeout(() => { const c = document.getElementById('char-'+who); if (c){ c.classList.remove('talk'); void c.getBoundingClientRect(); c.classList.add('talk'); } }, i*550);
-    });
+  const dlg = {lines:[], i:0};
+  function say(lines){ dlg.lines = lines; dlg.i = 0; drawSay(); }
+  function drawSay(){
+    const [who, text] = dlg.lines[dlg.i], n = dlg.lines.length;
+    dialog.innerHTML = `<div class="speaker"><div class="av ${who}">${CH[who].ic}</div><b>${CH[who].nm}</b>`
+      + (n>1 ? `<span class="cnt">${dlg.i+1} / ${n}</span>` : '')
+      + (dlg.i<n-1 ? '<button class="dnext" type="button">다음 ▶</button>' : '')
+      + `</div><div class="speech ${who}"><p>${text}</p></div>`;
+    hop(who);
   }
+  dialog.addEventListener('click', e => { if (e.target.closest('.dnext') && dlg.i<dlg.lines.length-1){ dlg.i++; drawSay(); } });
 
   /* ---------- build arrows ---------- */
   const svg = document.getElementById('fig');
