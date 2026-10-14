@@ -19,7 +19,9 @@
   html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;line-height:1.55}
   /* 1440px 폭으로 설계하고, 화면 크기에 맞춰 #app 전체를 zoom 으로 축소·확대 → 어떤 화면에서도 한 화면에 들어옴 */
   html,body{height:100%}
-  body{display:grid;place-items:center;overflow:hidden}
+  html{-webkit-text-size-adjust:100%;text-size-adjust:100%}   /* 태블릿·휴대폰 브라우저가 글자를 멋대로 키우지 않게 */
+  /* 넓은 화면: 바깥 틀을 화면에 고정 → 1440px 폭으로 그린 앱이 태블릿 브라우저의 화면 기준을 넓히지 못하게(처음 열 때 잘림 방지) */
+  body{display:grid;place-items:center;overflow:hidden;position:fixed;inset:0}
   body.tall{place-items:start center;overflow-y:auto}
   #app{width:1440px}
   button{font-family:inherit;cursor:pointer}
@@ -162,6 +164,7 @@
   .arrow path{fill:none;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .9s ease,opacity .3s,stroke-width .3s}
   .arrow polygon,.arrow .lbl{opacity:0;transition:opacity .35s .75s}
   .arrow.on path{stroke-dashoffset:0}
+  .arrow:not(.on) > path:not(.hit){opacity:0}   /* 숨긴 화살표는 선 끝 조각도 안 보이게 (고해상도·축소 화면에서 남던 조각) */
   .arrow.on polygon,.arrow.on .lbl{opacity:1}
   .arrow:not(.on) polygon,.arrow:not(.on) .lbl{transition-delay:0s}   /* 이전으로 갈 때는 머리·숫자가 바로 사라짐 */
   svg.instant .arrow path{transition:stroke-width .3s,opacity .3s}
@@ -217,7 +220,7 @@
   svg.warm #hint-warm{opacity:1} #hint-warm{opacity:0;transition:opacity .3s}
 
   @media (max-width:900px){
-    body{display:block;overflow:auto}
+    body{display:block;overflow:auto;position:static}
     #app{width:auto;zoom:1 !important}
     main{grid-template-columns:1fr}
     .dialog{min-height:64px}
@@ -1203,20 +1206,26 @@
   /* ---------- 한 화면 맞춤 (zoom) ---------- */
   const app = $('app');
   let lastZ = 0, refH = 0;
+  // 실제로 보이는 화면 크기(스크롤바 제외)
+  const viewW = () => document.documentElement.clientWidth || innerWidth, viewH = () => innerHeight;
   function fit(){
-    if (innerWidth < 900){ app.style.zoom = ''; document.body.classList.remove('tall'); return; }
+    if (viewW() < 900){ app.style.zoom = ''; document.body.classList.remove('tall'); return; }
     // 숫자 입력 중(화면 키보드가 열림)에는 배율을 바꾸지 않음 → 입력칸이 움직이지 않게
     const ae = document.activeElement;
     if (ae && ae.tagName==='INPUT' && ae.type==='text') return;
     app.style.zoom = 1;
     const h = app.offsetHeight, w = 1440;
     if (activeTab!=='check' || !refH) refH = h;   // 1·3탭(대화 화면) 높이를 기준으로 삼아 세 탭의 그림 크기를 같게
-    const z = Math.min(innerWidth / w, innerHeight / refH, 1.6);
+    const z = Math.min(viewW() / w, (viewH() - 2) / refH, 1.6);   // 2px 여유: 반올림 때문에 아래가 살짝 잘리지 않게
     if (Math.abs(z - lastZ) > 0.004) lastZ = z;
     app.style.zoom = lastZ;
-    document.body.classList.toggle('tall', h*lastZ > innerHeight + 1);   // 2탭 내용이 길어지면 잘리지 않게 스크롤
+    document.body.classList.toggle('tall', h*lastZ > viewH() + 1);   // 2탭 내용이 길어지면 잘리지 않게 스크롤
   }
   addEventListener('resize', fit);
+  // 태블릿: 화면 회전·주소창이 줄어들 때, 처음 열고 브라우저가 화면을 다시 잡은 뒤에도 다시 맞춤
+  addEventListener('orientationchange', () => setTimeout(fit, 250));
+  if (window.visualViewport) visualViewport.addEventListener('resize', fit);
+  addEventListener('load', () => { setTimeout(fit, 300); setTimeout(fit, 1000); });
   document.addEventListener('focusout', e => { if (e.target.tagName==='INPUT') setTimeout(fit, 60); });
   addEventListener('load', fit);
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
