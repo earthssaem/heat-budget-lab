@@ -170,7 +170,7 @@
   .arrow .lbl rect{fill:#fff;stroke:none;filter:drop-shadow(0 1px 2px rgba(60,40,10,.12))}
   .arrow text{font-family:inherit;font-weight:900;font-size:17px;dominant-baseline:central}
   .arrow.sol text{fill:#c9780f} .arrow.ter text{fill:#c8433d} .arrow.heat text{fill:#2f8a81}
-  .arrow text.name{font-size:11.5px;font-weight:700;fill:#7a7267;dominant-baseline:auto;paint-order:stroke;stroke:rgba(255,255,255,.85);stroke-width:3px;stroke-linejoin:round}
+  .arrow text.name{font-size:11px;font-weight:500;fill:#a29a8f;dominant-baseline:auto;paint-order:stroke;stroke:rgba(255,255,255,.7);stroke-width:2.5px;stroke-linejoin:round}
   .arrow path.hit{stroke:transparent !important;stroke-dasharray:none !important;stroke-linecap:round !important;fill:none;pointer-events:none}
   svg.picking .arrow path.hit{pointer-events:stroke}
   .bracket{opacity:0;transition:opacity .4s}
@@ -196,13 +196,12 @@
   svg.hl-sfc .arrow:not(.L-sfc),svg.hl-atm .arrow:not(.L-atm),svg.hl-space .arrow:not(.L-space){opacity:.13}
   svg.hl-sfc #band-sfc,svg.hl-atm #band-atm,svg.hl-space #band-space,svg.hb-sfc #band-sfc,svg.hb-atm #band-atm,svg.hb-space #band-space{filter:brightness(.94)}
   svg.picking .arrow{cursor:pointer}
-  svg.picking .arrow:hover .lbl rect{stroke:#9bb4e6;stroke-width:2}
-  .arrow.pick .lbl rect{stroke:var(--accent);stroke-width:3;fill:#eaf1ff}   /* 지금 고른 칸에 넣은 화살표 */
-  .arrow.pick > path:not(.hit),.arrow.pick > polygon{filter:drop-shadow(0 0 2.5px #3b6fd1) drop-shadow(0 0 1px #3b6fd1)}
+  svg.picking .arrow:hover .lbl rect{fill:#f6f2ea}
+  /* 지금 고른 칸에 넣은 화살표: 배지 바탕만 화살표 색의 옅은 톤으로 */
+  .arrow.sol.pick .lbl rect{fill:#ffe4b8} .arrow.ter.pick .lbl rect{fill:#fdd6d1} .arrow.heat.pick .lbl rect{fill:#cdece7}
   .speech.info,.speech.info::before{border-color:#cfd9ee}
   .dialog .speaker .pc{min-height:30px;font-size:16px}
   .arrow{transition:opacity .3s}
-  .arrow.hl .lbl rect{stroke:var(--accent);stroke-width:2.5}   /* 1탭: 지금 대사가 설명하는 화살표 */
   #thermo{opacity:0;transition:opacity .3s} svg.warm #thermo{opacity:1}
   svg.warm #hint-warm{opacity:1} #hint-warm{opacity:0;transition:opacity .3s}
 
