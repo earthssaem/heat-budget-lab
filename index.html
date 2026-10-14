@@ -894,6 +894,10 @@
            book:{in:'반사·산란(30) + 지표면 방출(12) + 대기와 구름의 방출(58)', out:'태양 복사(100)'},
            ask:'이번에는 우주 기준이야. 지구에서 우주로 들어오는 것과, 우주에서 지구로 나가는 것을 구분해 줘.',
            trap:{},
+           // 다른 정답: 태양 복사 100이 대기 꼭대기에서 나뉜 네 갈래(모두 우주에서 나온 에너지)
+           alt:{out:{ids:['refA','refS','absA','absS'],
+                     book:'태양 복사 100이 나뉜 대기 반사·산란(23) + 지표 반사(7) + 대기 흡수(23) + 지표 흡수(47)',
+                     say:'나뉜 네 갈래를 모두 더해도 내가 보낸 100이니까 맞아! 교과서 표에서는 보통 나뉘기 전의 100 하나로 적어.'}},
            win:['우주로 들어온 건 23 + 7 + 12 + 58 = 100. 지구로 나간 태양 복사 100과 같아!',
                 '반사·산란된 30도 우주에는 도착했지? 지표·대기의 흡수 계산에서는 뺐지만, 여기서는 유입에 넣어.'],
            next:['sun','이제 지구와 우주 사이에 오간 에너지를 확인해 보자.']},
@@ -918,7 +922,7 @@
     const td = tdOf(L, k), c = tbl[L][k], d = LAYER[L];
     td.className = (act.L===L && act.k===k ? 'act ' : '') + (c.mark || '');
     if (c.mark==='right'){
-      td.innerHTML = `<i class="mk" aria-hidden="true"></i><div class="ans">${keySum(L,k)}</div><div class="eq book">= ${d.book[k]}</div>`;
+      td.innerHTML = `<i class="mk" aria-hidden="true"></i><div class="ans">${keySum(L,k)}</div><div class="eq book">= ${c.alt ? d.alt[k].book : d.book[k]}</div>`;
       return;
     }
     const chips = c.pick.map(id => `<button class="pc ${ARROWS[id].c}${c.chip[id] ? ' '+c.chip[id] : ''}" data-id="${id}" aria-label="${ARROW_NAME[id]} 빼기">${ARROW_VAL[id]}</button>`).join(' + ');
@@ -945,7 +949,7 @@
   // 칸을 고치면 그 칸의 채점 표시만 지움
   function touch(L, k){
     const c = tbl[L][k];
-    c.mark = null; c.chip = {};
+    c.mark = null; c.chip = {}; c.alt = false;
     renderCell(L, k);
     refreshCheck();
   }
@@ -973,16 +977,26 @@
   }
 
   function judge(){
-    const errs = [], newly = [];
+    const errs = [], newly = [], altUsed = [];
+    const same = (a, b) => a.length===b.length && a.every(x => b.includes(x));
     COLS.forEach(L => {
       const d = LAYER[L], wasDone = colDone(L);
       KINDS.forEach(k => {
         const c = tbl[L][k];
-        c.chip = {}; c.mark = null;
+        const wasRight = c.mark==='right';
+        c.chip = {}; c.mark = null; c.alt = false;
         if (!c.pick.length) return;          // 아직 비어 있는 칸은 채점하지 않음
         let wrong = false, trap = false;
+        const alt = d.alt && d.alt[k], inAlt = alt ? c.pick.filter(id => alt.ids.includes(id)) : [];
+        if (alt && same(c.pick, alt.ids)){ c.mark = 'right'; c.alt = true; if (!wasRight) altUsed.push(L); return; }   // 나뉜 갈래로 고른 정답
+        if (inAlt.length){
+          wrong = true; inAlt.forEach(id => c.chip[id] = 'wrong');
+          errs.push({p:0, who:d.who, t: c.pick.some(id => d.ans[k].includes(id))
+            ? '100과 그 100이 나뉜 갈래를 함께 넣으면 같은 에너지를 두 번 세는 거야. 나뉘기 전의 100 하나만 넣거나, 나뉜 갈래만 넣어 줘.'
+            : '100이 나뉜 갈래로 고르고 있구나. 그렇다면 100이 나뉜 갈래를 하나도 빠짐없이 넣어야 해.'});
+        }
         c.pick.forEach(id => {
-          if (d.ans[k].includes(id)) return;
+          if (d.ans[k].includes(id) || inAlt.includes(id)) return;
           if (d.trap[id]){ trap = true; c.chip[id] = 'trap'; errs.push({p:0, who:d.who, t:d.trap[id]}); }
           else {
             wrong = true; c.chip[id] = 'wrong';
@@ -990,7 +1004,7 @@
             errs.push({p:1, who:d.who, t: r==='none' ? `${eun(ARROW_NAME[id])} ${d.me}에 들어오거나 ${d.me}에서 나가는 에너지가 아니야.` : `이 화살표를 다시 보자. ${eun(ARROW_NAME[id])} ${d.me}의 ${KIND_NAME[r]}이야.`});
           }
         });
-        if (d.ans[k].some(id => !c.pick.includes(id))){ wrong = true; errs.push({p:2, who:d.who, t:`${d.me}의 ${KIND_NAME[k]}에 빠진 화살표가 있어. 그림을 다시 살펴봐.`}); }
+        if (!inAlt.length && d.ans[k].some(id => !c.pick.includes(id))){ wrong = true; errs.push({p:2, who:d.who, t:`${d.me}의 ${KIND_NAME[k]}에 빠진 화살표가 있어. 그림을 다시 살펴봐.`}); }
         c.mark = wrong ? 'wrong' : (trap ? 'trap' : 'right');
       });
       KINDS.forEach(k => renderCell(L, k));
@@ -1000,17 +1014,19 @@
     if (!errs.length && left.length && tbl[act.L][act.k].mark==='right') setActive(left[0].L, left[0].k, true);   // 다음 칸으로
     refreshCheck();
     if (errs.length){
-      const seen = new Set(), lines = errs.sort((a,b)=>a.p-b.p).filter(e => !seen.has(e.t) && seen.add(e.t)).slice(0, 3).map(e => [e.who, e.t]);
-      say(lines);
+      const seen = new Set(), uniq = errs.sort((a,b)=>a.p-b.p).filter(e => !seen.has(e.t) && seen.add(e.t));
+      const top = uniq.slice(0, 3), miss = uniq.find(e => e.p===2);
+      if (miss && !top.includes(miss)) top[2] = miss;      // '빠진 화살표' 안내는 잘리지 않게
+      say(top.map(e => [e.who, e.t]));
     } else if (newly.length){
-      const lines = newly.flatMap(L => LAYER[L].win.map(t => [LAYER[L].who, t]));
+      const lines = newly.flatMap(L => [...(altUsed.includes(L) ? [LAYER[L].alt.out.say] : []), ...LAYER[L].win].map(t => [LAYER[L].who, t]));
       if (!left.length) lines.push(['sfc','세 곳 모두 계산이 맞네! 지구가 흡수한 만큼 우주로 방출하는 열수지 평형을 확인했어.']);
       else lines.push(LAYER[left[0].L].next);
       say(lines);
     } else if (left.length===6){
       say([[LAYER[act.L].who, '먼저 표의 칸을 고르고, 화살표를 넣어 줘. 합계는 자동으로 계산돼.']]);
     } else if (left.length){
-      say([[LAYER[act.L].who, '✓ 표시가 있는 칸은 맞았어. 남은 칸도 이어서 확인해 보자.']]);
+      say([...altUsed.map(L => [LAYER[L].who, LAYER[L].alt.out.say]), [LAYER[act.L].who, '✓ 표시가 있는 칸은 맞았어. 남은 칸도 이어서 확인해 보자.']]);
     }
   }
 
