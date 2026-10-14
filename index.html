@@ -60,6 +60,14 @@
   .speech.sun,.speech.sun::before{border-color:#f5d78a} .speech.atm,.speech.atm::before{border-color:#b9d9ef} .speech.sfc,.speech.sfc::before{border-color:#d9c39d}
   .speech p{margin:0;font-size:17.5px;line-height:1.55;font-weight:500;word-break:keep-all;overflow-wrap:anywhere}
   .note{display:flex;flex-direction:column;gap:8px;min-height:48px}
+  .choices{display:flex;gap:8px;flex-wrap:wrap}
+  .choices .ch{flex:1;min-width:96px;min-height:44px;border:1.5px solid #d9d0c2;border-radius:12px;background:#fff;font-size:16px;font-weight:800;color:var(--ink)}
+  .choices .ch:hover:not(:disabled){border-color:#bfb3a1;background:#fbf8f2}
+  .choices .ch:disabled{cursor:default;opacity:.55}
+  .choices .ch.right{opacity:1;border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
+  .choices .ch.wrong{opacity:1;border-color:var(--bad);background:var(--bad-bg);color:var(--bad)}
+  .note .fb{font-size:14.5px;font-weight:700;padding:2px 2px}
+  .note .fb.ok{color:var(--ok)} .note .fb.no{color:var(--bad)}
   .note .key{padding:8px 12px;background:#eef4ff;border-left:4px solid var(--accent);border-radius:8px;font-size:13.5px;font-weight:600;color:#2a4a86;line-height:1.5}
   .more{margin:4px 0 0;border-top:1px dashed var(--line);padding-top:4px}
   .more[hidden]{display:none}
@@ -197,6 +205,11 @@
   svg.picking .arrow{cursor:pointer}
   svg.picking .arrow:hover .lbl rect{fill:#f6f2ea}
   /* 지금 고른 칸에 넣은 화살표: 배지 바탕만 화살표 색의 옅은 톤으로 */
+  /* 3탭: 숫자 대신 증가·감소 표시 (바뀌지 않은 화살표는 배지 없이 이름만) */
+  .arrow.nonum .lbl rect,.arrow.nonum .lbl text:not(.name){display:none}
+  .arrow.up .lbl text:not(.name),.arrow.down .lbl text:not(.name){font-size:13.5px}
+  .arrow.up .lbl rect{fill:#fde1dd} .arrow.up .lbl text:not(.name){fill:#c8433d}
+  .arrow.down .lbl rect{fill:#e2ebfb} .arrow.down .lbl text:not(.name){fill:#3b6fd1}
   .arrow.sol.pick .lbl rect{fill:#ffe4b8} .arrow.ter.pick .lbl rect{fill:#fdd6d1} .arrow.heat.pick .lbl rect{fill:#cdece7}
   .dialog .speaker .pc{min-height:26px;font-size:14px}
   .arrow{transition:opacity .3s}
@@ -669,7 +682,14 @@
     $('next').disabled = false;
     [...dots.children].forEach((b,i)=>{ b.className = i<cur?'done':(i===cur?'cur':''); });
 
-    if (mode==='warm'){ applyWarm(ln.st); emphasize(ln.hl); hop(ln.who); return; }   // 3탭: 화살표는 모두 보이고 굵기·숫자만 바뀜
+    if (mode==='warm'){   // 3탭: 화살표는 모두 보이고, 예측을 고르면 그림이 바뀜
+      if (ln.ask){
+        const got = warmAns[cur+'-'+li];
+        $('sayNote').innerHTML = askHTML(ln.ask, got) + $('sayNote').innerHTML;
+        if (!got){ $('next').disabled = true; $('next').textContent = '먼저 예측해 보세요'; }
+      }
+      applyWarm(warmSt0(cur, li)); emphasize(ln.hl); hop(ln.who); return;
+    }
     const vis = shownUpTo(cur, li);
     for (const id in nodes) nodes[id].g.classList.toggle('on', vis.has(id));
     $('br-ref').classList.toggle('on', vis.has('br-ref'));
@@ -722,14 +742,31 @@
     }
   }
 
+  // 3탭 예측: 답은 '단계-대사' 열쇠로 기억. 고르기 전에는 다음으로 넘어가지 않음
+  const warmAns = {};
+  const CHOICE = {up:'▲ 증가', down:'▼ 감소', same:'= 처음과 같음'};
+  const choiceName = (a, o) => (a.words && a.words[o]) || CHOICE[o];
+  function askHTML(a, got){
+    const btns = a.opts.map(o => `<button class="ch${got ? (o===a.ans ? ' right' : (o===got ? ' wrong' : '')) : ''}" data-o="${o}"${got ? ' disabled' : ''}>${choiceName(a, o)}</button>`).join('');
+    const fb = !got ? '' : (got===a.ans ? '<div class="fb ok">맞아요! 그림에서 바뀐 모습을 확인해 보세요.</div>'
+      : (w => `<div class="fb no">실제로는 ‘${w}’${hasBatchim(w) ? '이에요' : '예요'}. 그림에서 확인해 보세요.</div>`)(choiceName(a, a.ans).replace(/^[▲▼=]\s*/, '')));
+    return `<div class="choices">${btns}</div>` + fb;
+  }
+  const warmSt0 = (i, j) => { const ln = WARM_STEPS[i].lines[j]; return ln.ask && warmAns[i+'-'+j] ? ln.ask.reveal : ln.st; };
+  $('sayNote').addEventListener('click', e => {
+    const b = e.target.closest('.ch'); if (!b || mode!=='warm') return;
+    warmAns[cur+'-'+li] = b.dataset.o; render();
+  });
+  const clearWarmAns = () => { for (const k in warmAns) delete warmAns[k]; };
   function go(i, j=0){ const S = steps(); cur = clamp(i, 0, S.length-1); li = clamp(j, 0, S[cur].lines.length-1); render(); }
   // 다음: 남은 대사 → 다음 단계 → 마지막 대사에서 1탭은 2탭으로, 3탭은 처음으로
   function nextLine(){
     const S = steps();
+    if ($('next').disabled) return;                        // 3탭: 예측을 고르기 전
     if (li < S[cur].lines.length-1) go(cur, li+1);
     else if (cur < S.length-1) go(cur+1, 0);
     else if (mode==='flow') setTab('check');
-    else go(0);
+    else { clearWarmAns(); go(0); }
   }
   // 이전: 바로 앞 대사 → 단계의 첫 대사에서는 이전 단계의 마지막 대사로
   function prevLine(){
@@ -739,7 +776,7 @@
   }
   $('prev').onclick = prevLine;
   $('next').onclick = nextLine;
-  $('btnReset').onclick = () => go(0);
+  $('btnReset').onclick = () => { if (mode==='warm') clearWarmAns(); go(0); };
   $('btnAll').onclick = () => go(steps().length-1);
   document.addEventListener('keydown', e => {
     if (document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
@@ -767,9 +804,11 @@
   /* ---------- tabs ---------- */
   let activeTab = 'flow';
   document.querySelectorAll('.tab').forEach(b => b.onclick = () => setTab(b.dataset.tab));
-  function baseArrows(){
-    for (const id in ARROWS) setWidth(id, ARROWS[id].w);
-    nodes.emitA.tnum.textContent='104'; nodes.back.tnum.textContent='98'; nodes.atmUp.tnum.textContent='58'; nodes.emitP.tnum.textContent='12';
+  function baseArrows(){   // 3탭에서 바꾼 굵기·배지를 원래대로
+    for (const id in ARROWS){
+      const n = nodes[id]; n.tnum.textContent = ARROWS[id].label.num; n.g.classList.remove('nonum','up','down');
+      setWidth(id, ARROWS[id].w);
+    }
     $('ground-warm').setAttribute('opacity', 0);
   }
   function setTab(t){
@@ -803,7 +842,7 @@
       svg.classList.add('instant','warm');
       for (const id in nodes) nodes[id].g.classList.add('on');
       $('br-ref').classList.add('on'); $('br-earth').classList.add('on');
-      enterWarm(WARM_STEPS[cur].lines[li].st);
+      enterWarm(warmSt0(cur, li));
       render();
       requestAnimationFrame(()=>requestAnimationFrame(()=>svg.classList.remove('instant')));
     } else {
@@ -1021,43 +1060,47 @@
   const ro = n => /[036]$/.test(String(n)) ? '으로' : '로';   // 숫자 뒤 '로/으로' (영·삼·육은 받침이 있어 '으로')
   const ya = n => hasBatchim(String(n)) ? '이야' : '야';
 
-  // line.st = 그림 상태: base(지금 평형) · A(늘어난 직후) · rise(직후, 지표 온도 오르는 중) · B(새 평형)
+  // line.st = 그림 상태: base(지금 평형) · p1(대기 흡수만 증가) · p2(+ 대기 통과 감소) · A(+ 재복사·대기 방출 증가 = 늘어난 직후)
+  //           rise(직후, 지표 온도 오르는 중) · B(새 평형)
+  // line.ask = 먼저 예측하기: 학생이 고르면 그림이 reveal 상태로 바뀌고 맞았는지 알려 줌
   const WARM_STEPS = [
     {title:'지금은 열수지 평형', lines:[
-      {who:'atm', st:'base', t:'지금 그림은 1탭에서 확인한 열수지 평형 상태야. 지표도 나도 흡수한 만큼 내보내고 있어.'},
+      {who:'atm', st:'base', t:'지금 그림은 1탭에서 확인한 열수지 평형 상태야. 지표도 나도 들어온 만큼 내보내고 있어.'},
       {who:'sfc', st:'base', t:'그런데 대기 중 이산화 탄소가 늘어나면 어떻게 될까? 이산화 탄소는 적외선을 잘 흡수하는 온실 기체야.'},
     ]},
-    {title:'대기가 적외선을 더 많이 흡수', lines:[
-      {who:'atm', st:'A', t:`이산화 탄소가 늘면 지표가 방출한 적외선을 더 많이 흡수해. 흡수량이 ${O.abs}에서 ${A.abs}${ro(A.abs)} 커졌어.`,
-       hl:['emitA']},
-      {who:'atm', st:'A', t:`그만큼 나를 그냥 통과해 우주로 나가는 적외선은 줄어. ${O.pass}에서 ${A.pass}${ro(A.pass)} 줄었지.`,
-       hl:['emitP']},
+    {title:'대기의 적외선 흡수', lines:[
+      {who:'atm', st:'base', t:'이산화 탄소가 늘면, 지표가 방출한 적외선 중 내가 흡수하는 양은 어떻게 될까?',
+       hl:['emitA'], ask:{opts:['up','down'], ans:'up', reveal:'p1'}},
+      {who:'atm', st:'p1', t:'온실 기체가 많아지니 지표가 방출한 적외선을 더 많이 흡수하게 돼. 대기 흡수가 증가했어.', hl:['emitA']},
+      {who:'atm', st:'p1', t:'그럼 나를 그냥 통과해서 우주로 나가는 적외선은 어떻게 될까?',
+       hl:['emitP'], ask:{opts:['up','down'], ans:'down', reveal:'p2'}},
+      {who:'atm', st:'p2', t:'내가 더 많이 붙잡으니까 그냥 통과하는 적외선은 감소해.', hl:['emitP']},
     ]},
-    {title:'대기의 재복사 증가', lines:[
-      {who:'atm', st:'A', t:`흡수한 에너지가 늘면 나도 적외선을 더 많이 방출해. 지표로 향하는 재복사가 ${O.down}에서 ${A.down}${ro(A.down)} 늘어.`,
-       hl:['back']},
-      {who:'sfc', st:'A', t:`태양에서 47, 대기에서 ${A.down}. 받는 양은 ${A_in}인데, 내보내는 양은 아직 ${O_outAll}${ya(O_outAll)}. 들어오는 게 더 많아.`,
-       hl:['absS','back','emitA','emitP','evap','cond']},
-      {who:'sun', st:'A', t:'들어오는 에너지가 나가는 것보다 많으면 지표는 어떻게 될까?'},
+    {title:'대기의 재복사', lines:[
+      {who:'atm', st:'p2', t:'에너지를 더 많이 흡수한 나는 더 따뜻해져. 그럼 내가 지표로 보내는 재복사는 어떻게 될까?',
+       hl:['back'], ask:{opts:['up','down'], ans:'up', reveal:'A'}},
+      {who:'atm', st:'A', t:'따뜻해진 나는 적외선을 더 많이 방출해. 지표로 향하는 재복사도, 우주로 나가는 대기 방출도 증가했어.', hl:['back','atmUp']},
+      {who:'sfc', st:'A', t:'태양에서 받는 건 그대로인데 대기에서 받는 게 늘었어. 그런데 내가 내보내는 양은 아직 그대로야.', hl:['absS','back']},
     ]},
-    {title:'지표 온도 상승', lines:[
+    {title:'지표 온도는?', lines:[
+      {who:'sun', st:'A', t:'들어오는 에너지가 나가는 에너지보다 많아졌어. 그럼 지표 온도는 어떻게 될까?',
+       ask:{opts:['up','down'], ans:'up', reveal:'rise', words:{up:'▲ 상승', down:'▼ 하강'}}},
       {who:'sfc', st:'rise', t:'남는 에너지만큼 내 온도가 올라가. 이산화 탄소가 늘어난 직후는 아직 평형이 아니야.',
-       key:'흡수량이 방출량보다 많으면 온도가 올라가요.'},
-      {who:'sun', st:'rise', t:`우주로 나가는 지구 복사도 ${A.pass} + ${A.up} = ${A_out}${ro(A_out)} 줄었네. 지구가 흡수한 70보다 적어.`,
-       hl:['emitP','atmUp']},
+       key:'들어오는 에너지가 나가는 에너지보다 많으면 온도가 올라가요.'},
     ]},
     {title:'새로운 열수지 평형', lines:[
-      {who:'sfc', st:'B', t:`온도가 오르면 나도 적외선을 더 많이 방출해. 적외선 방출이 ${O.E}에서 ${B.E}까지 늘었어.`,
-       hl:['emitA','emitP']},
-      {who:'sfc', st:'B', t:`받는 양 47 + ${B.down}, 내보내는 양 ${B.E} + 24 + 5. 둘이 같아졌으니 다시 들어온 만큼 내보내고 있어.`,
-       hl:['absS','back','emitA','emitP','evap','cond']},
-      {who:'atm', st:'B', t:'다시 평형이 됐지만, 처음보다 더 높은 온도에서 이룬 새 평형이야. 나도 흡수와 방출이 모두 늘었어.',
+      {who:'sun', st:'rise', t:'온도가 올라간 지표가 방출하는 적외선은 어떻게 될까?',
+       hl:['emitA'], ask:{opts:['up','down'], ans:'up', reveal:'B'}},
+      {who:'sfc', st:'B', t:'온도가 오르면 나도 적외선을 더 많이 방출해. 그래서 들어오는 양과 나가는 양이 다시 같아졌어.', hl:['emitA','emitP']},
+      {who:'atm', st:'B', t:'다시 평형이 됐지만, 처음보다 더 높은 온도에서 이룬 새 평형이야.',
        key:'이산화 탄소가 늘면 더 높은 온도에서 새로운 열수지 평형에 도달해요.'},
     ]},
-    {title:'우주로 나가는 에너지', more:'그림의 숫자는 이산화 탄소 증가를 단순하게 나타낸 모형으로 계산한 값이에요. 물의 증발과 대류·전도는 그대로 두었고, 정확한 값보다는 변화의 방향을 보는 데 활용해요.',
+    {title:'우주로 나가는 에너지',
+     more:`단순 모형으로 계산한 값(처음 → 늘어난 직후 → 새 평형): 대기 흡수 ${O.abs} → ${A.abs} → ${B.abs}, 대기 통과 ${O.pass} → ${A.pass} → ${B.pass}, 대기 재복사 ${O.down} → ${A.down} → ${B.down}, 대기·구름 방출 ${O.up} → ${A.up} → ${B.up}, 지표 방출 ${O.E} → ${A.E} → ${B.E}. 물의 증발과 대류·전도는 그대로 두었어요. 그림의 굵기 차이는 알아보기 쉽게 실제보다 크게 나타냈어요.`,
      lines:[
-      {who:'sun', st:'B', t:'내가 보내는 100은 그대로야. 그럼 새 평형에서 우주로 나가는 지구 복사는 얼마일까?'},
-      {who:'atm', st:'B', t:`지표에서 바로 나가는 ${B.pass}, 내가 우주로 보내는 ${B.up}. 합하면 70으로 처음과 같아.`,
+      {who:'sun', st:'B', t:'내가 보내는 에너지는 그대로야. 새 평형에서 우주로 나가는 지구 복사 전체는 처음과 비교해 어떻게 될까?',
+       hl:['emitP','atmUp'], ask:{opts:['up','down','same'], ans:'same', reveal:'B'}},
+      {who:'atm', st:'B', t:'지표에서 바로 나가는 몫은 줄고 내가 우주로 보내는 몫은 늘어서, 합은 처음과 같아. 지구가 흡수하는 태양 복사와 같거든.',
        hl:['emitP','atmUp']},
       {who:'sun', st:'B', t:'우주와 주고받는 양은 처음과 같은데 지표는 더 따뜻해졌네. 온실 효과가 강해진 거야.',
        key:'온실 기체가 늘어 온실 효과가 강해지면 지구의 평균 온도가 높아져요. 이것이 지구 온난화예요.'},
@@ -1065,16 +1108,27 @@
   ];
 
   // 화면에 그려진 값(소수) → 목표값까지 부드럽게
-  const mark = (v, base) => v>base ? ' ↑' : (v<base ? ' ↓' : '');
   let disp = {...O}, tw = null, raf = 0;
   const th = {h:7, from:7, to:7, t0:0, dur:0};
   const ease = t => t<.5 ? 2*t*t : 1-Math.pow(-2*t+2,2)/2;
+  // 굵기: 처음 평형 대비 변화율을 GAIN배로 키워 그림 (방향이 한눈에 보이게, '더 알아보기'에 밝힘)
+  const GAIN = 2.5, wOf = (base, v, o) => Math.max(2.5, base*(1 + GAIN*(v/o - 1)));
   function drawNums(){
-    const m = {}; for (const k in disp) m[k] = Math.round(disp[k]);
-    setWidth('emitA', 26*disp.abs/O.abs);              nodes.emitA.tnum.textContent = m.abs + mark(m.abs, O.abs);
-    setWidth('back',  24*disp.down/O.down);            nodes.back.tnum.textContent  = m.down + mark(m.down, O.down);
-    setWidth('atmUp', 18*disp.up/O.up);                nodes.atmUp.tnum.textContent = m.up + mark(m.up, O.up);
-    setWidth('emitP', Math.max(3, 8*disp.pass/O.pass)); nodes.emitP.tnum.textContent = m.pass + mark(m.pass, O.pass);
+    setWidth('emitA', wOf(26, disp.abs,  O.abs));
+    setWidth('back',  wOf(24, disp.down, O.down));
+    setWidth('atmUp', wOf(18, disp.up,   O.up));
+    setWidth('emitP', wOf(8,  disp.pass, O.pass));
+  }
+  // 숫자 배지 대신: 처음 평형보다 바뀐 화살표에만 '▲ 증가 / ▼ 감소'
+  const CHG = {emitA:'abs', emitP:'pass', back:'down', atmUp:'up'};
+  function drawBadges(st){
+    const m = stNums(st);
+    for (const id in nodes){
+      const n = nodes[id], k = CHG[id], v = k ? m[k] - O[k] : 0;
+      n.tnum.textContent = v>0 ? '▲ 증가' : (v<0 ? '▼ 감소' : '');
+      n.g.classList.toggle('nonum', !v); n.g.classList.toggle('up', v>0); n.g.classList.toggle('down', v<0);
+      fitPill(n);
+    }
   }
   function drawThermo(){
     $('thermo-fill').setAttribute('y', (67-th.h).toFixed(1)); $('thermo-fill').setAttribute('height', th.h.toFixed(1));
@@ -1100,24 +1154,26 @@
   function tweenTo(target, dur=700){ tw = {from:{...disp}, to:{...target}, t0:performance.now(), dur}; kick(); }
   function thermoTo(to, dur){ Object.assign(th, {from:th.h, to, t0:performance.now(), dur}); kick(); }
 
-  const WARM_HINT = {base:'※ 화살표 굵기와 숫자 = 현재 평형 상태의 에너지양',
-                     A:'※ 이산화 탄소가 늘어난 직후 — 아직 평형이 아님 (단순 모형)',
-                     rise:'※ 이산화 탄소가 늘어난 직후 — 아직 평형이 아님 (단순 모형)',
-                     B:'※ 화살표 굵기와 숫자 = 새 평형 상태의 에너지양 (단순 모형)'};
-  const stNums = st => st==='base' ? O : (st==='B' ? B : A);
+  const WARM_HINT = {base:'※ 화살표 굵기 = 에너지양 (지금 평형 상태)',
+                     p1:'※ 이산화 탄소가 늘어난 직후 — 아직 평형이 아님 (굵기 차이는 크게 나타냄)',
+                     B:'※ 새로운 평형 상태 (굵기 차이는 크게 나타냄)'};
+  WARM_HINT.p2 = WARM_HINT.A = WARM_HINT.rise = WARM_HINT.p1;
+  const ST = {base:O, p1:{...O, abs:A.abs}, p2:{...O, abs:A.abs, pass:A.pass}, A, rise:A, B};
+  const stNums = st => ST[st];
   const stTemp = st => thermoH(st==='B' ? B.E : (st==='rise' ? (O.E + B.E)/2 : O.E));   // rise: 오르기 시작(중간까지 한 번만)
   let warmSt = '';
   function applyWarm(st){
     $('hint-warm').textContent = WARM_HINT[st];
-    $('thermo-dir').textContent = st==='rise' ? '▲' : '';
+    $('thermo-dir').textContent = st==='rise' || st==='B' ? '▲' : '';
     if (st===warmSt) return;                 // 같은 상태의 대사끼리는 그림을 다시 움직이지 않음
     warmSt = st;
+    drawBadges(st);
     tweenTo(stNums(st));
     thermoTo(stTemp(st), st==='rise' ? 1800 : 700);
   }
   function stopWarm(){ tw = null; th.dur = 0; cancelAnimationFrame(raf); raf = 0; warmSt = ''; }
   function enterWarm(st){                    // 탭에 들어오면 읽던 대사의 그림 상태를 바로 보여 줌
-    disp = {...stNums(st)}; drawNums();
+    disp = {...stNums(st)}; drawNums(); drawBadges(st);
     th.h = stTemp(st); drawThermo();
     warmSt = st;
   }
