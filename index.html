@@ -979,6 +979,11 @@
   function judge(){
     const errs = [], newly = [], altUsed = [];
     const same = (a, b) => a.length===b.length && a.every(x => b.includes(x));
+    // 반사된 30을 우주 유입·유출 양쪽에서 뺀 답(지구가 흡수한 70 = 방출한 70): 생각은 인정하고, 우주 칸은 빠짐없이 세도록 안내
+    const netIn = same(tbl.space.in.pick, ['emitP','atmUp']), netOut = same(tbl.space.out.pick, ['absA','absS']);
+    const NET = netIn && netOut ? '반사된 30을 양쪽에서 똑같이 뺐구나! 그건 지구가 흡수한 70과 방출한 70을 비교한 거야. 그런데 반사된 30도 실제로 우주에 들어왔다가 나갔으니, 우주 칸에는 빠짐없이 넣어야 해.'
+      : netIn ? '지표와 대기가 우주로 보낸 70만 골랐구나. 반사된 에너지도 우주로 돌아온다는 걸 떠올려 봐.'
+      : '지구가 흡수한 70만 골랐구나. 반사된 에너지도 우주에서 나왔다가 돌아간다는 걸 떠올려 봐.';
     COLS.forEach(L => {
       const d = LAYER[L], wasDone = colDone(L);
       KINDS.forEach(k => {
@@ -986,6 +991,7 @@
         const wasRight = c.mark==='right';
         c.chip = {}; c.mark = null; c.alt = false;
         if (!c.pick.length) return;          // 아직 비어 있는 칸은 채점하지 않음
+        if (L==='space' && ((k==='in' && netIn) || (k==='out' && netOut))){ c.mark = 'wrong'; errs.push({p:-1, who:d.who, t:NET}); return; }
         let wrong = false, trap = false;
         const alt = d.alt && d.alt[k], inAlt = alt ? c.pick.filter(id => alt.ids.includes(id)) : [];
         if (alt && same(c.pick, alt.ids)){ c.mark = 'right'; c.alt = true; if (!wasRight) altUsed.push(L); return; }   // 나뉜 갈래로 고른 정답
