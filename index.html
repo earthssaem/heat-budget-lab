@@ -20,6 +20,7 @@
   /* 1440px 폭으로 설계하고, 화면 크기에 맞춰 #app 전체를 zoom 으로 축소·확대 → 어떤 화면에서도 한 화면에 들어옴 */
   html,body{height:100%}
   body{display:grid;place-items:center;overflow:hidden}
+  body.tall{place-items:start center;overflow-y:auto}
   #app{width:1440px}
   button{font-family:inherit;cursor:pointer}
   header{padding:14px 20px 6px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
@@ -100,9 +101,10 @@
   @keyframes pop{from{background:#fff1d6;transform:translateX(-4px)}to{background:transparent}}
 
   /* ---- check panel ---- */
-  .chk{padding:18px 20px}
+  .chk{padding:18px 20px;display:flex;flex-direction:column;min-height:536px}   /* 1탭 대화 패널과 같은 높이 */
+  .chk[hidden]{display:none}
   .chk h2{margin:0 0 4px;font-size:20px;font-weight:900}
-  .chk .intro{margin:0 0 12px;font-size:14px}
+  .chk .intro{margin:0 0 10px;font-size:14px}
   .chk .rule{margin:0 0 10px;padding:7px 12px;background:#fff7e8;border-left:4px solid var(--sol);border-radius:8px;font-size:13px;line-height:1.55}
   .chk .rule .lb{display:inline-block;min-width:62px;font-weight:900}
   /* 채점 표시: 색 + 아이콘(✓ 정답, ✗ 오답, ! 함정) */
@@ -118,33 +120,28 @@
   .ftab thead th:first-child{width:82px}
   .ftab thead th .mk{vertical-align:-4px;margin-right:5px}
   .ftab tbody th{background:#f6f2ec;font-size:13px;font-weight:800;line-height:1.35}
-  .ftab td{position:relative;background:#fff;vertical-align:top;height:104px;cursor:pointer}
+  .ftab td{position:relative;background:#fff;vertical-align:top;height:84px;cursor:pointer}
   .ftab td.act{box-shadow:inset 0 0 0 3px var(--accent);background:#f4f8ff}
   .ftab td.right{background:var(--ok-bg)} .ftab td.wrong{background:var(--bad-bg)} .ftab td.trap{background:var(--warn-bg)}
   .ftab td>.mk{position:absolute;top:4px;right:4px}
   /* 합계는 고른 화살표의 숫자를 자동으로 더해 보여 줌 */
-  .ftab .tot{width:76px;height:42px;margin:0 auto;border-bottom:2px dashed #dcbcb2;font-size:24px;font-weight:900;line-height:42px;color:var(--ter-dk);text-align:center}
+  .ftab .tot{width:76px;height:30px;margin:0 auto;border-bottom:2px dashed #dcbcb2;font-size:21px;font-weight:900;line-height:30px;color:var(--ter-dk);text-align:center}
   .ftab .tot.empty{font-size:14px;font-weight:700;color:#c9bfb2}
-  .ftab .eq{margin-top:5px;font-size:12.5px;font-weight:800;line-height:2;color:#8a5a4a}
+  .ftab .eq{margin-top:4px;font-size:12.5px;font-weight:800;line-height:1.6;color:#8a5a4a}
+  .ftab .pc{min-height:20px;padding:0 7px;font-size:13px}
   .ftab .eq .ph{font-size:12px;font-weight:600;color:#b9b0a4}
-  .ftab .ans{font-size:24px;font-weight:900;color:var(--ter-dk);line-height:42px}
-  .ftab .eq.book{margin-top:2px;font-weight:700;line-height:1.5;color:var(--ter-dk);word-break:keep-all}
+  .ftab .ans{font-size:21px;font-weight:900;color:var(--ter-dk);line-height:30px}
+  .ftab .eq.book{margin-top:2px;font-size:11.5px;font-weight:700;line-height:1.45;color:var(--ter-dk);word-break:keep-all}
   /* 칸에 넣은 화살표 = 그림과 같은 알약형 숫자 배지, 한 번 더 누르면 빠짐 (× 표시는 곱하기로 보여 쓰지 않음) */
   .pc{display:inline-flex;align-items:center;border:0;border-radius:999px;padding:0 9px;min-height:26px;background:#fff;box-shadow:0 1px 3px rgba(60,40,10,.2);font-size:14px;font-weight:900;vertical-align:middle}
   .pc.sol{color:#c9780f} .pc.ter{color:#c8433d} .pc.heat{color:#2f8a81}
   .pc.wrong{background:var(--bad);color:#fff;text-decoration:line-through;text-decoration-thickness:2px}
   .pc.trap{background:var(--warn);color:#fff} .pc.trap::before{content:"!";margin-right:4px}
-  .chk .howto{margin:10px 0 6px;font-size:12.5px;font-weight:700;color:var(--muted);word-break:keep-all}
-  .verdicts{display:flex;flex-direction:column;gap:4px;margin-top:10px}
-  .verdicts:empty{display:none}
-  .verdicts div{padding:6px 12px;border-radius:10px;background:var(--ok-bg);color:var(--ok);font-size:13.5px;font-weight:700}
-  .chk .actions{display:flex;gap:8px;margin-top:12px}
-  .chk .actions button{flex:1;border:0;border-radius:12px;min-height:44px;font-weight:700;font-size:15px}
+  .chk .howto{margin:8px 0 4px;font-size:12.5px;font-weight:700;color:var(--muted);word-break:keep-all}
+  .chk .actions{display:flex;gap:8px;margin-top:auto;padding-top:12px}
+  .chk .actions button{flex:1;border:0;border-radius:12px;min-height:42px;font-weight:700;font-size:15px}
   .chk .actions .go{background:var(--ink);color:#fff}
   .chk .actions .re{background:#efe9df}
-  .chk .done{margin:10px 0 0;padding:12px 14px;background:var(--ok-bg);border-radius:12px;display:flex;flex-direction:column;gap:8px;font-size:14px;color:var(--ok)}
-  .chk .done[hidden]{display:none}
-  .chk .done button{border:0;border-radius:10px;min-height:40px;font-weight:800;font-size:14px;background:var(--ink);color:#fff}
 
   details{margin-top:6px;border-top:1px dashed var(--line);padding-top:4px}
   summary{cursor:pointer;font-weight:700;font-size:14px}
@@ -184,11 +181,13 @@
   .char{transform-box:fill-box;transform-origin:center bottom}
   .char.talk{animation:hop .55s ease 2}
   @keyframes hop{0%{transform:translateY(0)}35%{transform:translateY(-7px) scale(1.07)}70%{transform:translateY(0) scale(.98)}100%{transform:translateY(0)}}
-  /* 그림 아래 대화(2·3탭): 1탭과 같은 스타일. 여러 줄이면 '다음 ▶'으로 한 줄씩. 1탭의 대사는 오른쪽 패널로 옮겨감 */
-  .dialog{display:flex;flex-direction:column;gap:10px;padding:12px 6px 2px;min-height:160px}
+  /* 2탭 대화: 오른쪽 패널 안. 1탭과 같은 스타일, 여러 줄이면 '다음 ▶'으로 한 줄씩 */
+  .dialog{display:flex;flex-direction:column;gap:8px;padding:4px 0 0}
   .dialog[hidden]{display:none}
-  .dialog .speaker .av{width:40px;height:40px} .dialog .speaker .av svg{width:32px;height:32px}
-  .dialog .speech p{font-size:16px;line-height:1.5}
+  .dialog .speaker .av{width:32px;height:32px} .dialog .speaker .av svg{width:26px;height:26px}
+  .dialog .speaker .tag{font-size:12.5px;font-weight:700;color:var(--muted)}
+  .dialog .speech{padding:10px 14px}
+  .dialog .speech p{font-size:15px;line-height:1.45}
   .dialog .speech::before{left:14px}
   .dnext{margin-left:8px;border:1px solid #d9d0c2;background:#fff;border-radius:999px;padding:4px 12px;min-height:28px;font-size:12.5px;font-weight:700;color:var(--ink)}
   .dnext:hover{border-color:#bbb}
@@ -199,8 +198,7 @@
   svg.picking .arrow:hover .lbl rect{fill:#f6f2ea}
   /* 지금 고른 칸에 넣은 화살표: 배지 바탕만 화살표 색의 옅은 톤으로 */
   .arrow.sol.pick .lbl rect{fill:#ffe4b8} .arrow.ter.pick .lbl rect{fill:#fdd6d1} .arrow.heat.pick .lbl rect{fill:#cdece7}
-  .speech.info,.speech.info::before{border-color:#cfd9ee}
-  .dialog .speaker .pc{min-height:30px;font-size:16px}
+  .dialog .speaker .pc{min-height:26px;font-size:14px}
   .arrow{transition:opacity .3s}
   #thermo{opacity:0;transition:opacity .3s} svg.warm #thermo{opacity:1}
   svg.warm #hint-warm{opacity:1} #hint-warm{opacity:0;transition:opacity .3s}
@@ -341,7 +339,6 @@
       </g>
       <text id="hint-warm" x="934" y="528" text-anchor="end" font-size="12" font-weight="700" fill="#7a4a3a">※ 화살표 굵기와 숫자 = 현재 평형 상태의 에너지양</text>
     </svg>
-    <div class="dialog" id="dialog"></div>
     <div class="legend">
       <span><i class="s"></i>태양 복사 (가시광선 중심)</span>
       <span><i class="t"></i>지구 복사 (적외선)</span>
@@ -405,11 +402,7 @@
       <div id="pickArea">
         <p class="howto">표의 칸을 먼저 선택한 뒤, 그림에서 해당하는 화살표를 클릭하세요. <b>다시 누르면 선택이 취소됩니다.</b></p>
       </div>
-      <div class="verdicts" id="verdicts"></div>
-      <div class="done" id="chkDone" hidden>
-        <b>🎉 세 곳 모두 들어온 양 = 나간 양! 지구는 열수지 평형 상태.</b>
-        <button id="toWarm">3. 이산화 탄소가 늘어나면? →</button>
-      </div>
+      <div class="dialog" id="dialog"></div>
       <div class="actions">
         <button class="re" id="chkReset">다시</button>
         <button class="go" id="chkCheck">정답 확인</button>
@@ -827,17 +820,17 @@
                        emitA:'대기 흡수', emitP:'우주로 방출', evap:'물의 증발', cond:'대류·전도', back:'대기 재복사', atmUp:'대기·구름 방출'};
   // 화살표를 누르면 보여 주는 설명: 이름과 이동 방향만 (어느 칸에 들어가는지는 말하지 않음)
   const ARROW_INFO = {
-    solar:'태양에서 지구로 들어오는 복사 에너지입니다.',
-    refA: '태양 복사 에너지가 대기와 구름에서 반사·산란되어 우주로 돌아갑니다.',
-    refS: '태양 복사 에너지가 지표에서 반사되어 우주로 돌아갑니다.',
-    absA: '대기가 태양 복사 에너지를 흡수합니다.',
-    absS: '지표가 태양 복사 에너지를 흡수합니다.',
-    emitA:'지표에서 방출한 복사 에너지를 대기가 흡수합니다.',
-    emitP:'지표에서 방출한 복사 에너지가 대기를 통과해 우주로 나갑니다.',
-    evap: '지표의 물이 증발하면서 에너지가 숨은열 형태로 대기에 전달됩니다.',
-    cond: '대류와 전도로 지표의 열이 대기에 전달됩니다.',
-    back: '대기가 지표로 복사 에너지를 방출합니다.',
-    atmUp:'대기와 구름이 우주로 복사 에너지를 방출합니다.',
+    solar:['sun','내가 지구로 보내는 복사 에너지야.'],
+    refA: ['atm','태양 복사 에너지가 나와 구름에 부딪혀 반사·산란되고 우주로 돌아가는 거야.'],
+    refS: ['sfc','태양 복사 에너지가 나에게 닿자마자 반사되어 우주로 돌아가.'],
+    absA: ['atm','내가 태양 복사 에너지를 흡수하는 거야.'],
+    absS: ['sfc','내가 태양 복사 에너지를 흡수하는 거야. 땅과 바다가 데워지지.'],
+    emitA:['atm','지표가 방출한 복사 에너지를 내가 흡수하는 거야.'],
+    emitP:['sfc','내가 방출한 복사 에너지 중에서 대기를 그냥 통과해 우주로 나가는 몫이야.'],
+    evap: ['sfc','내 표면의 물이 증발하면서 숨은열 형태로 에너지를 대기에 옮기는 거야.'],
+    cond: ['sfc','대류와 전도로 내 열이 대기에 전달되는 거야.'],
+    back: ['atm','내가 지표 쪽으로 방출하는 복사 에너지야.'],
+    atmUp:['atm','나와 구름이 우주로 방출하는 복사 에너지야.'],
   };
   const ARROW_VAL  = {solar:100, refA:23, refS:7, absA:23, absS:47, emitA:104, emitP:12, evap:24, cond:5, back:98, atmUp:58};
   const ARROW_NAME = Object.fromEntries(Object.keys(ARROW_VAL).map(id => [id, ARROW_LABEL[id]+' '+ARROW_VAL[id]]));
@@ -901,8 +894,8 @@
     for (const id in nodes) nodes[id].g.classList.toggle('pick', cur.pick.includes(id));
     svg.classList.remove('hb-sfc','hb-atm','hb-space'); svg.classList.add('hb-'+act.L);
     document.querySelectorAll('#ftab thead th[data-col]').forEach(th => th.classList.toggle('right', colDone(th.dataset.col)));
-    $('verdicts').innerHTML = COLS.filter(colDone).map(L => `<div>✓ ${LAYER[L].me}: 유입 ${keySum(L,'in')} = 유출 ${keySum(L,'out')} → 평형</div>`).join('');
-    $('chkDone').hidden = !all; $('pickArea').hidden = all;
+    $('pickArea').hidden = all;
+    $('chkCheck').textContent = all ? '3. 이산화 탄소가 늘어나면? →' : '정답 확인';   // 모두 맞히면 다음 탭으로
   }
   function setActive(L, k, quiet=false){
     if (act.L===L && act.k===k) return;
@@ -924,11 +917,14 @@
     touch(act.L, act.k);
     return i<0;
   }
-  // 그림 아래 말풍선에 그 에너지의 이름과 이동 방향만 보여 줌
+  // 말풍선에서 관련 캐릭터가 그 에너지의 이름과 이동 방향만 말해 줌 (어느 칸인지는 말하지 않음)
   function sayInfo(id, removed){
     dlg.lines = []; dlg.i = 0;
-    dialog.innerHTML = `<div class="speaker"><span class="pc ${ARROWS[id].c}">${ARROW_VAL[id]}</span><b>${ARROW_LABEL[id]}</b>`
-      + (removed ? '<span class="cnt">선택 취소</span>' : '') + `</div><div class="speech info"><p>${ARROW_INFO[id]}</p></div>`;
+    const [who, t] = ARROW_INFO[id];
+    dialog.innerHTML = `<div class="speaker"><div class="av ${who}">${CH[who].ic}</div><b>${CH[who].nm}</b>`
+      + `<span class="pc ${ARROWS[id].c}">${ARROW_VAL[id]}</span><span class="tag">${ARROW_LABEL[id]}</span>`
+      + (removed ? '<span class="cnt">선택 취소</span>' : '') + `</div><div class="speech ${who}"><p>${t}</p></div>`;
+    hop(who);
   }
   function enterCheck(){
     COLS.forEach(L => KINDS.forEach(k => renderCell(L, k)));
@@ -993,9 +989,8 @@
     if (COLS.every(colDone)){ sayInfo(id, false); return; }   // 모두 맞힌 뒤에는 설명만
     sayInfo(id, !toggleArrow(id));
   });
-  $('chkCheck').onclick = judge;
+  $('chkCheck').onclick = () => COLS.every(colDone) ? setTab('warm') : judge();
   $('chkReset').onclick = () => { tbl = freshTable(); act = {L:'sfc', k:'in'}; enterCheck(); };
-  $('toWarm').onclick = () => setTab('warm');
 
   /* ---------- 3탭: 이산화 탄소가 늘어나면? (1탭처럼 대화로 따라가기) ---------- */
   // 단순 모형(학습지 수치 기준): 태양 복사 배분(반사·산란 30 / 대기 23 / 지표 47)과 물의 증발 24·대류와 전도 5는 그대로 두고,
@@ -1129,17 +1124,19 @@
 
   /* ---------- 한 화면 맞춤 (zoom) ---------- */
   const app = $('app');
-  let lastZ = 0;
+  let lastZ = 0, refH = 0;
   function fit(){
-    if (innerWidth < 900){ app.style.zoom = ''; return; }
+    if (innerWidth < 900){ app.style.zoom = ''; document.body.classList.remove('tall'); return; }
     // 숫자 입력 중(화면 키보드가 열림)에는 배율을 바꾸지 않음 → 입력칸이 움직이지 않게
     const ae = document.activeElement;
     if (ae && ae.tagName==='INPUT' && ae.type==='text') return;
     app.style.zoom = 1;
     const h = app.offsetHeight, w = 1440;
-    const z = Math.min(innerWidth / w, innerHeight / h, 1.6);
+    if (activeTab!=='check' || !refH) refH = h;   // 1·3탭(대화 화면) 높이를 기준으로 삼아 세 탭의 그림 크기를 같게
+    const z = Math.min(innerWidth / w, innerHeight / refH, 1.6);
     if (Math.abs(z - lastZ) > 0.004) lastZ = z;
     app.style.zoom = lastZ;
+    document.body.classList.toggle('tall', h*lastZ > innerHeight + 1);   // 2탭 내용이 길어지면 잘리지 않게 스크롤
   }
   addEventListener('resize', fit);
   document.addEventListener('focusout', e => { if (e.target.tagName==='INPUT') setTimeout(fit, 60); });
