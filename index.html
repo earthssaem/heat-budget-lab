@@ -23,7 +23,7 @@
   /* 넓은 화면: 바깥 틀을 화면에 고정 → 1440px 폭으로 그린 앱이 태블릿 브라우저의 화면 기준을 넓히지 못하게(처음 열 때 잘림 방지) */
   body{display:grid;place-items:center;overflow:hidden;position:fixed;inset:0}
   body.tall{place-items:start center;overflow-y:auto}
-  #app{width:1440px}
+  #app{width:1440px}   /* 넓은 화면에서는 fit()이 1440~1200px 중 화면에 가장 크게 보이는 폭을 고름 */
   button{font-family:inherit;cursor:pointer}
   header{padding:14px 20px 6px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
   .brand{display:flex;align-items:center;gap:12px}
@@ -127,7 +127,7 @@
   table.ftab{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13px}
   .ftab th,.ftab td{border:1px solid #d6cfc3;padding:6px 5px;text-align:center}
   .ftab thead th{background:#ebe6dd;font-size:14.5px;font-weight:900;height:36px}
-  .ftab thead th:first-child{width:82px}
+  .ftab thead th:first-child{width:68px}
   .ftab thead th .mk{vertical-align:-4px;margin-right:5px}
   .ftab tbody th{background:#f6f2ec;font-size:13px;font-weight:800;line-height:1.35}
   .ftab td{position:relative;background:#fff;vertical-align:top;height:84px;cursor:pointer}
@@ -1205,21 +1205,36 @@
 
   /* ---------- 한 화면 맞춤 (zoom) ---------- */
   const app = $('app');
-  let lastZ = 0, refH = 0;
+  let lastZ = 0, fitting = false;
+  // 배치 폭 후보: 화면 비율에 따라 폭을 좁히면(세로 공간이 남는 태블릿 가로 화면 등) 더 크게 보임
+  const WS = [1440, 1360, 1280, 1200], refMap = {};   // refMap[폭] = 그 폭에서 1·3탭(대화 화면) 높이
   // 실제로 보이는 화면 크기(스크롤바 제외)
   const viewW = () => document.documentElement.clientWidth || innerWidth, viewH = () => innerHeight;
   function fit(){
-    if (viewW() < 900){ app.style.zoom = ''; document.body.classList.remove('tall'); return; }
+    if (fitting) return;
+    if (viewW() < 900){ app.style.zoom = ''; app.style.width = ''; document.body.classList.remove('tall'); return; }
     // 숫자 입력 중(화면 키보드가 열림)에는 배율을 바꾸지 않음 → 입력칸이 움직이지 않게
     const ae = document.activeElement;
     if (ae && ae.tagName==='INPUT' && ae.type==='text') return;
+    fitting = true;
+    const vw = viewW(), vh = viewH() - 2;   // 2px 여유: 반올림 때문에 아래가 살짝 잘리지 않게
     app.style.zoom = 1;
-    const h = app.offsetHeight, w = 1440;
-    if (activeTab!=='check' || !refH) refH = h;   // 1·3탭(대화 화면) 높이를 기준으로 삼아 세 탭의 그림 크기를 같게
-    const z = Math.min(viewW() / w, (viewH() - 2) / refH, 1.6);   // 2px 여유: 반올림 때문에 아래가 살짝 잘리지 않게
-    if (Math.abs(z - lastZ) > 0.004) lastZ = z;
+    let best = null;
+    for (const W of WS){
+      app.style.width = W + 'px';
+      const h = app.offsetHeight;
+      if (activeTab!=='check' || !refMap[W]) refMap[W] = h;   // 1·3탭 높이를 기준으로 삼아 세 탭의 그림 크기를 같게
+      const z = Math.min(vw / W, vh / refMap[W], 1.6);
+      const roomy = (refMap[W] + 60) * z <= vh;               // 2탭 표가 길어질 여유(60px)가 남을 때만 더 좁힘
+      if (!best) best = {W, z};
+      else if (z > best.z * 1.01 && roomy) best = {W, z};     // 1% 넘게 커질 때만 더 좁은 폭을 고름
+    }
+    app.style.width = best.W + 'px';
+    const h = app.offsetHeight;
+    if (Math.abs(best.z - lastZ) > 0.004) lastZ = best.z;
     app.style.zoom = lastZ;
     document.body.classList.toggle('tall', h*lastZ > viewH() + 1);   // 2탭 내용이 길어지면 잘리지 않게 스크롤
+    fitting = false;
   }
   addEventListener('resize', fit);
   // 태블릿: 화면 회전·주소창이 줄어들 때, 처음 열고 브라우저가 화면을 다시 잡은 뒤에도 다시 맞춤
