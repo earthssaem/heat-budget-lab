@@ -38,8 +38,8 @@
   .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);border:1px solid var(--line)}
   .figure{padding:12px}
   .figure svg{width:100%;height:auto;display:block}
-  .legend{display:flex;gap:16px;flex-wrap:wrap;padding:8px 8px 0;font-size:12.5px;color:var(--muted)}
-  .legend i{display:inline-block;width:22px;height:9px;border-radius:5px;vertical-align:middle;margin-right:6px}
+  .legend{display:flex;gap:4px 12px;flex-wrap:wrap;padding:8px 8px 0;font-size:12px;color:var(--muted)}
+  .legend i{display:inline-block;width:18px;height:9px;border-radius:5px;vertical-align:middle;margin-right:5px}
   .legend .s{background:var(--sol)} .legend .t{background:var(--ter)} .legend .h{background:#4fb3a9}
   .panel{display:flex;flex-direction:column;gap:14px}
   /* 1탭 패널: 높이를 고정해 대사 길이가 달라져도 버튼 위치와 전체 배율이 흔들리지 않게 함 */
@@ -318,14 +318,14 @@
       </g></g>
 
       <!-- clouds -->
-      <g class="cloudwrap" transform="translate(415,302) scale(.72)">
+      <g class="cloudwrap" transform="translate(408.5,302) scale(.64)">
         <use href="#cloudShape"/>
-        <text x="0" y="8" font-size="14" font-weight="700" fill="#7f93aa" text-anchor="middle">구름</text>
+        <text x="0" y="8" font-size="15" font-weight="700" fill="#7f93aa" text-anchor="middle">대기</text>
       </g>
       <g transform="translate(668,250) scale(1.25)"><g class="cloudwrap char" id="char-atm">
         <use href="#cloudShape"/>
         <g class="face"><circle cx="-9" cy="-3" r="2.5"/><circle cx="9" cy="-3" r="2.5"/><circle class="hl" cx="-8" cy="-4" r=".9"/><circle class="hl" cx="10" cy="-4" r=".9"/><circle class="cheek" cx="-18" cy="4" r="3.6"/><circle class="cheek" cx="18" cy="4" r="3.6"/><path d="M-6,3 Q0,8.5 6,3"/></g>
-        <text x="-4" y="31" font-size="9.5" font-weight="700" fill="#7f93aa" text-anchor="middle">대기·구름</text>
+        <text x="-4" y="31" font-size="10" font-weight="700" fill="#7f93aa" text-anchor="middle">대기</text>
       </g></g>
       <!-- ground character: the ground itself has a face -->
       <g transform="translate(160,466) scale(1.35)"><g class="char" id="char-sfc">
@@ -356,8 +356,8 @@
       <text id="hint-warm" x="934" y="528" text-anchor="end" font-size="12" font-weight="700" fill="#7a4a3a">※ 화살표 굵기와 숫자 = 현재 평형 상태의 에너지양</text>
     </svg>
     <div class="legend">
-      <span><i class="s"></i>태양 복사 (가시광선 중심)</span>
-      <span><i class="t"></i>지구 복사 (적외선)</span>
+      <span><i class="s"></i>태양 복사 에너지 (가시광선 중심)</span>
+      <span><i class="t"></i>지구 복사 에너지 (적외선)</span>
       <span><i class="h"></i>물의 증발·대류와 전도</span>
       <span>· 화살표 굵기 = 에너지양</span>
     </div>
@@ -440,7 +440,7 @@
   const ARROWS = {
     // 수치는 학습지 그림 기준. 태양 복사 100의 가지(23·23·7)는 100 화살표 머리 안쪽(y=118)에서 출발 → 끊긴 곳 없이 이어짐.
     // 객체 순서 = 그리기 순서: solar·absS 를 가지들보다 뒤에 두어 굵은 줄기가 가지의 시작을 덮음.
-    refA:  {pts:[[470,118],[415,300],[335,52]], w:11, c:'sol', cont:true, layers:['space','atm'],
+    refA:  {pts:[[470,118],[404,276],[335,52]], w:11, c:'sol', cont:true, layers:['space','atm'],
             label:{x:334,y:166,num:'23',name:'대기 반사·산란',anchor:'middle'}},
     // 지표면 반사 7: 100 화살표 머리에서 갈라져 지표에 닿은 뒤 바로 꺾여 우주로 (구름 반사와 같은 모양).
     refS:  {pts:[[470,118],[438,408],[205,52]], w:6, c:'sol', cont:true, layers:['space','sfc'],
@@ -452,18 +452,18 @@
     absS:  {pts:[[470,124],[470,414]], w:19, c:'sol', cont:true, layers:['sfc'],
             label:{x:496,y:372,num:'47',name:'지표 흡수',anchor:'start'}},
     // 물의 증발(숨은열)과 대류·전도: 복사가 아니라 열 이동이라 색을 따로 씀. 지표 방출 줄기보다 왼쪽에 둠
-    evap:  {pts:[[704,414],[704,274]], w:10, c:'heat', cont:true, layers:['sfc','atm'],
+    evap:  {pts:[[704,414],[704,278]], w:10, c:'heat', cont:true, layers:['sfc','atm'],
             label:{x:721,y:326,num:'24',name:'물의 증발',anchor:'start'}},
-    cond:  {pts:[[786,414],[786,260],[731,260]], w:5, c:'heat', cont:true, layers:['sfc','atm'],
+    cond:  {pts:[[786,414],[786,264],[734,264]], w:5, c:'heat', cont:true, layers:['sfc','atm'],
             label:{x:800,y:378,num:'5',name:'대류·전도',anchor:'start'}},
-    back:  {pts:[[620,272],[620,414]], w:24, c:'ter', cont:true, layers:['atm','sfc'],
+    back:  {pts:[[620,279],[620,414]], w:24, c:'ter', cont:true, layers:['atm','sfc'],
             label:{x:600,y:352,num:'98',name:'대기 재복사',anchor:'end',follow:{cx:620,side:-1}}},
-    atmUp: {pts:[[660,216],[660,46]], w:18, c:'ter', cont:true, layers:['atm','space'],
-            label:{x:681,y:142,num:'58',name:'대기·구름 방출',anchor:'start'}},
+    atmUp: {pts:[[660,208],[660,46]], w:18, c:'ter', cont:true, layers:['atm','space'],
+            label:{x:681,y:142,num:'58',name:'대기 방출',anchor:'start'}},
     // 지표 방출 116: 지표에서 한 줄기로 올라와 대기 흡수 104(왼쪽으로 꺾여 구름으로)와 우주로 12(곧게 위로)로 갈라짐.
     // 두 가지는 줄기 폭을 나눠 나란히 붙어서 출발하고(fork), 줄기 굵기 = 두 가지 굵기의 합(sum). 줄기를 뒤에 그려 가지의 시작을 덮음.
-    emitA: {pts:() => [[forkX('emitA'),EMIT.top+8],[forkX('emitA'),228],[708,228]], w:26, c:'ter', cont:true, layers:['sfc','atm'], fork:'emit',
-            label:{x:790,y:200,num:'104',name:'대기 흡수',anchor:'middle',nameAt:{x:790,y:178}}},
+    emitA: {pts:() => [[forkX('emitA'),EMIT.top+8],[forkX('emitA'),226],[714,226]], w:26, c:'ter', cont:true, layers:['sfc','atm'], fork:'emit',
+            label:{x:784,y:196,num:'104',name:'대기 흡수',anchor:'middle',nameAt:{x:784,y:174}}},
     emitP: {pts:() => [[forkX('emitP'),EMIT.top+8],[forkX('emitP'),46]], w:8, c:'ter', cont:true, layers:['sfc','space'], fork:'emit',
             label:{x:873,y:140,num:'12',name:'우주로 방출',anchor:'end',follow:{side:-1}}},
     emit:  {pts:[[EMIT.x,414],[EMIT.x,EMIT.top]], w:34, c:'ter', cont:true, nohead:true, layers:['sfc','atm','space'], sum:['emitA','emitP'],
@@ -495,7 +495,7 @@
       {who:'sun', t:'벌써 30이 돌아왔네. 그럼 지구가 실제로 흡수하는 에너지는 얼마일까?',
        hl:['refA','refS']},
     ]},
-    {title:'대기·구름 흡수 23', ledger:[{col:'atm',kind:'in',label:'태양 복사 흡수',v:23}], lines:[
+    {title:'대기 흡수 23', ledger:[{col:'atm',kind:'in',label:'태양 복사 흡수',v:23}], lines:[
       {who:'atm', t:'반사되지 않은 70 중 23은 대기와 구름이 흡수해. 햇빛이 지표만 데우는 건 아니거든.',
        show:['absA'], hl:['absA']},
     ]},
@@ -512,7 +512,7 @@
      ledger:[{col:'sfc',kind:'out',label:'대기로 방출',v:104},{col:'sfc',kind:'out',label:'우주로 방출',v:12},
              {col:'atm',kind:'in',label:'지구 복사 흡수',v:104},{col:'space',kind:'in',label:'지표면 방출',v:12}],
      lines:[
-      {who:'sfc', t:'나도 흡수만 하지 않고 방출도 하기 때문이야. 적외선으로 방출하는 양이 모두 116이야.',
+      {who:'sfc', t:'나도 흡수만 하지 않고 방출도 하기 때문이야. 내가 방출하는 지구 복사 에너지는 모두 116이야.',
        show:['emit','emitA','emitP'], hl:['emit']},
       {who:'atm', t:'그중 104는 온실 기체와 구름이 흡수해. 나머지 12는 대기를 통과해서 우주로 나가고.',
        hl:['emitA','emitP']},
@@ -521,7 +521,7 @@
      ledger:[{col:'sfc',kind:'out',label:'물의 증발',v:24},{col:'sfc',kind:'out',label:'대류와 전도',v:5},
              {col:'atm',kind:'in',label:'물의 증발',v:24},{col:'atm',kind:'in',label:'대류와 전도',v:5}],
      lines:[
-      {who:'sfc', t:'적외선만 있는 게 아니야. 바다와 땅의 물이 증발하면서 24를, 대류와 전도로 5를 대기에 옮겨.',
+      {who:'sfc', t:'지구 복사 에너지만 있는 게 아니야. 바다와 땅의 물이 증발하면서 24를, 대류와 전도로 5를 대기에 옮겨.',
        show:['evap','cond'], hl:['evap','cond']},
       {who:'atm', t:'수증기가 응결할 때 숨은열이 나오고, 데워진 공기가 올라오며 열을 전해. 이 29도 내가 흡수해.',
        hl:['evap','cond'], key:'지표는 복사뿐 아니라 물의 증발, 대류와 전도로도 대기에 에너지를 전달해요.'},
@@ -530,21 +530,21 @@
     ]},
     {title:'대기 재복사와 온실 효과',
      ledger:[{col:'sfc',kind:'in',label:'대기 재복사',v:98},{col:'atm',kind:'out',label:'지표로 재복사',v:98}],
-     more:'대기가 적외선을 흡수·재복사하지 않는다면 지구의 평균 지표 온도는 약 −18℃가 돼요. 실제 평균은 약 15℃로, 이 차이가 대기의 온실 효과 때문이에요.',
+     more:'대기가 지구 복사 에너지를 흡수·재복사하지 않는다면 지구의 평균 지표 온도는 약 −18℃가 돼요. 실제 평균은 약 15℃로, 이 차이가 대기의 온실 효과 때문이에요.',
      lines:[
-      {who:'atm', t:'내가 빠졌네! 나도 적외선을 방출하고, 그중 98이 지표에 흡수돼. 이걸 대기의 재복사라고 해.',
+      {who:'atm', t:'내가 빠졌네! 나도 지구 복사 에너지를 방출하고, 그중 98이 지표에 흡수돼. 이걸 대기의 재복사라고 해.',
        show:['back'], hl:['back']},
       {who:'sfc', t:'태양에서 47, 대기에서 98. 합하면 145! 내보내는 양과 딱 맞네.',
        hl:['absS','back','emitA','emitP','evap','cond']},
       {who:'sun', t:'계산은 맞는데… 내가 보낸 건 100이잖아. 에너지가 늘어난 건 아니지?',
        hl:['solar','emitA','emitP']},
-      {who:'atm', t:'새로 생긴 건 아니야. 지표와 나 사이에서도 에너지가 오가거든. 내가 적외선을 흡수하고 재복사해서 지표가 더 따뜻하게 유지되는 게 온실 효과야.',
-       hl:['emitA','back'], key:'대기의 적외선 흡수와 재복사로 지표가 더 높은 온도로 유지돼요.'},
+      {who:'atm', t:'새로 생긴 건 아니야. 지표와 나 사이에서도 에너지가 오가거든. 내가 지구 복사 에너지를 흡수하고 재복사해서 지표가 더 따뜻하게 유지되는 게 온실 효과야.',
+       hl:['emitA','back'], key:'대기가 지구 복사 에너지를 흡수하고 재복사해서 지표가 더 높은 온도로 유지돼요.'},
     ]},
     {title:'대기 → 우주 58',
-     ledger:[{col:'atm',kind:'out',label:'우주로 방출',v:58},{col:'space',kind:'in',label:'대기·구름 방출',v:58}],
+     ledger:[{col:'atm',kind:'out',label:'우주로 방출',v:58},{col:'space',kind:'in',label:'대기 방출',v:58}],
      lines:[
-      {who:'atm', t:'지표 쪽으로만 방출하는 건 아니야. 우주로 방출하는 적외선도 58 있어.',
+      {who:'atm', t:'지표 쪽으로만 방출하는 건 아니야. 우주로 방출하는 지구 복사 에너지도 58 있어.',
        show:['atmUp'], hl:['atmUp']},
       {who:'atm', t:'내 계산도 맞춰 볼까? 흡수는 23 + 104 + 24 + 5, 방출은 98 + 58. 둘 다 156이니까 나도 평형이야.',
        hl:['absA','emitA','evap','cond','back','atmUp'],
@@ -881,7 +881,7 @@
   /* ---------- 층별 평형 확인 (교과서 표 채우기) ---------- */
   // 그림 라벨과 같은 이름. 피드백에서는 '이름 + 숫자'로 부름
   const ARROW_LABEL = {solar:'태양 복사', refA:'대기 반사·산란', refS:'지표 반사', absA:'대기 흡수', absS:'지표 흡수',
-                       emit:'지표 방출', emitA:'대기 흡수', emitP:'우주로 방출', evap:'물의 증발', cond:'대류·전도', back:'대기 재복사', atmUp:'대기·구름 방출'};
+                       emit:'지표 방출', emitA:'대기 흡수', emitP:'우주로 방출', evap:'물의 증발', cond:'대류·전도', back:'대기 재복사', atmUp:'대기 방출'};
   // 화살표를 누르면 보여 주는 설명: 이름과 이동 방향만 (어느 칸에 들어가는지는 말하지 않음)
   const ARROW_INFO = {
     solar:['sun','내가 지구로 보내는 복사 에너지야.'],
@@ -889,7 +889,7 @@
     refS: ['sfc','태양 복사 에너지가 나에게 닿자마자 반사되어 우주로 돌아가.'],
     absA: ['atm','내가 태양 복사 에너지를 흡수하는 거야.'],
     absS: ['sfc','내가 태양 복사 에너지를 흡수하는 거야. 땅과 바다가 데워지지.'],
-    emit: ['sfc','내가 적외선으로 방출하는 복사 에너지 전체야. 올라가면서 대기가 흡수하는 104와 대기를 통과해 우주로 나가는 12로 나뉘어.'],
+    emit: ['sfc','내가 방출하는 지구 복사 에너지 전체야. 올라가면서 대기가 흡수하는 104와 대기를 통과해 우주로 나가는 12로 나뉘어.'],
     emitA:['atm','지표가 방출한 복사 에너지를 내가 흡수하는 거야.'],
     emitP:['sfc','내가 방출한 복사 에너지 중에서 대기를 그냥 통과해 우주로 나가는 몫이야.'],
     evap: ['sfc','내 표면의 물이 증발하면서 숨은열 형태로 에너지를 대기에 옮기는 거야.'],
@@ -1115,20 +1115,20 @@
   const WARM_STEPS = [
     {title:'지금은 열수지 평형', lines:[
       {who:'atm', st:'base', t:'지금 그림은 1탭에서 확인한 열수지 평형 상태야. 지표도 나도 들어온 만큼 내보내고 있어.'},
-      {who:'sfc', st:'base', t:'그런데 대기 중 이산화 탄소가 늘어나면 어떻게 될까? 이산화 탄소는 적외선을 잘 흡수하는 온실 기체야.'},
+      {who:'sfc', st:'base', t:'그런데 대기 중 이산화 탄소가 늘어나면 어떻게 될까? 이산화 탄소는 지구 복사 에너지를 잘 흡수하는 온실 기체야.'},
     ]},
-    {title:'대기의 적외선 흡수', lines:[
-      {who:'atm', st:'base', t:'이산화 탄소가 늘면, 지표가 방출한 적외선 중 내가 흡수하는 양은 어떻게 될까?',
+    {title:'대기의 지구 복사 에너지 흡수', lines:[
+      {who:'atm', st:'base', t:'이산화 탄소가 늘면, 지표가 방출한 지구 복사 에너지 중 내가 흡수하는 양은 어떻게 될까?',
        hl:['emitA'], ask:{opts:['up','down'], ans:'up', reveal:'p1'}},
-      {who:'atm', st:'p1', t:'온실 기체가 많아지니 지표가 방출한 적외선을 더 많이 흡수하게 돼. 대기 흡수가 증가했어.', hl:['emitA']},
-      {who:'atm', st:'p1', t:'그럼 나를 그냥 통과해서 우주로 나가는 적외선은 어떻게 될까?',
+      {who:'atm', st:'p1', t:'온실 기체가 많아지니 지표가 방출한 지구 복사 에너지를 더 많이 흡수하게 돼. 대기 흡수가 증가했어.', hl:['emitA']},
+      {who:'atm', st:'p1', t:'그럼 나를 그냥 통과해서 우주로 나가는 지구 복사 에너지는 어떻게 될까?',
        hl:['emitP'], ask:{opts:['up','down'], ans:'down', reveal:'p2'}},
-      {who:'atm', st:'p2', t:'내가 더 많이 붙잡으니까 그냥 통과하는 적외선은 감소해.', hl:['emitP']},
+      {who:'atm', st:'p2', t:'내가 더 많이 붙잡으니까 그냥 통과하는 지구 복사 에너지는 감소해.', hl:['emitP']},
     ]},
     {title:'대기의 재복사', lines:[
       {who:'atm', st:'p2', t:'에너지를 더 많이 흡수한 나는 더 따뜻해져. 그럼 내가 지표로 보내는 재복사는 어떻게 될까?',
        hl:['back'], ask:{opts:['up','down'], ans:'up', reveal:'A'}},
-      {who:'atm', st:'A', t:'따뜻해진 나는 적외선을 더 많이 방출해. 지표로 향하는 재복사도, 우주로 나가는 대기 방출도 증가했어.', hl:['back','atmUp']},
+      {who:'atm', st:'A', t:'따뜻해진 나는 지구 복사 에너지를 더 많이 방출해. 지표로 향하는 재복사도, 우주로 나가는 대기 방출도 증가했어.', hl:['back','atmUp']},
       {who:'sfc', st:'A', t:'태양에서 받는 건 그대로인데 대기에서 받는 게 늘었어. 그런데 내가 내보내는 양은 아직 그대로야.', hl:['absS','back']},
     ]},
     {title:'지표 온도는?', lines:[
@@ -1138,14 +1138,14 @@
        key:'들어오는 에너지가 나가는 에너지보다 많으면 온도가 올라가요.'},
     ]},
     {title:'새로운 열수지 평형', lines:[
-      {who:'sun', st:'rise', t:'온도가 올라간 지표가 방출하는 적외선은 어떻게 될까?',
+      {who:'sun', st:'rise', t:'온도가 올라간 지표가 방출하는 지구 복사 에너지는 어떻게 될까?',
        hl:['emit'], ask:{opts:['up','down'], ans:'up', reveal:'B'}},
-      {who:'sfc', st:'B', t:'온도가 오르면 나도 적외선을 더 많이 방출해. 그래서 들어오는 양과 나가는 양이 다시 같아졌어.', hl:['emit']},
+      {who:'sfc', st:'B', t:'온도가 오르면 나도 지구 복사 에너지를 더 많이 방출해. 그래서 들어오는 양과 나가는 양이 다시 같아졌어.', hl:['emit']},
       {who:'atm', st:'B', t:'다시 평형이 됐지만, 처음보다 더 높은 온도에서 이룬 새 평형이야.',
        key:'이산화 탄소가 늘면 더 높은 온도에서 새로운 열수지 평형에 도달해요.'},
     ]},
     {title:'우주로 나가는 에너지',
-     more:`단순 모형으로 계산한 값(처음 → 늘어난 직후 → 새 평형): 대기 흡수 ${O.abs} → ${A.abs} → ${B.abs}, 대기 통과 ${O.pass} → ${A.pass} → ${B.pass}, 대기 재복사 ${O.down} → ${A.down} → ${B.down}, 대기·구름 방출 ${O.up} → ${A.up} → ${B.up}, 지표 방출 ${O.E} → ${A.E} → ${B.E}. 물의 증발과 대류·전도는 그대로 두었어요. 그림의 굵기 차이는 알아보기 쉽게 실제보다 크게 나타냈어요.`,
+     more:`단순 모형으로 계산한 값(처음 → 늘어난 직후 → 새 평형): 대기 흡수 ${O.abs} → ${A.abs} → ${B.abs}, 대기 통과 ${O.pass} → ${A.pass} → ${B.pass}, 대기 재복사 ${O.down} → ${A.down} → ${B.down}, 대기 방출 ${O.up} → ${A.up} → ${B.up}, 지표 방출 ${O.E} → ${A.E} → ${B.E}. 물의 증발과 대류·전도는 그대로 두었어요. 그림의 굵기 차이는 알아보기 쉽게 실제보다 크게 나타냈어요.`,
      lines:[
       {who:'sun', st:'B', t:'내가 보내는 에너지는 그대로야. 새 평형에서 우주로 나가는 지구 복사 전체는 처음과 비교해 어떻게 될까?',
        hl:['emitP','atmUp'], ask:{opts:['up','down','same'], ans:'same', reveal:'B'}},
