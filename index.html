@@ -169,6 +169,9 @@
   .arrow:not(.on) > path:not(.hit){opacity:0}   /* 숨긴 화살표는 선 끝 조각도 안 보이게 (고해상도·축소 화면에서 남던 조각) */
   .arrow.on polygon,.arrow.on .lbl{opacity:1}
   .arrow:not(.on) polygon,.arrow:not(.on) .lbl{transition-delay:0s}   /* 이전으로 갈 때는 머리·숫자가 바로 사라짐 */
+  /* 지표 방출: 줄기(116)가 아래에서 올라온 뒤 두 가지(104·12)로 갈라지도록 가지를 늦게 그림 */
+  svg:not(.instant):not(.warm) .arrow.fork.on > path:not(.hit){transition-delay:.75s}
+  svg:not(.instant):not(.warm) .arrow.fork.on polygon,svg:not(.instant):not(.warm) .arrow.fork.on .lbl{transition-delay:1.5s}
   svg.instant .arrow path{transition:stroke-width .3s,opacity .3s}
   svg.instant .arrow polygon,svg.instant .arrow .lbl{transition:opacity .2s}
   svg.warm .arrow path{transition:opacity .3s}   /* 굵기는 JS가 부드럽게 바꿈 */
@@ -178,9 +181,9 @@
   .arrow.ter path{stroke:url(#gTer)} .arrow.ter polygon{fill:#ea6a62;stroke:#ea6a62}
   .arrow.heat path{stroke:#4fb3a9} .arrow.heat polygon{fill:#4fb3a9;stroke:#4fb3a9}
   .arrow .lbl rect{fill:#fff;stroke:none;filter:drop-shadow(0 1px 2px rgba(60,40,10,.12))}
-  .arrow text{font-family:inherit;font-weight:900;font-size:24px;dominant-baseline:central}
+  .arrow text{font-family:inherit;font-weight:900;font-size:21px;dominant-baseline:central}
   .arrow.sol text{fill:#c9780f} .arrow.ter text{fill:#c8433d} .arrow.heat text{fill:#2f8a81}
-  .arrow text.name{font-size:16px;font-weight:700;fill:#6f675c;dominant-baseline:auto;paint-order:stroke;stroke:rgba(255,255,255,.85);stroke-width:3.5px;stroke-linejoin:round}
+  .arrow text.name{font-size:15px;font-weight:700;fill:#6f675c;dominant-baseline:auto;paint-order:stroke;stroke:rgba(255,255,255,.85);stroke-width:3.5px;stroke-linejoin:round}
   .arrow path.hit{stroke:transparent !important;stroke-dasharray:none !important;stroke-linecap:round !important;fill:none;pointer-events:none}
   svg.picking .arrow path.hit{pointer-events:stroke}
   .bracket{opacity:0;transition:opacity .4s}
@@ -212,7 +215,7 @@
   /* 지금 고른 칸에 넣은 화살표: 배지 바탕만 화살표 색의 옅은 톤으로 */
   /* 3탭: 숫자 대신 증가·감소 표시 (바뀌지 않은 화살표는 배지 없이 이름만) */
   .arrow.nonum .lbl rect,.arrow.nonum .lbl text:not(.name){display:none}
-  .arrow.up .lbl text:not(.name),.arrow.down .lbl text:not(.name){font-size:18.5px}
+  .arrow.up .lbl text:not(.name),.arrow.down .lbl text:not(.name){font-size:17px}
   .arrow.up .lbl rect{fill:#fde1dd} .arrow.up .lbl text:not(.name){fill:#c8433d}
   .arrow.down .lbl rect{fill:#e2ebfb} .arrow.down .lbl text:not(.name){fill:#3b6fd1}
   .arrow.sol.pick .lbl rect{fill:#ffe4b8} .arrow.ter.pick .lbl rect{fill:#fdd6d1} .arrow.heat.pick .lbl rect{fill:#cdece7}
@@ -609,7 +612,7 @@
 
   for (const id in ARROWS){
     const cfg = ARROWS[id];
-    const g = el('g', {class:'arrow '+cfg.c+(cfg.cont?' cont':'')+' '+cfg.layers.map(l=>'L-'+l).join(' '), id:'ar-'+id});
+    const g = el('g', {class:'arrow '+cfg.c+(cfg.cont?' cont':'')+(cfg.fork?' fork':'')+' '+cfg.layers.map(l=>'L-'+l).join(' '), id:'ar-'+id});
     const hit = el('path', {class:'hit'});   // 눈에 보이지 않는 넓은 클릭 판정 영역 (가는 화살표도 누르기 쉽게)
     const path = el('path', {'pathLength':'1', 'stroke-width':cfg.w});
     const head = el('polygon');
@@ -620,7 +623,7 @@
     const tnum = el('text', {x:lb.x, y:lb.y-6, 'text-anchor':lb.anchor||'middle'}); tnum.textContent = lb.num;
     lblG.append(rect, tnum);
     let tname = null;
-    if (lb.name){ const na = lb.nameAt || {x:lb.x, y:lb.y+35}; tname = el('text', {class:'name', x:na.x, y:na.y, 'text-anchor':lb.anchor||'middle'}); tname.textContent = lb.name; lblG.append(tname); }
+    if (lb.name){ const na = lb.nameAt || {x:lb.x, y:lb.y+32}; tname = el('text', {class:'name', x:na.x, y:na.y, 'text-anchor':lb.anchor||'middle'}); tname.textContent = lb.name; lblG.append(tname); }
     g.append(lblG);
     gArrows.append(g);
     nodes[id] = {g, hit, path, head, tnum, tname, rect};
