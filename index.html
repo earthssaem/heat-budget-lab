@@ -27,6 +27,11 @@
   button{font-family:inherit;cursor:pointer}
   header{padding:14px 20px 6px;display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px}
   .brand{display:flex;align-items:center;gap:12px}
+  /* 제목 부분(로고·제목·부제)을 누르면 처음 화면(1탭 STEP 0)으로 */
+  a.brand{color:inherit;text-decoration:none;border-radius:16px;margin:-4px -8px;padding:4px 8px;-webkit-tap-highlight-color:transparent}
+  a.brand .logo{transition:transform .15s}
+  @media (hover:hover){ a.brand:hover h1{color:var(--accent)} a.brand:hover .logo{transform:translateY(-1px)} }   /* 터치 화면에서는 누른 뒤 색이 남지 않게 */
+  a.brand:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
   .brand .logo{width:46px;height:46px;border-radius:14px;overflow:hidden;background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);flex:0 0 auto}
   .brand .logo svg{display:block;width:100%;height:100%}
   h1{font-size:22px;margin:0;font-weight:900;letter-spacing:-.3px}
@@ -240,7 +245,7 @@
 <body>
 <div id="app">
 <header>
-  <div class="brand">
+  <a class="brand" id="homeLink" href="#" title="처음 화면으로" aria-label="지구 열수지 탐구실 — 처음 화면으로">
     <div class="logo" aria-hidden="true">
       <svg viewBox="0 0 48 48">
         <defs>
@@ -279,7 +284,7 @@
       <h1>지구 열수지 탐구실</h1>
       <p>지구의 복사 평형 상태에서 나타나는 지표, 대기, 우주 간의 열출입 관계를 탐구해 봅시다.</p>
     </div>
-  </div>
+  </a>
   <nav class="tabs">
     <button class="tab active" data-tab="flow">1. 열수지 평형</button>
     <button class="tab" data-tab="check">2. 층별 평형 확인</button>
@@ -823,6 +828,7 @@
     if (document.activeElement && /INPUT|TEXTAREA/.test(document.activeElement.tagName)) return;
     if (activeTab!=='flow' && activeTab!=='warm') return;
     if (e.target && e.target.closest && e.target.closest('summary')) return;   // '더 알아보기'는 Enter·Space로 여닫음
+    if (e.target && e.target.closest && e.target.closest('#homeLink')) return;  // 제목에 초점이 있을 때 Enter는 처음 화면으로
     if (e.key==='ArrowRight' || e.key===' ' || e.key==='Enter'){ e.preventDefault(); nextLine(); }
     if (e.key==='ArrowLeft'){ e.preventDefault(); prevLine(); }
     if (e.key==='Home'){ go(0); }
@@ -852,6 +858,14 @@
     }
     $('ground-warm').setAttribute('opacity', 0);
   }
+  // 제목을 누르면 처음 화면으로: 1탭 · 대화로 보기 · STEP 0 (2탭 입력과 3탭 답은 그대로 둠)
+  function goHome(){
+    if (activeTab!=='flow') setTab('flow');
+    setView('text');
+    go(0);
+    scrollTo(0, 0); document.body.scrollTop = 0;   // 좁은 화면·2탭 긴 표에서 스크롤한 경우 맨 위로
+  }
+  $('homeLink').addEventListener('click', e => { e.preventDefault(); goHome(); });
   function setTab(t){
     activeTab = t;
     document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab===t));
