@@ -178,16 +178,16 @@
   .arrow.ter path{stroke:url(#gTer)} .arrow.ter polygon{fill:#ea6a62;stroke:#ea6a62}
   .arrow.heat path{stroke:#4fb3a9} .arrow.heat polygon{fill:#4fb3a9;stroke:#4fb3a9}
   .arrow .lbl rect{fill:#fff;stroke:none;filter:drop-shadow(0 1px 2px rgba(60,40,10,.12))}
-  .arrow text{font-family:inherit;font-weight:900;font-size:17px;dominant-baseline:central}
+  .arrow text{font-family:inherit;font-weight:900;font-size:22px;dominant-baseline:central}
   .arrow.sol text{fill:#c9780f} .arrow.ter text{fill:#c8433d} .arrow.heat text{fill:#2f8a81}
-  .arrow text.name{font-size:11px;font-weight:500;fill:#a29a8f;dominant-baseline:auto;paint-order:stroke;stroke:rgba(255,255,255,.7);stroke-width:2.5px;stroke-linejoin:round}
+  .arrow text.name{font-size:14.5px;font-weight:700;fill:#6f675c;dominant-baseline:auto;paint-order:stroke;stroke:rgba(255,255,255,.85);stroke-width:3.5px;stroke-linejoin:round}
   .arrow path.hit{stroke:transparent !important;stroke-dasharray:none !important;stroke-linecap:round !important;fill:none;pointer-events:none}
   svg.picking .arrow path.hit{pointer-events:stroke}
   .bracket{opacity:0;transition:opacity .4s}
   .bracket.on{opacity:1}
   .bracket path{fill:none;stroke:#a89e8f;stroke-width:1.5;stroke-linecap:round}
-  .bracket text{font-weight:800;font-size:13.5px;fill:#6b6257;paint-order:stroke;stroke:#fff;stroke-width:4px}
-  .band-label{font-size:15px;font-weight:900;fill:#6b6b6b}
+  .bracket text{font-weight:800;font-size:17px;fill:#6b6257;paint-order:stroke;stroke:#fff;stroke-width:4px}
+  .band-label{font-size:20px;font-weight:900;fill:#5f5f5f}
   .cloudwrap{filter:url(#fCloud)}
   .face circle{fill:#4a3f33;stroke:none} .face path{fill:none;stroke:#4a3f33;stroke-width:1.8;stroke-linecap:round}
   .face .hl{fill:#fff} .face .cheek{fill:#f4a6a0;opacity:.55}
@@ -212,7 +212,7 @@
   /* 지금 고른 칸에 넣은 화살표: 배지 바탕만 화살표 색의 옅은 톤으로 */
   /* 3탭: 숫자 대신 증가·감소 표시 (바뀌지 않은 화살표는 배지 없이 이름만) */
   .arrow.nonum .lbl rect,.arrow.nonum .lbl text:not(.name){display:none}
-  .arrow.up .lbl text:not(.name),.arrow.down .lbl text:not(.name){font-size:13.5px}
+  .arrow.up .lbl text:not(.name),.arrow.down .lbl text:not(.name){font-size:17px}
   .arrow.up .lbl rect{fill:#fde1dd} .arrow.up .lbl text:not(.name){fill:#c8433d}
   .arrow.down .lbl rect{fill:#e2ebfb} .arrow.down .lbl text:not(.name){fill:#3b6fd1}
   .arrow.sol.pick .lbl rect{fill:#ffe4b8} .arrow.ter.pick .lbl rect{fill:#fdd6d1} .arrow.heat.pick .lbl rect{fill:#cdece7}
@@ -286,7 +286,7 @@
 
 <main>
   <section class="card figure">
-    <svg id="fig" viewBox="0 0 960 540" aria-label="지구 열수지 평형 그림">
+    <svg id="fig" viewBox="150 0 840 472.5" aria-label="지구 열수지 평형 그림">
       <defs>
         <linearGradient id="gSpace" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e9ecfa"/><stop offset="1" stop-color="#f1f3fc"/></linearGradient>
         <linearGradient id="gAtm" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#e3f1fb"/><stop offset="1" stop-color="#eef7fd"/></linearGradient>
@@ -297,15 +297,15 @@
         <linearGradient id="gTer" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="0" y2="540"><stop offset="0" stop-color="#ff9b90"/><stop offset="1" stop-color="#e65a55"/></linearGradient>
       </defs>
       <!-- bands -->
-      <rect id="band-space" x="0" y="0" width="960" height="122" fill="url(#gSpace)"/>
-      <rect id="band-atm" x="0" y="122" width="960" height="290" fill="url(#gAtm)"/>
-      <rect id="band-sfc" x="0" y="412" width="960" height="128" fill="url(#gGround)"/>
-      <rect id="ground-warm" x="0" y="412" width="960" height="128" fill="#f07a5a" opacity="0"/>
-      <line x1="0" y1="122" x2="960" y2="122" stroke="#c9d3e6" stroke-width="1" stroke-dasharray="6 5"/>
-      <line x1="0" y1="412" x2="960" y2="412" stroke="#b8a98c" stroke-width="2"/>
-      <text class="band-label" x="26" y="68">우주</text>
-      <text class="band-label" x="26" y="272">대기</text>
-      <text class="band-label" x="26" y="482">지표</text>
+      <rect id="band-space" x="0" y="0" width="1000" height="122" fill="url(#gSpace)"/>
+      <rect id="band-atm" x="0" y="122" width="1000" height="290" fill="url(#gAtm)"/>
+      <rect id="band-sfc" x="0" y="412" width="1000" height="128" fill="url(#gGround)"/>
+      <rect id="ground-warm" x="0" y="412" width="1000" height="128" fill="#f07a5a" opacity="0"/>
+      <line x1="0" y1="122" x2="1000" y2="122" stroke="#c9d3e6" stroke-width="1" stroke-dasharray="6 5"/>
+      <line x1="0" y1="412" x2="1000" y2="412" stroke="#b8a98c" stroke-width="2"/>
+      <text class="band-label" x="166" y="100">우주</text>
+      <text class="band-label" x="166" y="272">대기</text>
+      <text class="band-label" x="166" y="440">지표</text>
 
       <!-- sun -->
       <g transform="translate(420,46)"><g class="char" id="char-sun">
@@ -322,15 +322,15 @@
       <!-- clouds -->
       <g class="cloudwrap" transform="translate(408.5,302) scale(.64)">
         <use href="#cloudShape"/>
-        <text x="0" y="8" font-size="15" font-weight="700" fill="#7f93aa" text-anchor="middle">대기</text>
+        <text x="0" y="9" font-size="21" font-weight="800" fill="#6f86a3" text-anchor="middle">대기</text>
       </g>
       <g transform="translate(668,250) scale(1.25)"><g class="cloudwrap char" id="char-atm">
         <use href="#cloudShape"/>
         <g class="face"><circle cx="-9" cy="-3" r="2.5"/><circle cx="9" cy="-3" r="2.5"/><circle class="hl" cx="-8" cy="-4" r=".9"/><circle class="hl" cx="10" cy="-4" r=".9"/><circle class="cheek" cx="-18" cy="4" r="3.6"/><circle class="cheek" cx="18" cy="4" r="3.6"/><path d="M-6,3 Q0,8.5 6,3"/></g>
-        <text x="-4" y="31" font-size="10" font-weight="700" fill="#7f93aa" text-anchor="middle">대기</text>
+        <text x="-4" y="33" font-size="13" font-weight="800" fill="#6f86a3" text-anchor="middle">대기</text>
       </g></g>
       <!-- ground character: the ground itself has a face -->
-      <g transform="translate(160,466) scale(1.35)"><g class="char" id="char-sfc">
+      <g transform="translate(700,444) scale(1.1)"><g class="char" id="char-sfc">
         <g class="face"><circle cx="-12" cy="-5" r="3.2"/><circle cx="12" cy="-5" r="3.2"/><circle class="hl" cx="-11" cy="-6.3" r="1.1"/><circle class="hl" cx="13" cy="-6.3" r="1.1"/><circle class="cheek" cx="-24" cy="3" r="4.5"/><circle class="cheek" cx="24" cy="3" r="4.5"/><path d="M-8,3 Q0,10 8,3"/></g>
       </g></g>
 
@@ -340,22 +340,22 @@
       <!-- brackets -->
       <g class="bracket" id="br-ref">
         <path d="M205,34 L205,26 L345,26 L345,34"/>
-        <text x="275" y="19" text-anchor="middle">반사·산란 30</text>
+        <text x="275" y="18" text-anchor="middle">반사·산란 30</text>
       </g>
       <g class="bracket" id="br-earth">
-        <path d="M660,34 L660,26 L889,26 L889,34"/>
-        <text x="774" y="19" text-anchor="middle">지구 복사 70</text>
+        <path d="M660,34 L660,26 L909,26 L909,34"/>
+        <text x="784" y="18" text-anchor="middle">지구 복사 70</text>
       </g>
 
       <!-- thermometer (warming tab) -->
-      <g id="thermo" transform="translate(330,428)">
-        <rect x="-7" y="0" width="14" height="70" rx="7" fill="#fff" stroke="#8a8175" stroke-width="1.5"/>
-        <rect id="thermo-fill" x="-4" y="60" width="8" height="7" rx="3" fill="#e4544f"/>
-        <circle cx="0" cy="76" r="11" fill="#e4544f" stroke="#8a8175" stroke-width="1.5"/>
-        <text x="0" y="104" text-anchor="middle" font-size="12" font-weight="700" fill="#6b5f4c">지표 온도</text>
-        <text id="thermo-dir" x="-14" y="34" text-anchor="end" font-size="15" font-weight="900" fill="#e4544f"></text>
+      <g id="thermo" transform="translate(842,442)">
+        <text x="-20" y="6" text-anchor="end" font-size="16" font-weight="800" fill="#6b5f4c">지표 온도</text>
+        <rect x="2" y="-7" width="104" height="14" rx="7" fill="#fff" stroke="#8a8175" stroke-width="1.5"/>
+        <rect id="thermo-fill" x="4" y="-4" width="19" height="8" rx="3" fill="#e4544f"/>
+        <circle cx="0" cy="0" r="11" fill="#e4544f" stroke="#8a8175" stroke-width="1.5"/>
+        <text id="thermo-dir" x="116" y="7" font-size="18" font-weight="900" fill="#e4544f"></text>
       </g>
-      <text id="hint-warm" x="934" y="528" text-anchor="end" font-size="12" font-weight="700" fill="#7a4a3a">※ 화살표 굵기와 숫자 = 현재 평형 상태의 에너지양</text>
+      <text id="hint-warm" x="166" y="463" font-size="13" font-weight="700" fill="#7a4a3a">※ 화살표 굵기와 숫자 = 현재 평형 상태의 에너지양</text>
     </svg>
     <div class="legend">
       <span><i class="s"></i>태양 복사 에너지 (가시광선 중심)</span>
@@ -436,40 +436,40 @@
 (() => {
   /* ---------- arrow definitions (textbook numbers: 대기과학 2016) ---------- */
   const W = {};                          // 지금 그려진 화살표 굵기 (3탭에서 바뀜)
-  const EMIT = {x:876, top:262};         // 지표 방출 줄기의 x, 줄기가 끝나고 두 가지로 갈라지는 y
+  const EMIT = {x:896, top:262};         // 지표 방출 줄기의 x, 줄기가 끝나고 두 가지로 갈라지는 y
   // 갈라진 가지의 x: 줄기 폭 안에서 대기 흡수는 왼쪽, 우주로 방출은 오른쪽에 붙음
   const forkX = id => { const T = W.emitA + W.emitP; return id==='emitA' ? EMIT.x - T/2 + W.emitA/2 : EMIT.x + T/2 - W.emitP/2; };
   const ARROWS = {
     // 수치는 학습지 그림 기준. 태양 복사 100의 가지(23·23·7)는 100 화살표 머리 안쪽(y=118)에서 출발 → 끊긴 곳 없이 이어짐.
     // 객체 순서 = 그리기 순서: solar·absS 를 가지들보다 뒤에 두어 굵은 줄기가 가지의 시작을 덮음.
     refA:  {pts:[[470,118],[404,276],[335,52]], w:11, c:'sol', cont:true, layers:['space','atm'],
-            label:{x:334,y:166,num:'23',name:'대기 반사·산란',anchor:'middle'}},
+            label:{x:275,y:88,num:'23',name:'대기 반사·산란',anchor:'middle',nameAt:{x:275,y:56}}},
     // 지표면 반사 7: 100 화살표 머리에서 갈라져 지표에 닿은 뒤 바로 꺾여 우주로 (구름 반사와 같은 모양).
     refS:  {pts:[[470,118],[438,408],[205,52]], w:6, c:'sol', cont:true, layers:['space','sfc'],
-            label:{x:365,y:336,num:'7',name:'지표 반사',anchor:'end'}},
+            label:{x:360,y:336,num:'7',name:'지표 반사',anchor:'end'}},
     absA:  {pts:[[470,118],[470,236],[600,236]], w:10, c:'sol', cont:true, layers:['atm'],
-            label:{x:535,y:214,num:'23',name:'대기 흡수',anchor:'middle',nameAt:{x:535,y:190}}},
+            label:{x:535,y:214,num:'23',name:'대기 흡수',anchor:'middle',nameAt:{x:535,y:182}}},
     solar: {pts:[[470,36],[470,124]], w:40, c:'sol', layers:['space'],
             label:{x:506,y:74,num:'100',name:'태양 복사',anchor:'start'}},
     absS:  {pts:[[470,124],[470,414]], w:19, c:'sol', cont:true, layers:['sfc'],
-            label:{x:496,y:372,num:'47',name:'지표 흡수',anchor:'start'}},
+            label:{x:496,y:300,num:'47',name:'지표 흡수',anchor:'start'}},
     // 물의 증발(숨은열)과 대류·전도: 복사가 아니라 열 이동이라 색을 따로 씀. 지표 방출 줄기보다 왼쪽에 둠
-    evap:  {pts:[[704,414],[704,278]], w:10, c:'heat', cont:true, layers:['sfc','atm'],
-            label:{x:721,y:326,num:'24',name:'물의 증발',anchor:'start'}},
-    cond:  {pts:[[786,414],[786,264],[734,264]], w:5, c:'heat', cont:true, layers:['sfc','atm'],
-            label:{x:800,y:378,num:'5',name:'대류·전도',anchor:'start'}},
+    evap:  {pts:[[708,414],[708,279]], w:10, c:'heat', cont:true, layers:['sfc','atm'],
+            label:{x:725,y:330,num:'24',name:'물의 증발',anchor:'start'}},
+    cond:  {pts:[[796,414],[796,264],[734,264]], w:5, c:'heat', cont:true, layers:['sfc','atm'],
+            label:{x:810,y:370,num:'5',name:'대류·전도',anchor:'start'}},
     back:  {pts:[[620,279],[620,414]], w:24, c:'ter', cont:true, layers:['atm','sfc'],
-            label:{x:600,y:352,num:'98',name:'대기 재복사',anchor:'end',follow:{cx:620,side:-1}}},
+            label:{x:596,y:372,num:'98',name:'대기 재복사',anchor:'end',follow:{cx:620,side:-1}}},
     atmUp: {pts:[[660,208],[660,46]], w:18, c:'ter', cont:true, layers:['atm','space'],
             label:{x:681,y:142,num:'58',name:'대기 방출',anchor:'start'}},
     // 지표 방출 116: 지표에서 한 줄기로 올라와 대기 흡수 104(왼쪽으로 꺾여 구름으로)와 우주로 12(곧게 위로)로 갈라짐.
     // 두 가지는 줄기 폭을 나눠 나란히 붙어서 출발하고(fork), 줄기 굵기 = 두 가지 굵기의 합(sum). 줄기를 뒤에 그려 가지의 시작을 덮음.
     emitA: {pts:() => [[forkX('emitA'),EMIT.top+8],[forkX('emitA'),226],[714,226]], w:26, c:'ter', cont:true, layers:['sfc','atm'], fork:'emit',
-            label:{x:784,y:196,num:'104',name:'대기 흡수',anchor:'middle',nameAt:{x:784,y:174}}},
+            label:{x:800,y:196,num:'104',name:'대기 흡수',anchor:'middle',nameAt:{x:800,y:162}}},
     emitP: {pts:() => [[forkX('emitP'),EMIT.top+8],[forkX('emitP'),46]], w:8, c:'ter', cont:true, layers:['sfc','space'], fork:'emit',
-            label:{x:873,y:140,num:'12',name:'우주로 방출',anchor:'end',follow:{side:-1}}},
+            label:{x:893,y:106,num:'12',name:'우주로 방출',anchor:'end',follow:{side:-1}}},
     emit:  {pts:[[EMIT.x,414],[EMIT.x,EMIT.top]], w:34, c:'ter', cont:true, nohead:true, layers:['sfc','atm','space'], sum:['emitA','emitP'],
-            label:{x:905,y:340,num:'116',name:'지표 방출',anchor:'start',follow:{side:1}}},
+            label:{x:925,y:340,num:'116',name:'지표 방출',anchor:'start',follow:{side:1}}},
   };
 
   const LAYER_NAME = {sfc:'지표', atm:'대기', space:'우주'};
@@ -620,7 +620,7 @@
     const tnum = el('text', {x:lb.x, y:lb.y-6, 'text-anchor':lb.anchor||'middle'}); tnum.textContent = lb.num;
     lblG.append(rect, tnum);
     let tname = null;
-    if (lb.name){ const na = lb.nameAt || {x:lb.x, y:lb.y+24}; tname = el('text', {class:'name', x:na.x, y:na.y, 'text-anchor':lb.anchor||'middle'}); tname.textContent = lb.name; lblG.append(tname); }
+    if (lb.name){ const na = lb.nameAt || {x:lb.x, y:lb.y+30}; tname = el('text', {class:'name', x:na.x, y:na.y, 'text-anchor':lb.anchor||'middle'}); tname.textContent = lb.name; lblG.append(tname); }
     g.append(lblG);
     gArrows.append(g);
     nodes[id] = {g, hit, path, head, tnum, tname, rect};
@@ -1185,7 +1185,7 @@
     }
   }
   function drawThermo(){
-    $('thermo-fill').setAttribute('y', (67-th.h).toFixed(1)); $('thermo-fill').setAttribute('height', th.h.toFixed(1));
+    $('thermo-fill').setAttribute('width', (8 + 1.5*th.h).toFixed(1));   // 가로 온도계: 7~60 → 막대 길이
     $('ground-warm').setAttribute('opacity', (0.45*(th.h-7)/53).toFixed(3));
   }
   function tick(now){
