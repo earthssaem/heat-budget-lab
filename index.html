@@ -220,7 +220,7 @@
   .arrow.down .lbl rect{fill:#e2ebfb} .arrow.down .lbl text:not(.name){fill:#3b6fd1}
   .arrow.sol.pick .lbl rect{fill:#ffe4b8} .arrow.ter.pick .lbl rect{fill:#fdd6d1} .arrow.heat.pick .lbl rect{fill:#cdece7}
   .dialog .speaker .pc{min-height:26px;font-size:14px}
-  .arrow{transition:opacity .3s}
+  .arrow,.fork-wrap{transition:opacity .3s}
   #thermo{opacity:0;transition:opacity .3s} svg.warm #thermo{opacity:1}
   svg.warm #hint-warm{opacity:1} #hint-warm{opacity:0;transition:opacity .3s}
 
@@ -592,7 +592,7 @@
   const NS = 'http://www.w3.org/2000/svg';
   const el = (t, a={}) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); return e; };
   const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
-  const nodes = {};
+  const nodes = {}, forkWrap = {};
 
   function geometry(cfg, w){
     const P = typeof cfg.pts==='function' ? cfg.pts() : cfg.pts;
@@ -625,7 +625,12 @@
     let tname = null;
     if (lb.name){ const na = lb.nameAt || {x:lb.x, y:lb.y+32}; tname = el('text', {class:'name', x:na.x, y:na.y, 'text-anchor':lb.anchor||'middle'}); tname.textContent = lb.name; lblG.append(tname); }
     g.append(lblG);
-    gArrows.append(g);
+    // 줄기(116)와 갈라진 가지(104·12)는 한 묶음에 넣음: 함께 흐려질 때 겹친 부분만 진해지지 않게 묶음째로 흐림
+    const trunk = cfg.sum ? id : cfg.fork;
+    if (trunk){
+      if (!forkWrap[trunk]) gArrows.append(forkWrap[trunk] = el('g', {class:'fork-wrap'}));
+      forkWrap[trunk].append(g);
+    } else gArrows.append(g);
     nodes[id] = {g, hit, path, head, tnum, tname, rect};
     W[id] = cfg.w;
   }
@@ -686,7 +691,13 @@
   function emphasize(ids){
     const set = new Set(ids||[]);
     for (const k of [...set]) if (ARROWS[k] && ARROWS[k].fork) set.add(ARROWS[k].fork);   // 갈라진 가지를 강조하면 줄기도 함께
-    for (const k in nodes){ const g = nodes[k].g; g.classList.toggle('hl', set.has(k)); g.style.opacity = set.size && !set.has(k) ? '.3' : ''; }
+    const dim = k => set.size && !set.has(k);
+    for (const k in nodes){ const g = nodes[k].g; g.classList.toggle('hl', set.has(k)); g.style.opacity = dim(k) ? '.3' : ''; }
+    for (const t in forkWrap){                 // 줄기와 가지가 모두 흐려지면 각각 말고 묶음을 흐림
+      const all = [t, ...ARROWS[t].sum].every(dim);
+      forkWrap[t].style.opacity = all ? '.3' : '';
+      if (all) [t, ...ARROWS[t].sum].forEach(k => nodes[k].g.style.opacity = '');
+    }
   }
   function hop(who){
     document.querySelectorAll('.char').forEach(c => c.classList.remove('talk'));
