@@ -322,10 +322,10 @@
         <use href="#cloudShape"/>
         <text x="0" y="8" font-size="14" font-weight="700" fill="#7f93aa" text-anchor="middle">구름</text>
       </g>
-      <g transform="translate(660,248) scale(1.05)"><g class="cloudwrap char" id="char-atm">
+      <g transform="translate(668,250) scale(1.25)"><g class="cloudwrap char" id="char-atm">
         <use href="#cloudShape"/>
         <g class="face"><circle cx="-9" cy="-3" r="2.5"/><circle cx="9" cy="-3" r="2.5"/><circle class="hl" cx="-8" cy="-4" r=".9"/><circle class="hl" cx="10" cy="-4" r=".9"/><circle class="cheek" cx="-18" cy="4" r="3.6"/><circle class="cheek" cx="18" cy="4" r="3.6"/><path d="M-6,3 Q0,8.5 6,3"/></g>
-        <text x="0" y="31" font-size="10.5" font-weight="700" fill="#7f93aa" text-anchor="middle">대기·구름</text>
+        <text x="-4" y="31" font-size="9.5" font-weight="700" fill="#7f93aa" text-anchor="middle">대기·구름</text>
       </g></g>
       <!-- ground character: the ground itself has a face -->
       <g transform="translate(160,466) scale(1.35)"><g class="char" id="char-sfc">
@@ -341,8 +341,8 @@
         <text x="275" y="19" text-anchor="middle">반사·산란 30</text>
       </g>
       <g class="bracket" id="br-earth">
-        <path d="M688,34 L688,26 L912,26 L912,34"/>
-        <text x="800" y="19" text-anchor="middle">지구 복사 70</text>
+        <path d="M660,34 L660,26 L889,26 L889,34"/>
+        <text x="774" y="19" text-anchor="middle">지구 복사 70</text>
       </g>
 
       <!-- thermometer (warming tab) -->
@@ -433,6 +433,10 @@
 <script>
 (() => {
   /* ---------- arrow definitions (textbook numbers: 대기과학 2016) ---------- */
+  const W = {};                          // 지금 그려진 화살표 굵기 (3탭에서 바뀜)
+  const EMIT = {x:876, top:262};         // 지표 방출 줄기의 x, 줄기가 끝나고 두 가지로 갈라지는 y
+  // 갈라진 가지의 x: 줄기 폭 안에서 대기 흡수는 왼쪽, 우주로 방출은 오른쪽에 붙음
+  const forkX = id => { const T = W.emitA + W.emitP; return id==='emitA' ? EMIT.x - T/2 + W.emitA/2 : EMIT.x + T/2 - W.emitP/2; };
   const ARROWS = {
     // 수치는 학습지 그림 기준. 태양 복사 100의 가지(23·23·7)는 100 화살표 머리 안쪽(y=118)에서 출발 → 끊긴 곳 없이 이어짐.
     // 객체 순서 = 그리기 순서: solar·absS 를 가지들보다 뒤에 두어 굵은 줄기가 가지의 시작을 덮음.
@@ -447,19 +451,23 @@
             label:{x:506,y:74,num:'100',name:'태양 복사',anchor:'start'}},
     absS:  {pts:[[470,124],[470,414]], w:19, c:'sol', cont:true, layers:['sfc'],
             label:{x:496,y:372,num:'47',name:'지표 흡수',anchor:'start'}},
-    emitA: {pts:[[700,414],[700,272]], w:26, c:'ter', cont:true, layers:['sfc','atm'],
-            label:{x:722,y:352,num:'104',name:'대기 흡수',anchor:'start',follow:{cx:700,side:1}}},
-    emitP: {pts:[[900,414],[900,46]], w:8, c:'ter', cont:true, layers:['sfc','space'],
-            label:{x:884,y:186,num:'12',name:'우주로 방출',anchor:'end'}},
-    // 물의 증발(숨은열)과 대류·전도: 복사가 아니라 열 이동이라 색을 따로 씀
-    evap:  {pts:[[792,414],[792,266],[712,266]], w:10, c:'heat', cont:true, layers:['sfc','atm'],
-            label:{x:754,y:302,num:'24',name:'물의 증발',anchor:'middle'}},
-    cond:  {pts:[[828,414],[828,238],[700,238]], w:5, c:'heat', cont:true, layers:['sfc','atm'],
-            label:{x:770,y:220,num:'5',name:'대류·전도',anchor:'middle',nameAt:{x:770,y:198}}},
-    back:  {pts:[[620,268],[620,414]], w:24, c:'ter', cont:true, layers:['atm','sfc'],
+    // 물의 증발(숨은열)과 대류·전도: 복사가 아니라 열 이동이라 색을 따로 씀. 지표 방출 줄기보다 왼쪽에 둠
+    evap:  {pts:[[704,414],[704,274]], w:10, c:'heat', cont:true, layers:['sfc','atm'],
+            label:{x:721,y:326,num:'24',name:'물의 증발',anchor:'start'}},
+    cond:  {pts:[[786,414],[786,260],[731,260]], w:5, c:'heat', cont:true, layers:['sfc','atm'],
+            label:{x:800,y:378,num:'5',name:'대류·전도',anchor:'start'}},
+    back:  {pts:[[620,272],[620,414]], w:24, c:'ter', cont:true, layers:['atm','sfc'],
             label:{x:600,y:352,num:'98',name:'대기 재복사',anchor:'end',follow:{cx:620,side:-1}}},
-    atmUp: {pts:[[700,228],[700,46]], w:18, c:'ter', cont:true, layers:['atm','space'],
-            label:{x:722,y:142,num:'58',name:'대기·구름 방출',anchor:'start'}},
+    atmUp: {pts:[[660,216],[660,46]], w:18, c:'ter', cont:true, layers:['atm','space'],
+            label:{x:681,y:142,num:'58',name:'대기·구름 방출',anchor:'start'}},
+    // 지표 방출 116: 지표에서 한 줄기로 올라와 대기 흡수 104(왼쪽으로 꺾여 구름으로)와 우주로 12(곧게 위로)로 갈라짐.
+    // 두 가지는 줄기 폭을 나눠 나란히 붙어서 출발하고(fork), 줄기 굵기 = 두 가지 굵기의 합(sum). 줄기를 뒤에 그려 가지의 시작을 덮음.
+    emitA: {pts:() => [[forkX('emitA'),EMIT.top+8],[forkX('emitA'),228],[708,228]], w:26, c:'ter', cont:true, layers:['sfc','atm'], fork:'emit',
+            label:{x:790,y:200,num:'104',name:'대기 흡수',anchor:'middle',nameAt:{x:790,y:178}}},
+    emitP: {pts:() => [[forkX('emitP'),EMIT.top+8],[forkX('emitP'),46]], w:8, c:'ter', cont:true, layers:['sfc','space'], fork:'emit',
+            label:{x:873,y:140,num:'12',name:'우주로 방출',anchor:'end',follow:{side:-1}}},
+    emit:  {pts:[[EMIT.x,414],[EMIT.x,EMIT.top]], w:34, c:'ter', cont:true, nohead:true, layers:['sfc','atm','space'], sum:['emitA','emitP'],
+            label:{x:905,y:340,num:'116',name:'지표 방출',anchor:'start',follow:{side:1}}},
   };
 
   const LAYER_NAME = {sfc:'지표', atm:'대기', space:'우주'};
@@ -505,7 +513,7 @@
              {col:'atm',kind:'in',label:'지구 복사 흡수',v:104},{col:'space',kind:'in',label:'지표면 방출',v:12}],
      lines:[
       {who:'sfc', t:'나도 흡수만 하지 않고 방출도 하기 때문이야. 적외선으로 방출하는 양이 모두 116이야.',
-       show:['emitA','emitP'], hl:['emitA','emitP']},
+       show:['emit','emitA','emitP'], hl:['emit']},
       {who:'atm', t:'그중 104는 온실 기체와 구름이 흡수해. 나머지 12는 대기를 통과해서 우주로 나가고.',
        hl:['emitA','emitP']},
     ]},
@@ -582,7 +590,8 @@
   const nodes = {};
 
   function geometry(cfg, w){
-    const pts = cfg.pts.map(p => p.slice());
+    const P = typeof cfg.pts==='function' ? cfg.pts() : cfg.pts;
+    const pts = P.map(p => p.slice());
     const n = pts.length, p1 = pts[n-2], p2 = pts[n-1];
     const dx = p2[0]-p1[0], dy = p2[1]-p1[1], L = Math.hypot(dx,dy);
     const ux = dx/L, uy = dy/L;
@@ -591,8 +600,9 @@
     pts[n-1] = [bx, by];
     const nx = -uy, ny = ux;
     const head = [[p2[0],p2[1]],[bx+nx*hw/2, by+ny*hw/2],[bx-nx*hw/2, by-ny*hw/2]];
-    const path = P => P.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
-    return {d: path(pts), full: path(cfg.pts), head: head.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ')};
+    const path = Q => Q.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+','+p[1].toFixed(1)).join(' ');
+    if (cfg.nohead) return {d: path(P), full: path(P), head: '', x0: P[0][0]};   // 갈라지기 전 줄기: 머리 없이 끝남
+    return {d: path(pts), full: path(P), head: head.map(p=>p[0].toFixed(1)+','+p[1].toFixed(1)).join(' '), x0: P[0][0]};
   }
 
   for (const id in ARROWS){
@@ -612,8 +622,9 @@
     g.append(lblG);
     gArrows.append(g);
     nodes[id] = {g, hit, path, head, tnum, tname, rect};
-    setWidth(id, cfg.w);
+    W[id] = cfg.w;
   }
+  for (const id in ARROWS) draw(id);
   function fitPill(n){
     try{
       const b = n.tnum.getBBox();
@@ -624,14 +635,24 @@
   const refit = () => { for (const id in nodes) fitPill(nodes[id]); };
   if (document.fonts && document.fonts.ready) document.fonts.ready.then(refit);
   window.addEventListener('load', refit);
+  // 굵기 바꾸기. 갈라진 가지(fork)를 바꾸면 줄기 굵기(= 가지 굵기의 합)와 두 가지의 위치도 함께 다시 그림
   function setWidth(id, w){
-    const cfg = ARROWS[id], n = nodes[id], geo = geometry(cfg, w);
+    const cfg = ARROWS[id];
+    if (cfg.sum) return;                 // 줄기 굵기는 가지 굵기로 정해짐
+    W[id] = w;
+    if (!cfg.fork) return draw(id);
+    const t = ARROWS[cfg.fork];
+    W[cfg.fork] = t.sum.reduce((a, k) => a + W[k], 0);
+    [...t.sum, cfg.fork].forEach(draw);
+  }
+  function draw(id){
+    const cfg = ARROWS[id], n = nodes[id], w = W[id], geo = geometry(cfg, w);
     n.path.setAttribute('d', geo.d);
     n.path.setAttribute('stroke-width', w);
     n.head.setAttribute('points', geo.head);
     n.hit.setAttribute('d', geo.full); n.hit.setAttribute('stroke-width', Math.max(w + 14, 22));
     const f = cfg.label.follow;
-    if (f){ const x = f.cx + f.side*(w/2 + 12); n.tnum.setAttribute('x', x); if (n.tname && !cfg.label.nameAt) n.tname.setAttribute('x', x); }
+    if (f){ const x = (f.cx ?? geo.x0) + f.side*(w/2 + 12); n.tnum.setAttribute('x', x); if (n.tname && !cfg.label.nameAt) n.tname.setAttribute('x', x); }
     fitPill(n);
   }
 
@@ -659,6 +680,7 @@
   // 지금 대사가 설명하는 화살표만 또렷하게, 나머지는 흐름을 읽을 수 있을 만큼만 흐리게
   function emphasize(ids){
     const set = new Set(ids||[]);
+    for (const k of [...set]) if (ARROWS[k] && ARROWS[k].fork) set.add(ARROWS[k].fork);   // 갈라진 가지를 강조하면 줄기도 함께
     for (const k in nodes){ const g = nodes[k].g; g.classList.toggle('hl', set.has(k)); g.style.opacity = set.size && !set.has(k) ? '.3' : ''; }
   }
   function hop(who){
@@ -859,7 +881,7 @@
   /* ---------- 층별 평형 확인 (교과서 표 채우기) ---------- */
   // 그림 라벨과 같은 이름. 피드백에서는 '이름 + 숫자'로 부름
   const ARROW_LABEL = {solar:'태양 복사', refA:'대기 반사·산란', refS:'지표 반사', absA:'대기 흡수', absS:'지표 흡수',
-                       emitA:'대기 흡수', emitP:'우주로 방출', evap:'물의 증발', cond:'대류·전도', back:'대기 재복사', atmUp:'대기·구름 방출'};
+                       emit:'지표 방출', emitA:'대기 흡수', emitP:'우주로 방출', evap:'물의 증발', cond:'대류·전도', back:'대기 재복사', atmUp:'대기·구름 방출'};
   // 화살표를 누르면 보여 주는 설명: 이름과 이동 방향만 (어느 칸에 들어가는지는 말하지 않음)
   const ARROW_INFO = {
     solar:['sun','내가 지구로 보내는 복사 에너지야.'],
@@ -867,6 +889,7 @@
     refS: ['sfc','태양 복사 에너지가 나에게 닿자마자 반사되어 우주로 돌아가.'],
     absA: ['atm','내가 태양 복사 에너지를 흡수하는 거야.'],
     absS: ['sfc','내가 태양 복사 에너지를 흡수하는 거야. 땅과 바다가 데워지지.'],
+    emit: ['sfc','내가 적외선으로 방출하는 복사 에너지 전체야. 올라가면서 대기가 흡수하는 104와 대기를 통과해 우주로 나가는 12로 나뉘어.'],
     emitA:['atm','지표가 방출한 복사 에너지를 내가 흡수하는 거야.'],
     emitP:['sfc','내가 방출한 복사 에너지 중에서 대기를 그냥 통과해 우주로 나가는 몫이야.'],
     evap: ['sfc','내 표면의 물이 증발하면서 숨은열 형태로 에너지를 대기에 옮기는 거야.'],
@@ -874,7 +897,7 @@
     back: ['atm','내가 지표 쪽으로 방출하는 복사 에너지야.'],
     atmUp:['atm','나와 구름이 우주로 방출하는 복사 에너지야.'],
   };
-  const ARROW_VAL  = {solar:100, refA:23, refS:7, absA:23, absS:47, emitA:104, emitP:12, evap:24, cond:5, back:98, atmUp:58};
+  const ARROW_VAL  = {solar:100, refA:23, refS:7, absA:23, absS:47, emit:116, emitA:104, emitP:12, evap:24, cond:5, back:98, atmUp:58};
   const ARROW_NAME = Object.fromEntries(Object.keys(ARROW_VAL).map(id => [id, ARROW_LABEL[id]+' '+ARROW_VAL[id]]));
   const COLS = ['sfc','atm','space'], KINDS = ['in','out'], KIND_NAME = {in:'유입', out:'유출'};
   // 교과서 표 기준: 지표·대기는 그 층이 흡수한 것(유입)과 방출한 것(유출)만 셈. 우주는 지구 ↔ 우주 사이의 출입.
@@ -964,12 +987,12 @@
     return i<0;
   }
   // 말풍선에서 관련 캐릭터가 그 에너지의 이름과 이동 방향만 말해 줌 (어느 칸인지는 말하지 않음)
-  function sayInfo(id, removed){
+  function sayInfo(id, removed, more=''){
     dlg.lines = []; dlg.i = 0;
     const [who, t] = ARROW_INFO[id];
     dialog.innerHTML = `<div class="speaker"><div class="av ${who}">${CH[who].ic}</div><b>${CH[who].nm}</b>`
       + `<span class="pc ${ARROWS[id].c}">${ARROW_VAL[id]}</span><span class="tag">${ARROW_LABEL[id]}</span>`
-      + (removed ? '<span class="cnt">선택 취소</span>' : '') + `</div><div class="speech ${who}"><p>${t}</p></div>`;
+      + (removed ? '<span class="cnt">선택 취소</span>' : '') + `</div><div class="speech ${who}"><p>${t}${more}</p></div>`;
     hop(who);
   }
   function enterCheck(){
@@ -1051,6 +1074,7 @@
     const g = e.target.closest('.arrow'); if (!g) return;
     const id = g.id.slice(3);
     if (COLS.every(colDone)){ sayInfo(id, false); return; }   // 모두 맞힌 뒤에는 설명만
+    if (ARROWS[id].sum){ sayInfo(id, false, ' 표에는 나뉜 화살표를 하나씩 넣어 줘.'); return; }   // 줄기 116은 나뉜 가지로 셈
     sayInfo(id, !toggleArrow(id));
   });
   $('chkCheck').onclick = () => COLS.every(colDone) ? setTab('warm') : judge();
@@ -1115,8 +1139,8 @@
     ]},
     {title:'새로운 열수지 평형', lines:[
       {who:'sun', st:'rise', t:'온도가 올라간 지표가 방출하는 적외선은 어떻게 될까?',
-       hl:['emitA'], ask:{opts:['up','down'], ans:'up', reveal:'B'}},
-      {who:'sfc', st:'B', t:'온도가 오르면 나도 적외선을 더 많이 방출해. 그래서 들어오는 양과 나가는 양이 다시 같아졌어.', hl:['emitA','emitP']},
+       hl:['emit'], ask:{opts:['up','down'], ans:'up', reveal:'B'}},
+      {who:'sfc', st:'B', t:'온도가 오르면 나도 적외선을 더 많이 방출해. 그래서 들어오는 양과 나가는 양이 다시 같아졌어.', hl:['emit']},
       {who:'atm', st:'B', t:'다시 평형이 됐지만, 처음보다 더 높은 온도에서 이룬 새 평형이야.',
        key:'이산화 탄소가 늘면 더 높은 온도에서 새로운 열수지 평형에 도달해요.'},
     ]},
@@ -1139,13 +1163,16 @@
   // 굵기: 처음 평형 대비 변화율을 GAIN배로 키워 그림 (방향이 한눈에 보이게, '더 알아보기'에 밝힘)
   const GAIN = 2.5, wOf = (base, v, o) => Math.max(2.5, base*(1 + GAIN*(v/o - 1)));
   function drawNums(){
-    setWidth('emitA', wOf(26, disp.abs,  O.abs));
+    // 지표 방출 줄기 = 대기 흡수 + 대기 통과. 줄기는 지표 방출량으로, 통과 가지는 통과량으로 굵기를 정하고 나머지를 흡수 가지에 줌
+    // (p1처럼 흡수만 먼저 늘린 상태에서는 흡수 가지가 늘어난 만큼 줄기도 굵어짐)
+    const wP = wOf(8, disp.pass, O.pass);
+    setWidth('emitA', Math.max(2.5, wOf(34, disp.E, O.E) - wP + GAIN*26*(disp.abs + disp.pass - disp.E)/O.abs));
+    setWidth('emitP', wP);
     setWidth('back',  wOf(24, disp.down, O.down));
     setWidth('atmUp', wOf(18, disp.up,   O.up));
-    setWidth('emitP', wOf(8,  disp.pass, O.pass));
   }
   // 숫자 배지 대신: 처음 평형보다 바뀐 화살표에만 '▲ 증가 / ▼ 감소'
-  const CHG = {emitA:'abs', emitP:'pass', back:'down', atmUp:'up'};
+  const CHG = {emit:'E', emitA:'abs', emitP:'pass', back:'down', atmUp:'up'};
   function drawBadges(st){
     const m = stNums(st);
     for (const id in nodes){
