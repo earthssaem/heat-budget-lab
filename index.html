@@ -228,6 +228,10 @@
   .arrow,.fork-wrap{transition:opacity .3s}
   #thermo{opacity:0;transition:opacity .3s} svg.warm #thermo{opacity:1}
   svg.warm #hint-warm{opacity:1} #hint-warm{opacity:0;transition:opacity .3s}
+  /* 새로고침 때 주소의 탭(#tab2·#tab3)을 처음부터 보여 줌: head 스크립트가 html[data-tab] 을 붙이고 setTab 이 뗌 */
+  html[data-tab="check"] #flowPanel{display:none}
+  html[data-tab="check"] #checkPanel{display:flex}
+  html[data-tab="warm"] #flowPanel .views{display:none}
 
   @media (max-width:900px){
     body{display:block;overflow:auto;position:static}
@@ -241,6 +245,8 @@
     .tab{padding:8px 12px;font-size:13px}
   }
 </style>
+<!-- 새로고침 때 1탭이 잠깐 보였다가 바뀌지 않도록, 그리기 전에 주소의 탭(#tab2·#tab3)을 html[data-tab] 으로 표시 (패널은 css, 탭 버튼은 본문 끝 스크립트, 해제는 setTab) -->
+<script>(function () { var m = location.hash.match(/^#tab([23])$/); if (m) document.documentElement.setAttribute('data-tab', m[1] === '2' ? 'check' : 'warm'); })();</script>
 </head>
 <body>
 <div id="app">
@@ -440,6 +446,9 @@
 <footer>© 2026 제작: 김연경(earthssaem@gmail.com) | <a class="hub" href="https://earthssaem-lab.vercel.app/" target="_blank" rel="noopener">연경쌤의 지구과학 실험실 둘러보기 →</a></footer>
 </div>
 
+<script>/* 주소의 탭 버튼을 처음부터 선택된 모양으로 (위 head 스크립트 참고) */
+(function () { var t = document.documentElement.getAttribute('data-tab'); if (!t) return;
+  document.querySelectorAll('.tab').forEach(function (b) { b.classList.toggle('active', b.getAttribute('data-tab') === t); }); })();</script>
 <script>
 (() => {
   /* ---------- arrow definitions (textbook numbers: 대기과학 2016) ---------- */
@@ -866,8 +875,12 @@
     scrollTo(0, 0); document.body.scrollTop = 0;   // 좁은 화면·2탭 긴 표에서 스크롤한 경우 맨 위로
   }
   $('homeLink').addEventListener('click', e => { e.preventDefault(); goHome(); });
+  // 주소에 적는 탭 번호(#tab2·#tab3). 1탭('flow')은 주소를 깨끗하게 둠
+  const TAB_NO = {flow:'1', check:'2', warm:'3'};
   function setTab(t){
-    activeTab = t;
+    activeTab = t; document.documentElement.removeAttribute('data-tab');   // 처음 표시(html[data-tab])를 거두고 원래 방식(hidden·.active)으로만 보여 줌
+    // 새로고침해도 보던 탭이 열리게 주소 끝에 탭 번호를 적어 둠 (#tab3). 방문 기록은 늘리지 않음
+    try { history.replaceState(null, '', t==='flow' ? location.pathname + location.search : '#tab' + TAB_NO[t]); } catch (e) { /* 주소를 못 바꾸는 환경이면 그냥 둠 */ }
     document.querySelectorAll('.tab').forEach(b => b.classList.toggle('active', b.dataset.tab===t));
     $('flowPanel').hidden = t==='check';
     $('checkPanel').hidden = t!=='check';
@@ -1306,7 +1319,14 @@
   dialog.hidden = true;
   buildDots();
   render();
+  /* 처음 열 때 주소에 탭 번호(#tab2·#tab3)가 있으면 그 탭으로: 탭 버튼과 같은 setTab 으로 연다.
+     스크립트가 이것 하나뿐이라 여기가 '모든 스크립트를 읽은 뒤'다. DOMContentLoaded 까지 미루면
+     그 사이에 1탭 대사·그림이 한두 프레임 그려지므로 같은 작업 안에서 바로 바꾼다.
+     fit()은 1탭 배치로 먼저 재야 세 탭의 그림 크기 기준(refMap)이 평소와 같아짐 → 표시를 잠시 거두고 잼(그리기 전이라 화면에는 안 보임) */
+  const startTab = (location.hash.match(/^#tab([23])$/) || [])[1];
+  document.documentElement.removeAttribute('data-tab');
   fit();
+  if (startTab) setTab(startTab==='2' ? 'check' : 'warm');
 })();
 </script>
 </body>
